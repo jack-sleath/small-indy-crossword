@@ -101,12 +101,12 @@
 - Implement the Share button: copies `<baseUrl>/?seed=<code>` and the short code to clipboard
 
 **Done when:**
-- [ ] `encodeSeed` and `decodeSeed` are unit-testable pure functions
-- [ ] A hardcoded valid seed loads the correct puzzle on `/`
-- [ ] The short code is visible on the play screen
-- [ ] Share button copies URL and code to clipboard
-- [ ] Visiting `/` with no seed shows a prompt linking to `/generate`
-- [ ] The same seed produces the same puzzle on reload and on a different device
+- [x] `encodeSeed` and `decodeSeed` are unit-testable pure functions
+- [x] A hardcoded valid seed loads the correct puzzle on `/`
+- [x] The short code is visible on the play screen
+- [x] Share button copies URL and code to clipboard
+- [x] Visiting `/` with no seed shows a prompt linking to `/generate`
+- [x] The same seed produces the same puzzle on reload and on a different device
 
 ---
 
