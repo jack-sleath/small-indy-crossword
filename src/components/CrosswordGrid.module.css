@@ -6,10 +6,10 @@
   height: min(90vw, 350px);
   border: 2px solid #000;
   gap: 0;
-  outline: none; /* focus ring handled by browser default or custom */
+  outline: none;
 }
 
-.grid:focus {
+.gridActive {
   outline: 2px solid #4a90d9;
   outline-offset: 2px;
 }
@@ -28,6 +28,7 @@
 
 .cell {
   background: #fff;
+  transition: background-color 0.12s ease;
 }
 
 .cellBlack {
@@ -67,6 +68,12 @@
   font-weight: bold;
   text-transform: uppercase;
   line-height: 1;
+  animation: popIn 0.12s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0.4; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 .cellSelected .letter {

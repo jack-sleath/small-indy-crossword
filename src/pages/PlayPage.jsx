@@ -58,7 +58,8 @@ export default function PlayPage() {
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
 
-  const gridRef = useRef(null)
+  // Hidden input for mobile virtual keyboard; also used on desktop
+  const hiddenInputRef = useRef(null)
   const startTimeRef = useRef(null)
   const intervalRef = useRef(null)
 
@@ -84,10 +85,10 @@ export default function PlayPage() {
     setAnswerMap(buildAnswerMap(built))
   }, [pool, seedParam])
 
-  // Keep grid focused when a cell is selected
+  // Focus the hidden input whenever a cell is selected (triggers mobile keyboard)
   useEffect(() => {
     if (selected !== null) {
-      gridRef.current?.focus({ preventScroll: true })
+      hiddenInputRef.current?.focus({ preventScroll: true })
     }
   }, [selected])
 
@@ -112,8 +113,6 @@ export default function PlayPage() {
   }, [isWon])
 
   if (!puzzle) {
-    // Derive active entry + word before puzzle is loaded (no-op guards)
-    // Render loading/no-seed states
     if (!seedParam) {
       return (
         <main className={styles.page}>
@@ -155,6 +154,21 @@ export default function PlayPage() {
     ? getActiveWordKeys(entries, selected.row, selected.col, activeEntry?.direction ?? direction)
     : new Set()
 
+  // ── Shared letter input logic (called from both keyboard handler and onChange) ──
+  function processLetter(letter) {
+    if (!selected || isWon) return
+    const { row, col } = selected
+    startTimerIfNeeded()
+    const newValues = { ...cellValues, [`${row},${col}`]: letter }
+    setCellValues(newValues)
+    setIncorrectCells(new Set())
+    checkForWin(newValues, answerMap)
+    if (activeEntry) {
+      const next = getNextCellInEntry(activeEntry, row, col)
+      if (next) setSelected(next)
+    }
+  }
+
   // ── Cell click ───────────────────────────────────────────────────────────
   function handleCellClick(row, col) {
     if (isWon) return
@@ -177,39 +191,28 @@ export default function PlayPage() {
     setDirection(entry.direction)
   }
 
-  // ── Keyboard ─────────────────────────────────────────────────────────────
+  // ── Keyboard: handles special keys + desktop letter keys ─────────────────
   function handleKeyDown(e) {
     if (!selected || isWon) return
     const { row, col } = selected
 
     if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
+      // On desktop e.key is the letter; on mobile e.key is often 'Unidentified'
+      // (mobile letters are handled via onChange instead)
       e.preventDefault()
-      startTimerIfNeeded()
-      const letter = e.key.toUpperCase()
-      const newValues = { ...cellValues, [`${row},${col}`]: letter }
-      setCellValues(newValues)
-      setIncorrectCells(new Set())
-      checkForWin(newValues, answerMap)
-      if (activeEntry) {
-        const next = getNextCellInEntry(activeEntry, row, col)
-        if (next) setSelected(next)
-      }
+      processLetter(e.key.toUpperCase())
     } else if (e.key === 'Backspace') {
       e.preventDefault()
       startTimerIfNeeded()
       const key = `${row},${col}`
       setIncorrectCells(new Set())
       if (cellValues[key]) {
-        const n = { ...cellValues }
-        delete n[key]
-        setCellValues(n)
+        const n = { ...cellValues }; delete n[key]; setCellValues(n)
       } else if (activeEntry) {
         const prev = getPrevCellInEntry(activeEntry, row, col)
         if (prev) {
           setSelected(prev)
-          const n = { ...cellValues }
-          delete n[`${prev.row},${prev.col}`]
-          setCellValues(n)
+          const n = { ...cellValues }; delete n[`${prev.row},${prev.col}`]; setCellValues(n)
         }
       }
     } else if (e.key === 'ArrowRight') {
@@ -233,6 +236,18 @@ export default function PlayPage() {
         setDirection(next.direction)
       }
     }
+  }
+
+  // ── onChange: handles mobile virtual keyboard letter input ────────────────
+  function handleHiddenInputChange(e) {
+    // e.nativeEvent.data is the typed character on mobile (null on desktop
+    // when e.preventDefault() was called in onKeyDown)
+    const char = e.nativeEvent?.data
+    if (char && /^[a-zA-Z]$/.test(char)) {
+      processLetter(char.toUpperCase())
+    }
+    // Always clear to prevent accumulating characters in the input
+    e.target.value = ''
   }
 
   // ── Check ─────────────────────────────────────────────────────────────────
@@ -265,8 +280,7 @@ export default function PlayPage() {
     if (isWon) return
     setIsAssisted(true)
     setIncorrectCells(new Set())
-    const newValues = { ...answerMap }
-    setCellValues(newValues)
+    setCellValues({ ...answerMap })
     setIsWon(true)
     setShowModal(true)
     clearInterval(intervalRef.current)
@@ -275,6 +289,7 @@ export default function PlayPage() {
 
   // ── Share ─────────────────────────────────────────────────────────────────
   function handleShare() {
+    if (!seedParam) return
     const shareUrl = `${BASE_URL}/?seed=${seedParam}`
     navigator.clipboard.writeText(`${shareUrl}\nCode: ${seedParam}`).then(() => {
       setCopyFeedback(true)
@@ -301,7 +316,28 @@ export default function PlayPage() {
     <main className={styles.page}>
       <h1 className={styles.title}>Mini Crossword</h1>
 
-      <div className={styles.timer} aria-live="off">{formatTime(elapsed)}</div>
+      <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
+        {formatTime(elapsed)}
+      </div>
+
+      {/*
+        Hidden input: receives focus when a cell is selected to trigger the
+        mobile virtual keyboard. onChange handles mobile letter input;
+        onKeyDown handles special keys and desktop letter input.
+      */}
+      <input
+        ref={hiddenInputRef}
+        className={styles.hiddenInput}
+        type="text"
+        aria-hidden="true"
+        tabIndex={-1}
+        autoCapitalize="none"
+        autoCorrect="off"
+        autoComplete="off"
+        spellCheck={false}
+        onKeyDown={handleKeyDown}
+        onChange={handleHiddenInputChange}
+      />
 
       <CrosswordGrid
         puzzle={puzzle}
@@ -311,10 +347,10 @@ export default function PlayPage() {
         incorrectCells={incorrectCells}
         onCellClick={handleCellClick}
         onKeyDown={handleKeyDown}
-        containerRef={gridRef}
+        isActive={selected !== null}
       />
 
-      <div className={styles.controls}>
+      <div className={styles.controls} role="group" aria-label="Puzzle controls">
         <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
         <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
         <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
@@ -322,7 +358,7 @@ export default function PlayPage() {
 
       <div className={styles.seedBar}>
         <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
-        <button className={styles.shareBtn} onClick={handleShare}>
+        <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
           {copyFeedback ? 'Copied!' : 'Share'}
         </button>
       </div>
