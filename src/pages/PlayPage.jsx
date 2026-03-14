@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import CrosswordGrid from '../components/CrosswordGrid'
 import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
-import SAMPLE_PUZZLE from '../data/samplePuzzle'
+import { decodeSeed } from '../utils/seed'
+import { buildPuzzle } from '../utils/buildPuzzle'
 import {
   getCellsInEntry,
   getEntryAt,
@@ -14,9 +16,8 @@ import {
 } from '../utils/puzzleHelpers'
 import styles from './PlayPage.module.css'
 
-const { grid, entries } = SAMPLE_PUZZLE
+const BASE_URL = `${window.location.origin}/small-indy-crossword`
 
-/** Build a map of "row,col" → correct letter from all entries. */
 function buildAnswerMap(puzzle) {
   const map = {}
   for (const entry of puzzle.entries) {
@@ -27,51 +28,72 @@ function buildAnswerMap(puzzle) {
   return map
 }
 
-const ANSWER_MAP = buildAnswerMap(SAMPLE_PUZZLE)
-
 function formatTime(seconds) {
   const m = String(Math.floor(seconds / 60)).padStart(2, '0')
   const s = String(seconds % 60).padStart(2, '0')
   return `${m}:${s}`
 }
 
-function checkWin(cellValues) {
-  return Object.entries(ANSWER_MAP).every(([key, letter]) => cellValues[key] === letter)
+function checkWin(cellValues, answerMap) {
+  return Object.entries(answerMap).every(([key, letter]) => cellValues[key] === letter)
 }
 
 export default function PlayPage() {
-  const [cellValues, setCellValues] = useState({})
-  const [selected, setSelected] = useState(null)   // { row, col } | null
-  const [direction, setDirection] = useState('across')
+  const [searchParams] = useSearchParams()
+  const seedParam = searchParams.get('seed')
 
-  // Timer
-  const [elapsed, setElapsed] = useState(0)
-  const startTimeRef = useRef(null)
-  const intervalRef = useRef(null)
+  const [pool, setPool] = useState(null)
+  const [puzzle, setPuzzle] = useState(null)
+  const [answerMap, setAnswerMap] = useState({})
+  const [seedError, setSeedError] = useState(false)
 
   // Game state
+  const [cellValues, setCellValues] = useState({})
+  const [selected, setSelected] = useState(null)
+  const [direction, setDirection] = useState('across')
+  const [elapsed, setElapsed] = useState(0)
   const [isWon, setIsWon] = useState(false)
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [copyFeedback, setCopyFeedback] = useState(false)
 
   const gridRef = useRef(null)
+  const startTimeRef = useRef(null)
+  const intervalRef = useRef(null)
 
-  // Load pool.json (stub behaviour from milestone 1)
+  // Load pool.json, then decode seed
   useEffect(() => {
     fetch('/small-indy-crossword/pool.json')
       .then((r) => r.json())
-      .then((data) => console.log('pool.json (PlayPage):', data))
+      .then(({ pool: p }) => {
+        console.log('pool.json (PlayPage):', p)
+        setPool(p)
+      })
   }, [])
 
-  // Keep grid focused whenever a cell is selected
+  useEffect(() => {
+    if (!pool || !seedParam) return
+    const rawEntries = decodeSeed(seedParam, pool)
+    if (!rawEntries) {
+      setSeedError(true)
+      return
+    }
+    const built = buildPuzzle(rawEntries)
+    setPuzzle(built)
+    setAnswerMap(buildAnswerMap(built))
+  }, [pool, seedParam])
+
+  // Keep grid focused when a cell is selected
   useEffect(() => {
     if (selected !== null) {
       gridRef.current?.focus({ preventScroll: true })
     }
   }, [selected])
 
-  // Start timer on first interaction
+  // Clean up timer on unmount
+  useEffect(() => () => clearInterval(intervalRef.current), [])
+
   function startTimerIfNeeded() {
     if (startTimeRef.current !== null || isWon) return
     startTimeRef.current = Date.now()
@@ -80,26 +102,50 @@ export default function PlayPage() {
     }, 500)
   }
 
-  // Stop timer when won
-  useEffect(() => {
-    if (isWon && intervalRef.current) {
+  const checkForWin = useCallback((values, aMap) => {
+    if (!isWon && checkWin(values, aMap)) {
+      setIsWon(true)
+      setShowModal(true)
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
   }, [isWon])
 
-  // Clean up interval on unmount
-  useEffect(() => () => clearInterval(intervalRef.current), [])
-
-  // Check win after every cell value change
-  const checkForWin = useCallback((values) => {
-    if (!isWon && checkWin(values)) {
-      setIsWon(true)
-      setShowModal(true)
+  if (!puzzle) {
+    // Derive active entry + word before puzzle is loaded (no-op guards)
+    // Render loading/no-seed states
+    if (!seedParam) {
+      return (
+        <main className={styles.page}>
+          <h1 className={styles.title}>Mini Crossword</h1>
+          <div className={styles.noSeed}>
+            <p>No puzzle loaded.</p>
+            <Link to="/generate" className={styles.generateLink}>Generate a puzzle →</Link>
+          </div>
+        </main>
+      )
     }
-  }, [isWon])
+    if (seedError) {
+      return (
+        <main className={styles.page}>
+          <h1 className={styles.title}>Mini Crossword</h1>
+          <div className={styles.noSeed}>
+            <p>Invalid or unrecognised seed.</p>
+            <Link to="/generate" className={styles.generateLink}>Generate a new puzzle →</Link>
+          </div>
+        </main>
+      )
+    }
+    return (
+      <main className={styles.page}>
+        <h1 className={styles.title}>Mini Crossword</h1>
+        <p className={styles.loading}>Loading…</p>
+      </main>
+    )
+  }
 
-  // Derive active entry and active word highlight keys
+  const { grid, entries } = puzzle
+
   const activeEntry = selected
     ? getEntryAt(entries, selected.row, selected.col, direction) ??
       getEntryAt(entries, selected.row, selected.col, direction === 'across' ? 'down' : 'across')
@@ -109,14 +155,12 @@ export default function PlayPage() {
     ? getActiveWordKeys(entries, selected.row, selected.col, activeEntry?.direction ?? direction)
     : new Set()
 
-  // ── Cell click ──────────────────────────────────────────────────────────────
+  // ── Cell click ───────────────────────────────────────────────────────────
   function handleCellClick(row, col) {
     if (isWon) return
     if (selected && selected.row === row && selected.col === col) {
       const other = direction === 'across' ? 'down' : 'across'
-      if (getEntryAt(entries, row, col, other)) {
-        setDirection(other)
-      }
+      if (getEntryAt(entries, row, col, other)) setDirection(other)
     } else {
       setSelected({ row, col })
       if (!getEntryAt(entries, row, col, direction)) {
@@ -126,14 +170,14 @@ export default function PlayPage() {
     }
   }
 
-  // ── Clue click ──────────────────────────────────────────────────────────────
+  // ── Clue click ───────────────────────────────────────────────────────────
   function handleClueClick(entry) {
     if (isWon) return
     setSelected({ row: entry.row, col: entry.col })
     setDirection(entry.direction)
   }
 
-  // ── Keyboard ─────────────────────────────────────────────────────────────────
+  // ── Keyboard ─────────────────────────────────────────────────────────────
   function handleKeyDown(e) {
     if (!selected || isWon) return
     const { row, col } = selected
@@ -144,8 +188,8 @@ export default function PlayPage() {
       const letter = e.key.toUpperCase()
       const newValues = { ...cellValues, [`${row},${col}`]: letter }
       setCellValues(newValues)
-      setIncorrectCells(new Set()) // clear check highlights on input
-      checkForWin(newValues)
+      setIncorrectCells(new Set())
+      checkForWin(newValues, answerMap)
       if (activeEntry) {
         const next = getNextCellInEntry(activeEntry, row, col)
         if (next) setSelected(next)
@@ -156,38 +200,30 @@ export default function PlayPage() {
       const key = `${row},${col}`
       setIncorrectCells(new Set())
       if (cellValues[key]) {
-        const newValues = { ...cellValues }
-        delete newValues[key]
-        setCellValues(newValues)
+        const n = { ...cellValues }
+        delete n[key]
+        setCellValues(n)
       } else if (activeEntry) {
         const prev = getPrevCellInEntry(activeEntry, row, col)
         if (prev) {
           setSelected(prev)
-          const newValues = { ...cellValues }
-          delete newValues[`${prev.row},${prev.col}`]
-          setCellValues(newValues)
+          const n = { ...cellValues }
+          delete n[`${prev.row},${prev.col}`]
+          setCellValues(n)
         }
       }
     } else if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      setDirection('across')
-      const next = getAdjacentCell(grid, row, col, 0, 1)
-      if (next) setSelected(next)
+      e.preventDefault(); setDirection('across')
+      const next = getAdjacentCell(grid, row, col, 0, 1); if (next) setSelected(next)
     } else if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      setDirection('across')
-      const next = getAdjacentCell(grid, row, col, 0, -1)
-      if (next) setSelected(next)
+      e.preventDefault(); setDirection('across')
+      const next = getAdjacentCell(grid, row, col, 0, -1); if (next) setSelected(next)
     } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setDirection('down')
-      const next = getAdjacentCell(grid, row, col, 1, 0)
-      if (next) setSelected(next)
+      e.preventDefault(); setDirection('down')
+      const next = getAdjacentCell(grid, row, col, 1, 0); if (next) setSelected(next)
     } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setDirection('down')
-      const next = getAdjacentCell(grid, row, col, -1, 0)
-      if (next) setSelected(next)
+      e.preventDefault(); setDirection('down')
+      const next = getAdjacentCell(grid, row, col, -1, 0); if (next) setSelected(next)
     } else if (e.key === 'Tab') {
       e.preventDefault()
       const entry = activeEntry ?? getEntryAt(entries, row, col, direction)
@@ -204,11 +240,10 @@ export default function PlayPage() {
     if (isWon) return
     const wrong = new Set(
       Object.entries(cellValues)
-        .filter(([key, letter]) => ANSWER_MAP[key] && letter !== ANSWER_MAP[key])
+        .filter(([key, letter]) => answerMap[key] && letter !== answerMap[key])
         .map(([key]) => key)
     )
     setIncorrectCells(wrong)
-    // Clear highlights after 3 seconds
     setTimeout(() => setIncorrectCells(new Set()), 3000)
   }
 
@@ -216,13 +251,13 @@ export default function PlayPage() {
   function handleRevealCell() {
     if (!selected || isWon) return
     const key = `${selected.row},${selected.col}`
-    const correct = ANSWER_MAP[key]
+    const correct = answerMap[key]
     if (!correct) return
     setIsAssisted(true)
     setIncorrectCells(new Set())
     const newValues = { ...cellValues, [key]: correct }
     setCellValues(newValues)
-    checkForWin(newValues)
+    checkForWin(newValues, answerMap)
   }
 
   // ── Reveal all ────────────────────────────────────────────────────────────
@@ -230,10 +265,21 @@ export default function PlayPage() {
     if (isWon) return
     setIsAssisted(true)
     setIncorrectCells(new Set())
-    const newValues = { ...ANSWER_MAP }
+    const newValues = { ...answerMap }
     setCellValues(newValues)
     setIsWon(true)
     setShowModal(true)
+    clearInterval(intervalRef.current)
+    intervalRef.current = null
+  }
+
+  // ── Share ─────────────────────────────────────────────────────────────────
+  function handleShare() {
+    const shareUrl = `${BASE_URL}/?seed=${seedParam}`
+    navigator.clipboard.writeText(`${shareUrl}\nCode: ${seedParam}`).then(() => {
+      setCopyFeedback(true)
+      setTimeout(() => setCopyFeedback(false), 2000)
+    })
   }
 
   // ── Reset (play again) ────────────────────────────────────────────────────
@@ -258,7 +304,7 @@ export default function PlayPage() {
       <div className={styles.timer} aria-live="off">{formatTime(elapsed)}</div>
 
       <CrosswordGrid
-        puzzle={SAMPLE_PUZZLE}
+        puzzle={puzzle}
         cellValues={cellValues}
         selected={selected}
         activeWordKeys={activeWordKeys}
@@ -272,6 +318,13 @@ export default function PlayPage() {
         <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
         <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
         <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
+      </div>
+
+      <div className={styles.seedBar}>
+        <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+        <button className={styles.shareBtn} onClick={handleShare}>
+          {copyFeedback ? 'Copied!' : 'Share'}
+        </button>
       </div>
 
       <ClueList
