@@ -16,6 +16,7 @@ export default function GeneratePage() {
   const [seed, setSeed] = useState(null)
   const [noSolution, setNoSolution] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
+  const [previewVisible, setPreviewVisible] = useState(false)
   const attemptRef = useRef(0)
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export default function GeneratePage() {
     const s = encodeSeed(rawEntries)
     setPuzzle(built)
     setSeed(s)
+    setPreviewVisible(false)
   }
 
   function handleCopy() {
@@ -113,26 +115,38 @@ export default function GeneratePage() {
     <main className={styles.page}>
       <h1 className={styles.title}>Generate Puzzle</h1>
 
-      {/* Read-only preview */}
-      <CrosswordGrid
-        puzzle={puzzle}
-        cellValues={Object.fromEntries(
-          puzzle.entries.flatMap((e) => {
-            const cells = []
-            for (let i = 0; i < e.answer.length; i++) {
-              const row = e.direction === 'across' ? e.row : e.row + i
-              const col = e.direction === 'across' ? e.col + i : e.col
-              cells.push([`${row},${col}`, e.answer[i]])
-            }
-            return cells
-          })
+      {/* Read-only preview — hidden by default so the puzzle creator isn't spoiled */}
+      <div className={styles.previewWrapper}>
+        {previewVisible ? (
+          <>
+            <CrosswordGrid
+              puzzle={puzzle}
+              cellValues={Object.fromEntries(
+                puzzle.entries.flatMap((e) => {
+                  const cells = []
+                  for (let i = 0; i < e.answer.length; i++) {
+                    const row = e.direction === 'across' ? e.row : e.row + i
+                    const col = e.direction === 'across' ? e.col + i : e.col
+                    cells.push([`${row},${col}`, e.answer[i]])
+                  }
+                  return cells
+                })
+              )}
+              selected={null}
+              activeWordKeys={new Set()}
+              incorrectCells={new Set()}
+            />
+            <ClueList entries={puzzle.entries} activeEntryId={null} />
+            <button className={styles.revealBtn} onClick={() => setPreviewVisible(false)}>
+              Hide preview
+            </button>
+          </>
+        ) : (
+          <button className={styles.revealBtn} onClick={() => setPreviewVisible(true)}>
+            Reveal preview
+          </button>
         )}
-        selected={null}
-        activeWordKeys={new Set()}
-        incorrectCells={new Set()}
-      />
-
-      <ClueList entries={puzzle.entries} activeEntryId={null} />
+      </div>
 
       <div className={styles.seedBar}>
         <span className={styles.seedCode} title="Puzzle code">{seed}</span>
