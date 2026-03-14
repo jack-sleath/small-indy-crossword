@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // GitHub Pages SPA redirect: store the path in sessionStorage, then
+      // redirect to the root so the React app can pick it up.
+      var path = window.location.pathname
+        .replace('/small-indy-crossword', '')
+        .replace(/\/$/, '') || '/'
+      var search = window.location.search
+      sessionStorage.setItem('spa-redirect', path + search)
+      window.location.replace('/small-indy-crossword/')
+    </script>
+  </head>
+  <body></body>
+</html>
