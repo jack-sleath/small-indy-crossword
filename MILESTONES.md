@@ -23,11 +23,11 @@
 - Set up basic global CSS reset and mobile-friendly viewport meta tag
 
 **Done when:**
-- [ ] `npm run dev` starts the app locally without errors
-- [ ] `/` and `/generate` routes both render without errors
-- [ ] `npm run build && npm run deploy` publishes to GitHub Pages
-- [ ] The deployed page is reachable and both routes work via the GitHub Pages URL
-- [ ] `pool.json` contents are visible in the browser console on both routes
+- [x] `npm run dev` starts the app locally without errors
+- [x] `/` and `/generate` routes both render without errors
+- [x] `npm run build && npm run deploy` publishes to GitHub Pages
+- [x] The deployed page is reachable and both routes work via the GitHub Pages URL
+- [x] `pool.json` contents are visible in the browser console on both routes
 
 ---
 
