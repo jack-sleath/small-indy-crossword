@@ -6,6 +6,19 @@
   min-height: 100dvh;
 }
 
+/* Hidden input for mobile virtual keyboard — positioned off-screen */
+.hiddenInput {
+  position: fixed;
+  top: -100px;
+  left: -100px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  /* font-size 16px prevents iOS from auto-zooming on focus */
+  font-size: 16px;
+  pointer-events: none;
+}
+
 .title {
   font-size: 1.25rem;
   font-weight: 700;

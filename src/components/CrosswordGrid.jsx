@@ -16,9 +16,10 @@ function buildNumberMap(entries) {
  *   selected        — { row, col } | null
  *   activeWordKeys  — Set of "row,col" strings for the active word
  *   incorrectCells  — Set of "row,col" strings to highlight as incorrect
+ *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
- *   onKeyDown       — (e) => void
- *   containerRef    — ref attached to the focusable grid container
+ *   onKeyDown       — (e) => void (fallback for desktop when grid itself is focused)
+ *   containerRef    — ref attached to the grid container
  */
 export default function CrosswordGrid({
   puzzle,
@@ -26,6 +27,7 @@ export default function CrosswordGrid({
   selected = null,
   activeWordKeys = new Set(),
   incorrectCells = new Set(),
+  isActive = false,
   onCellClick,
   onKeyDown,
   containerRef,
@@ -36,10 +38,10 @@ export default function CrosswordGrid({
   return (
     <div
       ref={containerRef}
-      className={styles.grid}
+      className={isActive ? `${styles.grid} ${styles.gridActive}` : styles.grid}
       role="grid"
       aria-label="Crossword grid"
-      tabIndex={0}
+      tabIndex={-1}
       onKeyDown={onKeyDown}
     >
       {grid.map((row, rowIdx) =>
