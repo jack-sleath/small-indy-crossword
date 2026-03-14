@@ -42,9 +42,9 @@
 - Style the grid to look clean on both mobile and desktop viewports
 
 **Done when:**
-- [ ] A 5×5 grid renders with correct black/white cell layout matching the hardcoded puzzle
-- [ ] Across and Down clue lists render with correct numbering
-- [ ] Layout is usable at 375px (mobile) and 1280px (desktop) widths
+- [x] A 5×5 grid renders with correct black/white cell layout matching the hardcoded puzzle
+- [x] Across and Down clue lists render with correct numbering
+- [x] Layout is usable at 375px (mobile) and 1280px (desktop) widths
 
 ---
 
