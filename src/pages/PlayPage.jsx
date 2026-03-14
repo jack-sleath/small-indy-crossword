@@ -9,6 +9,10 @@ import {
   getCellsInEntry,
   getEntryAt,
   getNextCellInEntry,
+  getNextEmptyCellInEntry,
+  getNextIncompleteEntry,
+  getFirstEmptyCellInEntry,
+  isEntryComplete,
   getPrevCellInEntry,
   getNextEntry,
   getAdjacentCell,
@@ -163,9 +167,25 @@ export default function PlayPage() {
     setCellValues(newValues)
     setIncorrectCells(new Set())
     checkForWin(newValues, answerMap)
-    if (activeEntry) {
-      const next = getNextCellInEntry(activeEntry, row, col)
-      if (next) setSelected(next)
+    if (!activeEntry) return
+
+    // If the current word is now complete, jump to the first empty cell of the
+    // next incomplete entry. Otherwise skip to the next empty cell in this word.
+    if (isEntryComplete(activeEntry, newValues)) {
+      const nextEntry = getNextIncompleteEntry(entries, activeEntry, newValues)
+      if (nextEntry) {
+        const firstEmpty = getFirstEmptyCellInEntry(nextEntry, newValues)
+        setSelected(firstEmpty ?? { row: nextEntry.row, col: nextEntry.col })
+        setDirection(nextEntry.direction)
+      }
+    } else {
+      const nextEmpty = getNextEmptyCellInEntry(activeEntry, row, col, newValues)
+      if (nextEmpty) {
+        setSelected(nextEmpty)
+      } else {
+        // All empty cells in this entry are before the cursor — word will be
+        // complete on a future keystroke; just stay put.
+      }
     }
   }
 
