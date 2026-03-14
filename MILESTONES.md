@@ -147,7 +147,7 @@
 - Update README with usage instructions and how to update `pool.json`
 
 **Done when:**
-- [ ] All Acceptance Criteria are met
-- [ ] App passes manual QA on Chrome/Safari mobile and Chrome/Firefox desktop
-- [ ] README documents how to update puzzle content and deploy
-- [ ] No console errors in production build
+- [x] All Acceptance Criteria are met
+- [x] App passes manual QA on Chrome/Safari mobile and Chrome/Firefox desktop
+- [x] README documents how to update puzzle content and deploy
+- [x] No console errors in production build
