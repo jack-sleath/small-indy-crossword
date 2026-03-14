@@ -15,6 +15,7 @@ function buildNumberMap(entries) {
  *   cellValues      — object: "row,col" → letter (user input)
  *   selected        — { row, col } | null
  *   activeWordKeys  — Set of "row,col" strings for the active word
+ *   incorrectCells  — Set of "row,col" strings to highlight as incorrect
  *   onCellClick     — (row, col) => void
  *   onKeyDown       — (e) => void
  *   containerRef    — ref attached to the focusable grid container
@@ -24,6 +25,7 @@ export default function CrosswordGrid({
   cellValues = {},
   selected = null,
   activeWordKeys = new Set(),
+  incorrectCells = new Set(),
   onCellClick,
   onKeyDown,
   containerRef,
@@ -54,8 +56,11 @@ export default function CrosswordGrid({
             selected && selected.row === rowIdx && selected.col === colIdx
           const isActiveWord = activeWordKeys.has(key)
 
+          const isIncorrect = incorrectCells.has(key)
+
           let cellClass = styles.cell
-          if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
+          if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
+          else if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
 
           return (
