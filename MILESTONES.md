@@ -126,13 +126,13 @@
 - Validate pool at load: entries must have unique IDs, uppercase letter-only answers, 2–5 characters
 
 **Done when:**
-- [ ] `/generate` produces a valid, solvable 5×5 crossword from `pool.json`
-- [ ] The generated puzzle preview renders correctly
-- [ ] The seed code is displayed and copies to clipboard
-- [ ] "Play this puzzle →" opens the play route with the correct puzzle
-- [ ] "Regenerate" produces a different layout
-- [ ] A pool that is too small shows a clear error instead of crashing
-- [ ] Generation completes in under 2 seconds on a modern device
+- [x] `/generate` produces a valid, solvable 5×5 crossword from `pool.json`
+- [x] The generated puzzle preview renders correctly
+- [x] The seed code is displayed and copies to clipboard
+- [x] "Play this puzzle →" opens the play route with the correct puzzle
+- [x] "Regenerate" produces a different layout
+- [x] A pool that is too small shows a clear error instead of crashing
+- [x] Generation completes in under 2 seconds on a modern device
 
 ---
 
