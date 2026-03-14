@@ -60,12 +60,12 @@
 - Store cell values in React state
 
 **Done when:**
-- [ ] Clicking/tapping a cell selects it and highlights the active word
-- [ ] Typing letters fills cells and moves focus forward
-- [ ] Backspace clears and moves focus back
-- [ ] Arrow keys navigate between cells
-- [ ] Clicking a clue focuses its start cell
-- [ ] Direction toggles on repeated tap of same cell
+- [x] Clicking/tapping a cell selects it and highlights the active word
+- [x] Typing letters fills cells and moves focus forward
+- [x] Backspace clears and moves focus back
+- [x] Arrow keys navigate between cells
+- [x] Clicking a clue focuses its start cell
+- [x] Direction toggles on repeated tap of same cell
 
 ---
 
