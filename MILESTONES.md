@@ -80,12 +80,12 @@
 - Build a completion modal/overlay showing solve time and whether the puzzle was assisted
 
 **Done when:**
-- [ ] Timer starts on first keystroke and displays correctly
-- [ ] Completing the grid correctly triggers the win modal with elapsed time
-- [ ] Incorrect fill does not trigger win state
-- [ ] Check highlights only incorrect cells
-- [ ] Reveal cell fills the selected cell; Reveal all fills the entire grid
-- [ ] Completion modal appears and timer stops on win
+- [x] Timer starts on first keystroke and displays correctly
+- [x] Completing the grid correctly triggers the win modal with elapsed time
+- [x] Incorrect fill does not trigger win state
+- [x] Check highlights only incorrect cells
+- [x] Reveal cell fills the selected cell; Reveal all fills the entire grid
+- [x] Completion modal appears and timer stops on win
 
 ---
 
