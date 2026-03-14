@@ -1,0 +1,113 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  min-height: 100dvh;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.loading {
+  margin-top: 2rem;
+  color: #888;
+}
+
+.error {
+  margin-top: 1.5rem;
+  background: #fdeaea;
+  border: 1px solid #e07070;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  max-width: 340px;
+  width: 100%;
+  color: #a02020;
+  font-size: 0.9rem;
+}
+
+.error ul {
+  margin-top: 0.5rem;
+  padding-left: 1.2rem;
+}
+
+/* ── Seed / Share bar ───────────────────────────────────────────────────── */
+.seedBar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.seedCode {
+  font-family: monospace;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #555;
+}
+
+.shareBtn {
+  padding: 0.2rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #4a90d9;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.shareBtn:hover {
+  background: #357abd;
+}
+
+/* ── Actions row ────────────────────────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #f5f5f5;
+  color: #222;
+}
+
+.btn:hover {
+  background: #e8e8e8;
+}
+
+.playLink {
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  background: #4a90d9;
+  color: #fff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.playLink:hover {
+  background: #357abd;
+}
