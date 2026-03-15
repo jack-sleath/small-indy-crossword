@@ -102,6 +102,19 @@ export function getNextEntry(entries, currentEntry) {
 }
 
 /**
+ * Returns the previous entry in reading order (clueNumber asc, across before down).
+ * Wraps around to the last entry.
+ */
+export function getPrevEntry(entries, currentEntry) {
+  const sorted = [...entries].sort((a, b) => {
+    if (a.clueNumber !== b.clueNumber) return a.clueNumber - b.clueNumber
+    return a.direction === 'across' ? -1 : 1
+  })
+  const idx = sorted.findIndex((e) => e.id === currentEntry.id)
+  return sorted[(idx - 1 + sorted.length) % sorted.length]
+}
+
+/**
  * Returns the adjacent white cell offset by (dRow, dCol), or null if out of
  * bounds or black.
  */

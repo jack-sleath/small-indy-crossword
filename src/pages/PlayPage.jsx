@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import CrosswordGrid from '../components/CrosswordGrid'
+import ClueBar from '../components/ClueBar'
 import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
 import { decodeSeed } from '../utils/seed'
@@ -15,6 +16,7 @@ import {
   isEntryComplete,
   getPrevCellInEntry,
   getNextEntry,
+  getPrevEntry,
   getAdjacentCell,
   getActiveWordKeys,
 } from '../utils/puzzleHelpers'
@@ -177,6 +179,10 @@ export default function PlayPage() {
     ? getActiveWordKeys(entries, selected.row, selected.col, activeEntry?.direction ?? direction)
     : new Set()
 
+  const completedEntryIds = new Set(
+    entries.filter(e => isEntryComplete(e, cellValues)).map(e => e.id)
+  )
+
   // ── Shared letter input logic (called from both keyboard handler and onChange) ──
   function processLetter(letter) {
     if (!selected || isWon) return
@@ -210,6 +216,21 @@ export default function PlayPage() {
         // complete on a future keystroke; just stay put.
       }
     }
+  }
+
+  // ── Clue bar navigation ──────────────────────────────────────────────────
+  function handleNextClue() {
+    if (!activeEntry) return
+    const next = getNextEntry(entries, activeEntry)
+    setSelected({ row: next.row, col: next.col })
+    setDirection(next.direction)
+  }
+
+  function handlePrevClue() {
+    if (!activeEntry) return
+    const prev = getPrevEntry(entries, activeEntry)
+    setSelected({ row: prev.row, col: prev.col })
+    setDirection(prev.direction)
   }
 
   // ── Cell click ───────────────────────────────────────────────────────────
@@ -397,6 +418,12 @@ export default function PlayPage() {
         onChange={handleHiddenInputChange}
       />
 
+      <ClueBar
+        activeEntry={activeEntry}
+        onPrevClue={handlePrevClue}
+        onNextClue={handleNextClue}
+      />
+
       <CrosswordGrid
         puzzle={puzzle}
         cellValues={cellValues}
@@ -426,6 +453,7 @@ export default function PlayPage() {
       <ClueList
         entries={entries}
         activeEntryId={activeEntry?.id ?? null}
+        completedEntryIds={completedEntryIds}
         onClueClick={handleClueClick}
       />
 

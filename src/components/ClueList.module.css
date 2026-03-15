@@ -45,6 +45,10 @@
   font-weight: 600;
 }
 
+.itemComplete {
+  color: var(--color-text-subtle);
+}
+
 .number {
   font-weight: 700;
   min-width: 1.2em;
