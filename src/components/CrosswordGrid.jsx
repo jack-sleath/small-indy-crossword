@@ -18,7 +18,9 @@ function buildNumberMap(entries) {
  *   incorrectCells  — Set of "row,col" strings to highlight as incorrect
  *   revealedCells   — Set of "row,col" strings with revealed letters (shown red)
  *   correctCells    — Set of "row,col" strings confirmed correct by Check (shown blue)
- *   pencilCells     — Set of "row,col" strings entered in pencil mode (shown grey)
+ *   rebusMode       — boolean: rebus mode is active (multi-char input)
+
+ *   isWon           — boolean: puzzle is solved (triggers celebration animation)
  *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
  *   onKeyDown       — (e) => void (fallback for desktop when grid itself is focused)
@@ -32,7 +34,9 @@ export default function CrosswordGrid({
   incorrectCells = new Set(),
   revealedCells = new Set(),
   correctCells = new Set(),
-  pencilCells = new Set(),
+  rebusMode = false,
+
+  isWon = false,
   isActive = false,
   onCellClick,
   onKeyDown,
@@ -68,21 +72,26 @@ export default function CrosswordGrid({
           const isRevealed = revealedCells.has(key)
           const isCorrect = !isRevealed && correctCells.has(key)
 
+          // Stagger celebration animation across cells (row*5+col gives 0..24)
+          const cellIdx = rowIdx * 5 + colIdx
           let cellClass = styles.cell
-          if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
+          if (isWon) cellClass += ` ${styles.cellWon}`
+          else if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
+          else if (isSelected && rebusMode) cellClass = `${styles.cell} ${styles.cellSelected} ${styles.cellRebus}`
           else if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
 
-          const isPencil = pencilCells.has(key)
-          let letterClass = styles.letter
-          if (isRevealed) letterClass = `${styles.letter} ${styles.letterRevealed}`
-          else if (isCorrect) letterClass = `${styles.letter} ${styles.letterCorrect}`
-          else if (isPencil) letterClass = `${styles.letter} ${styles.letterPencil}`
+          const isMultiChar = letter.length > 1
+
+          let letterClass = isMultiChar ? `${styles.letter} ${styles.letterRebus}` : styles.letter
+          if (isRevealed) letterClass += ` ${styles.letterRevealed}`
+          else if (isCorrect) letterClass += ` ${styles.letterCorrect}`
 
           return (
             <div
               key={key}
               className={cellClass}
+              style={isWon ? { animationDelay: `${cellIdx * 30}ms` } : undefined}
               onClick={() => onCellClick?.(rowIdx, colIdx)}
               role="gridcell"
               aria-label={`Row ${rowIdx + 1}, column ${colIdx + 1}${letter ? `, letter ${letter}` : ''}`}

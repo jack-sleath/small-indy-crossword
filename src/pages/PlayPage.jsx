@@ -4,6 +4,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import ClueBar from '../components/ClueBar'
 import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
+import MobileKeyboard from '../components/MobileKeyboard'
 import { decodeSeed } from '../utils/seed'
 import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
 import {
@@ -64,11 +65,28 @@ export default function PlayPage() {
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [revealedCells, setRevealedCells] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
-  const [pencilMode, setPencilMode] = useState(false)
-  const [pencilCells, setPencilCells] = useState(new Set())
+  const [rebusMode, setRebusMode] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
+  const [autocheck, setAutocheck] = useState(() => localStorage.getItem('autocheck') === 'true')
+  const [showCheckMenu, setShowCheckMenu] = useState(false)
+  const [showRevealMenu, setShowRevealMenu] = useState(false)
+  const [pendingConfirm, setPendingConfirm] = useState(null) // { message, onConfirm }
+  // ── Cursor movement settings (persisted in localStorage) ─────────────────
+  const [skipFilled, setSkipFilled] = useState(() => localStorage.getItem('skipFilled') !== 'false')
+  const [jumpToNextClue, setJumpToNextClue] = useState(() => localStorage.getItem('jumpToNextClue') !== 'false')
+  const [spacebarClearAdvance, setSpacebarClearAdvance] = useState(() => localStorage.getItem('spacebarClearAdvance') === 'true')
+  const [showSettings, setShowSettings] = useState(false)
+  const [muteJingle, setMuteJingle] = useState(() => localStorage.getItem('muteJingle') === 'true')
+  const [shareFeedback, setShareFeedback] = useState(false)
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
+
+  // Detect touch device (pointer: coarse) for custom keyboard
+  const [isTouchDevice] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+  )
 
   // Hidden input for mobile virtual keyboard; also used on desktop
   const hiddenInputRef = useRef(null)
@@ -115,14 +133,60 @@ export default function PlayPage() {
     }, 500)
   }
 
+  function handleTogglePause() {
+    if (isWon || startTimeRef.current === null) return
+    if (isPaused) {
+      // Resume: restart interval from current elapsed
+      startTimeRef.current = Date.now() - elapsed * 1000
+      intervalRef.current = setInterval(() => {
+        setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
+      }, 500)
+      setIsPaused(false)
+    } else {
+      // Pause: freeze elapsed, stop interval
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+      setIsPaused(true)
+    }
+  }
+
+  function handleToggleHideTimer() {
+    setHideTimer(h => {
+      const next = !h
+      localStorage.setItem('hideTimer', String(next))
+      return next
+    })
+  }
+
+  function playJingle() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)()
+      const notes = [523.25, 659.25, 783.99, 1046.5] // C5, E5, G5, C6
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain); gain.connect(ctx.destination)
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const start = ctx.currentTime + i * 0.12
+        gain.gain.setValueAtTime(0, start)
+        gain.gain.linearRampToValueAtTime(0.25, start + 0.02)
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35)
+        osc.start(start); osc.stop(start + 0.35)
+      })
+    } catch { /* AudioContext not available — silently ignore */ }
+  }
+
   const checkForWin = useCallback((values, aMap) => {
     if (!isWon && checkWin(values, aMap)) {
       setIsWon(true)
       setShowModal(true)
       clearInterval(intervalRef.current)
       intervalRef.current = null
+      if (!muteJingle) playJingle()
     }
-  }, [isWon])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isWon, muteJingle])
 
   if (!puzzle) {
     if (!seedParam) {
@@ -190,39 +254,60 @@ export default function PlayPage() {
     if (!selected || isWon) return
     const { row, col } = selected
     const key = `${row},${col}`
+    if (revealedCells.has(key) || correctCells.has(key)) return
     startTimerIfNeeded()
+
+    // Rebus mode: accumulate up to 5 characters in the cell without advancing
+    if (rebusMode) {
+      const current = cellValues[key] ?? ''
+      if (current.length < 5) {
+        setCellValues(prev => ({ ...prev, [key]: current + letter }))
+      }
+      return
+    }
+
     const newValues = { ...cellValues, [key]: letter }
     setCellValues(newValues)
-    setIncorrectCells(new Set())
-    if (correctCells.has(key)) {
-      const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
-    }
-    // Track pencil vs pen mode for this cell
-    setPencilCells(prev => {
-      const next = new Set(prev)
-      if (pencilMode) next.add(key)
-      else next.delete(key)
-      return next
-    })
-    checkForWin(newValues, answerMap)
-    if (!activeEntry) return
-
-    // If the current word is now complete, jump to the first empty cell of the
-    // next incomplete entry. Otherwise skip to the next empty cell in this word.
-    if (isEntryComplete(activeEntry, newValues)) {
-      const nextEntry = getNextIncompleteEntry(entries, activeEntry, newValues)
-      if (nextEntry) {
-        const firstEmpty = getFirstEmptyCellInEntry(nextEntry, newValues)
-        setSelected(firstEmpty ?? { row: nextEntry.row, col: nextEntry.col })
-        setDirection(nextEntry.direction)
-      }
+    if (autocheck) {
+      // Real-time check: mark the just-typed cell immediately
+      const isCorrect = newValues[key] === answerMap[key]
+      setIncorrectCells(isCorrect ? new Set() : new Set([key]))
+      setCorrectCells(prev => {
+        const s = new Set(prev)
+        if (isCorrect && !revealedCells.has(key)) s.add(key)
+        else s.delete(key)
+        return s
+      })
     } else {
-      const nextEmpty = getNextEmptyCellInEntry(activeEntry, row, col, newValues)
-      if (nextEmpty) {
-        setSelected(nextEmpty)
+      setIncorrectCells(new Set())
+      if (correctCells.has(key)) {
+        const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
+      }
+    }
+
+    checkForWin(newValues, answerMap)
+    if (!activeEntry || rebusMode) return
+
+    // If the current word is now complete, optionally jump to the next clue.
+    if (isEntryComplete(activeEntry, newValues)) {
+      if (jumpToNextClue) {
+        const nextEntry = getNextIncompleteEntry(entries, activeEntry, newValues)
+        if (nextEntry) {
+          const firstEmpty = getFirstEmptyCellInEntry(nextEntry, newValues)
+          setSelected(firstEmpty ?? { row: nextEntry.row, col: nextEntry.col })
+          setDirection(nextEntry.direction)
+        }
+      }
+      // else: stay at end of word
+    } else {
+      // Advance to next empty cell (skipFilled=true) or just next cell (skipFilled=false)
+      if (skipFilled) {
+        const nextEmpty = getNextEmptyCellInEntry(activeEntry, row, col, newValues)
+        if (nextEmpty) setSelected(nextEmpty)
+        // else: all empty cells are before cursor — stay put
       } else {
-        // All empty cells in this entry are before the cursor — word will be
-        // complete on a future keystroke; just stay put.
+        const nextCell = getNextCellInEntry(activeEntry, row, col)
+        if (nextCell) setSelected(nextCell)
       }
     }
   }
@@ -240,6 +325,24 @@ export default function PlayPage() {
     const prev = getPrevEntry(entries, activeEntry)
     setSelected({ row: prev.row, col: prev.col })
     setDirection(prev.direction)
+  }
+
+  // ── Mobile keyboard backspace ────────────────────────────────────────────
+  function handleMobileBackspace() {
+    if (!selected || isWon) return
+    const { row, col } = selected
+    startTimerIfNeeded()
+    const key = `${row},${col}`
+    setIncorrectCells(new Set())
+    if (cellValues[key]) {
+      const n = { ...cellValues }; delete n[key]; setCellValues(n)
+    } else if (activeEntry) {
+      const prev = getPrevCellInEntry(activeEntry, row, col)
+      if (prev) {
+        setSelected(prev)
+        const n = { ...cellValues }; delete n[`${prev.row},${prev.col}`]; setCellValues(n)
+      }
+    }
   }
 
   // ── Cell click ───────────────────────────────────────────────────────────
@@ -278,17 +381,26 @@ export default function PlayPage() {
       e.preventDefault()
       startTimerIfNeeded()
       const key = `${row},${col}`
-      setIncorrectCells(new Set())
-      if (cellValues[key]) {
+      if (!autocheck) setIncorrectCells(new Set())
+      const isLocked = revealedCells.has(key) || correctCells.has(key)
+      if (cellValues[key] && !isLocked) {
         const n = { ...cellValues }; delete n[key]; setCellValues(n)
-        setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
+        if (autocheck) { setIncorrectCells(new Set()); setCorrectCells(prev => { const s = new Set(prev); s.delete(key); return s }) }
       } else if (activeEntry) {
-        const prev = getPrevCellInEntry(activeEntry, row, col)
-        if (prev) {
-          setSelected(prev)
-          const prevKey = `${prev.row},${prev.col}`
-          const n = { ...cellValues }; delete n[prevKey]; setCellValues(n)
-          setPencilCells(ps => { const s = new Set(ps); s.delete(prevKey); return s })
+        // Find the previous unlocked cell (skip revealed and confirmed-correct cells)
+        const cells = getCellsInEntry(activeEntry)
+        const idx = cells.findIndex(c => c.row === row && c.col === col)
+        let target = null
+        for (let i = idx - 1; i >= 0; i--) {
+          const c = cells[i]
+          const ck = `${c.row},${c.col}`
+          if (!revealedCells.has(ck) && !correctCells.has(ck)) { target = c; break }
+        }
+        if (target) {
+          setSelected(target)
+          const targetKey = `${target.row},${target.col}`
+          const n = { ...cellValues }; delete n[targetKey]; setCellValues(n)
+          if (autocheck) setCorrectCells(prev => { const s = new Set(prev); s.delete(targetKey); return s })
         }
       }
     } else if (e.key === 'ArrowRight') {
@@ -311,10 +423,27 @@ export default function PlayPage() {
       e.preventDefault()
       const entry = activeEntry ?? getEntryAt(entries, row, col, direction)
       if (entry) {
-        const next = getNextEntry(entries, entry)
+        const next = e.shiftKey ? getPrevEntry(entries, entry) : getNextEntry(entries, entry)
         setSelected({ row: next.row, col: next.col })
         setDirection(next.direction)
       }
+    } else if (e.key === ' ') {
+      e.preventDefault()
+      if (spacebarClearAdvance) {
+        // Clear cell + advance to next
+        const key = `${row},${col}`
+        const n = { ...cellValues }; delete n[key]; setCellValues(n)
+        setIncorrectCells(new Set())
+        const next = activeEntry ? getNextCellInEntry(activeEntry, row, col) : null
+        if (next) setSelected(next)
+      } else {
+        // Toggle direction only
+        const other = direction === 'across' ? 'down' : 'across'
+        if (getEntryAt(entries, row, col, other)) setDirection(other)
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault()
+      setRebusMode(r => !r)
     }
   }
 
@@ -330,13 +459,14 @@ export default function PlayPage() {
     e.target.value = ''
   }
 
-  // ── Check ─────────────────────────────────────────────────────────────────
-  function handleCheck() {
+  // ── Check helpers ─────────────────────────────────────────────────────────
+  function checkKeys(keysToCheck) {
     if (isWon) return
     const wrong = new Set()
     const correct = new Set(correctCells)
-    for (const [key, letter] of Object.entries(cellValues)) {
-      if (!answerMap[key]) continue
+    for (const key of keysToCheck) {
+      const letter = cellValues[key]
+      if (!letter || !answerMap[key]) continue
       if (letter === answerMap[key]) {
         if (!revealedCells.has(key)) correct.add(key)
       } else {
@@ -345,36 +475,91 @@ export default function PlayPage() {
     }
     setIncorrectCells(wrong)
     setCorrectCells(correct)
-    setTimeout(() => setIncorrectCells(new Set()), 3000)
+    if (wrong.size > 0) setTimeout(() => setIncorrectCells(new Set()), 3000)
   }
 
-  // ── Reveal cell ───────────────────────────────────────────────────────────
-  function handleRevealCell() {
-    if (!selected || isWon) return
-    const key = `${selected.row},${selected.col}`
-    const answer = answerMap[key]
-    if (!answer) return
+  function handleCheckSquare() {
+    if (!selected) return
+    checkKeys([`${selected.row},${selected.col}`])
+    setShowCheckMenu(false)
+  }
+
+  function handleCheckWord() {
+    if (!activeEntry) return
+    checkKeys(getCellsInEntry(activeEntry).map(c => `${c.row},${c.col}`))
+    setShowCheckMenu(false)
+  }
+
+  function handleCheckPuzzle() {
+    checkKeys(Object.keys(answerMap))
+    setShowCheckMenu(false)
+  }
+
+  function handleToggleAutocheck() {
+    setAutocheck(a => {
+      const next = !a
+      localStorage.setItem('autocheck', String(next))
+      return next
+    })
+  }
+
+  // ── Reveal helpers ────────────────────────────────────────────────────────
+  function revealKeys(keys) {
     setIsAssisted(true)
     setIncorrectCells(new Set())
-    setRevealedCells(prev => new Set([...prev, key]))
-    setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
-    const newValues = { ...cellValues, [key]: answer }
+    const revealed = new Set(revealedCells)
+    const newValues = { ...cellValues }
+    for (const key of keys) {
+      if (answerMap[key]) {
+        revealed.add(key)
+        newValues[key] = answerMap[key]
+      }
+    }
+    setRevealedCells(revealed)
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
+    setShowRevealMenu(false)
   }
 
-  // ── Reveal all ────────────────────────────────────────────────────────────
-  function handleRevealAll() {
+  function handleRevealSquare() {
+    if (!selected || isWon) return
+    const key = `${selected.row},${selected.col}`
+    setPendingConfirm({
+      message: 'Reveal this square? This will mark it as assisted.',
+      onConfirm: () => revealKeys([key]),
+    })
+  }
+
+  function handleRevealWord() {
+    if (!activeEntry || isWon) return
+    const keys = getCellsInEntry(activeEntry).map(c => `${c.row},${c.col}`)
+    setPendingConfirm({
+      message: 'Reveal this word? This will mark it as assisted.',
+      onConfirm: () => revealKeys(keys),
+    })
+  }
+
+  function handleRevealPuzzle() {
     if (isWon) return
-    setIsAssisted(true)
-    setIncorrectCells(new Set())
-    setRevealedCells(new Set(Object.keys(answerMap)))
-    setPencilCells(new Set())
-    setCellValues({ ...answerMap })
-    setIsWon(true)
-    setShowModal(true)
-    clearInterval(intervalRef.current)
-    intervalRef.current = null
+    setPendingConfirm({
+      message: 'Reveal the entire puzzle? This will mark it as assisted.',
+      onConfirm: () => {
+        revealKeys(Object.keys(answerMap))
+        setIsWon(true)
+        setShowModal(true)
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      },
+    })
+  }
+
+  // ── Settings toggles ──────────────────────────────────────────────────────
+  function toggleSetting(key, setter) {
+    setter(prev => {
+      const next = !prev
+      localStorage.setItem(key, String(next))
+      return next
+    })
   }
 
   // ── Share ─────────────────────────────────────────────────────────────────
@@ -387,18 +572,51 @@ export default function PlayPage() {
     })
   }
 
+  function handleShareResult() {
+    if (!seedParam) return
+    const m = String(Math.floor(elapsed / 60)).padStart(2, '0')
+    const s = String(elapsed % 60).padStart(2, '0')
+    const shareUrl = `${BASE_URL}/?seed=${seedParam}`
+    const text = `I solved the Small Indy in ${m}:${s}!${isAssisted ? ' (with help)' : ''}\n${shareUrl}`
+    if (navigator.share) {
+      navigator.share({ text }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setShareFeedback(true)
+        setTimeout(() => setShareFeedback(false), 2000)
+      })
+    }
+  }
+
+  function handleToggleMute() {
+    setMuteJingle(m => {
+      const next = !m
+      localStorage.setItem('muteJingle', String(next))
+      return next
+    })
+  }
+
   // ── Reset (play again) ────────────────────────────────────────────────────
+  function handleResetConfirm() {
+    setPendingConfirm({
+      message: 'Reset puzzle? All entries will be cleared and the timer will restart.',
+      onConfirm: handleReset,
+    })
+  }
+
   function handleReset() {
     setCellValues({})
     setSelected(null)
     setDirection('across')
     setElapsed(0)
     setIsWon(false)
+    setIsPaused(false)
     setShowModal(false)
     setIncorrectCells(new Set())
     setRevealedCells(new Set())
     setCorrectCells(new Set())
-    setPencilCells(new Set())
+    setRebusMode(false)
+    setPendingConfirm(null)
     setIsAssisted(false)
     startTimeRef.current = null
     clearInterval(intervalRef.current)
@@ -409,19 +627,65 @@ export default function PlayPage() {
     <main className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Mini Crossword</h1>
+        <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
+          ⚙
+        </button>
         <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
 
-      <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
-        {formatTime(elapsed)}
+      {showSettings && (
+        <div className={styles.settingsPanel} role="dialog" aria-label="Settings">
+          <h2 className={styles.settingsHeading}>Settings</h2>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={skipFilled} onChange={() => toggleSetting('skipFilled', setSkipFilled)} />
+            Skip filled squares
+          </label>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={jumpToNextClue} onChange={() => toggleSetting('jumpToNextClue', setJumpToNextClue)} />
+            Jump to next clue on word complete
+          </label>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
+            Spacebar clears cell &amp; advances (instead of toggle direction)
+          </label>
+          <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
+        </div>
+      )}
+
+      <button className={styles.muteBtn} onClick={handleToggleMute} aria-label={muteJingle ? 'Unmute completion sound' : 'Mute completion sound'} title={muteJingle ? 'Completion sound off' : 'Completion sound on'}>
+        {muteJingle ? '🔇' : '🔔'}
+      </button>
+
+      <div className={styles.timerRow}>
+        {hideTimer ? (
+          <span className={styles.timer} aria-label="Timer hidden">⏱ —:——</span>
+        ) : (
+          <button
+            className={`${styles.timer} ${styles.timerBtn}${isPaused ? ` ${styles.timerPaused}` : ''}`}
+            onClick={handleTogglePause}
+            aria-label={isPaused ? 'Resume timer' : `Time elapsed: ${formatTime(elapsed)} — click to pause`}
+            title={isPaused ? 'Click to resume' : 'Click to pause'}
+          >
+            {isPaused ? '⏸ Paused' : formatTime(elapsed)}
+          </button>
+        )}
+        <button
+          className={styles.timerToggle}
+          onClick={handleToggleHideTimer}
+          aria-label={hideTimer ? 'Show timer' : 'Hide timer'}
+          title={hideTimer ? 'Show timer' : 'Hide timer'}
+        >
+          {hideTimer ? '👁' : '🙈'}
+        </button>
       </div>
 
       {/*
-        Hidden input: receives focus when a cell is selected to trigger the
-        mobile virtual keyboard. onChange handles mobile letter input;
-        onKeyDown handles special keys and desktop letter input.
+        Hidden input: receives focus when a cell is selected.
+        On touch devices: inputMode="none" suppresses the system keyboard so
+        our custom MobileKeyboard handles all input.
+        On desktop: onChange handles letter input; onKeyDown handles special keys.
       */}
       <input
         ref={hiddenInputRef}
@@ -433,63 +697,165 @@ export default function PlayPage() {
         autoCorrect="off"
         autoComplete="off"
         spellCheck={false}
+        inputMode={isTouchDevice ? 'none' : undefined}
         onKeyDown={handleKeyDown}
         onChange={handleHiddenInputChange}
       />
 
-      <ClueBar
-        activeEntry={activeEntry}
-        onPrevClue={handlePrevClue}
-        onNextClue={handleNextClue}
-      />
+      {/* Desktop 3-column layout: Across | Grid+Controls | Down */}
+      <div className={styles.playLayout}>
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            completedEntryIds={completedEntryIds}
+            onClueClick={handleClueClick}
+            filter="across"
+          />
+        </div>
 
-      <CrosswordGrid
-        puzzle={puzzle}
-        cellValues={cellValues}
-        selected={selected}
-        activeWordKeys={activeWordKeys}
-        incorrectCells={incorrectCells}
-        revealedCells={revealedCells}
-        correctCells={correctCells}
-        pencilCells={pencilCells}
-        onCellClick={handleCellClick}
-        onKeyDown={handleKeyDown}
-        isActive={selected !== null}
-      />
+        <div className={styles.centerCol}>
+          <ClueBar
+            activeEntry={activeEntry}
+            onPrevClue={handlePrevClue}
+            onNextClue={handleNextClue}
+          />
 
-      <div className={styles.controls} role="group" aria-label="Puzzle controls">
-        <button
-          className={pencilMode ? `${styles.btn} ${styles.btnActive}` : styles.btn}
-          onClick={() => setPencilMode(m => !m)}
-          aria-pressed={pencilMode}
-          title={pencilMode ? 'Switch to Pen' : 'Switch to Pencil'}
-        >
-          {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
-        </button>
-        <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
-        <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
-        <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
+          <div className={styles.gridWrapper}>
+            <CrosswordGrid
+              puzzle={puzzle}
+              cellValues={cellValues}
+              selected={selected}
+              activeWordKeys={activeWordKeys}
+              incorrectCells={incorrectCells}
+              revealedCells={revealedCells}
+              correctCells={correctCells}
+              rebusMode={rebusMode}
+    
+              isWon={isWon}
+              onCellClick={isPaused ? undefined : handleCellClick}
+              onKeyDown={isPaused ? undefined : handleKeyDown}
+              isActive={!isPaused && selected !== null}
+            />
+            {isPaused && (
+              <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
+                <span>⏸ Paused</span>
+                <span className={styles.pauseHint}>Tap to resume</span>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.controls} role="group" aria-label="Puzzle controls">
+            <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
+              <button
+                className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
+                onClick={() => setShowCheckMenu(m => !m)}
+                disabled={isWon}
+                aria-haspopup="true"
+                aria-expanded={showCheckMenu}
+              >
+                Check ▾
+              </button>
+              {showCheckMenu && (
+                <div className={styles.menuDropdown} role="menu">
+                  <button className={styles.menuItem} onClick={handleCheckSquare} disabled={!selected} role="menuitem">Check Square</button>
+                  <button className={styles.menuItem} onClick={handleCheckWord} disabled={!activeEntry} role="menuitem">Check Word</button>
+                  <button className={styles.menuItem} onClick={handleCheckPuzzle} role="menuitem">Check Puzzle</button>
+                  <hr className={styles.menuDivider} />
+                  <button
+                    className={`${styles.menuItem}${autocheck ? ` ${styles.menuItemActive}` : ''}`}
+                    onClick={handleToggleAutocheck}
+                    role="menuitemcheckbox"
+                    aria-checked={autocheck}
+                  >
+                    {autocheck ? '✓ ' : ''}Autocheck
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowRevealMenu(false) }}>
+              <button
+                className={styles.btnDanger}
+                onClick={() => setShowRevealMenu(m => !m)}
+                disabled={isWon}
+                aria-haspopup="true"
+                aria-expanded={showRevealMenu}
+              >
+                Reveal ▾
+              </button>
+              {showRevealMenu && (
+                <div className={styles.menuDropdown} role="menu">
+                  <button className={styles.menuItem} onClick={handleRevealSquare} disabled={!selected} role="menuitem">Reveal Square</button>
+                  <button className={styles.menuItem} onClick={handleRevealWord} disabled={!activeEntry} role="menuitem">Reveal Word</button>
+                  <button className={styles.menuItem} onClick={handleRevealPuzzle} role="menuitem">Reveal Puzzle</button>
+                  <hr className={styles.menuDivider} />
+                  <button className={styles.menuItem} onClick={handleResetConfirm} role="menuitem">Reset Puzzle</button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {pendingConfirm && (
+            <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
+              <div className={styles.confirmBox}>
+                <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
+                <div className={styles.confirmButtons}>
+                  <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
+                  <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.seedBar}>
+            <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+            <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
+              {copyFeedback ? 'Copied!' : 'Share'}
+            </button>
+          </div>
+
+          {isTouchDevice && selected && (
+            <MobileKeyboard
+              onLetter={processLetter}
+              onBackspace={handleMobileBackspace}
+              onRebus={() => setRebusMode(r => !r)}
+              rebusActive={rebusMode}
+              clueLabel={activeEntry ? `${activeEntry.clueNumber}-${activeEntry.direction === 'across' ? 'A' : 'D'}` : ''}
+              clueText={activeEntry?.clue ?? ''}
+            />
+          )}
+
+          {/* Mobile-only: stacked clue list */}
+          <div className={styles.cluesMobile}>
+            <ClueList
+              entries={entries}
+              activeEntryId={activeEntry?.id ?? null}
+              completedEntryIds={completedEntryIds}
+              onClueClick={handleClueClick}
+            />
+          </div>
+        </div>
+
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            completedEntryIds={completedEntryIds}
+            onClueClick={handleClueClick}
+            filter="down"
+          />
+        </div>
       </div>
 
-      <div className={styles.seedBar}>
-        <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
-        <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
-          {copyFeedback ? 'Copied!' : 'Share'}
-        </button>
-      </div>
-
-      <ClueList
-        entries={entries}
-        activeEntryId={activeEntry?.id ?? null}
-        completedEntryIds={completedEntryIds}
-        onClueClick={handleClueClick}
-      />
 
       {showModal && (
         <CompletionModal
           elapsed={elapsed}
           assisted={isAssisted}
+          onDismiss={() => setShowModal(false)}
           onClose={handleReset}
+          onShareResult={handleShareResult}
+          shareFeedback={shareFeedback}
         />
       )}
     </main>
