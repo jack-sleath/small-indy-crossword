@@ -233,3 +233,215 @@
 - [ ] All newly generated puzzles pass intersection validation (no crossing cell letter conflicts)
 - [ ] Generation still completes in under 2 seconds
 - [ ] Existing valid seeds continue to decode and render correctly
+
+---
+
+## Milestone 15 — Active Cell Highlight & Direction Toggle [full-overhaul]
+**Branch:** milestone-15-full-overhaul
+**Goal:** Distinguish the cursor cell (yellow) from the rest of the active word (blue), and allow direction toggle via re-click or perpendicular arrow key.
+
+**Tasks:**
+- Change active cell styling from blue to yellow, keeping the rest of the active word blue
+- Implement direction toggle on re-click/re-tap of the already-active cell
+- Implement direction toggle when an arrow key is pressed on the perpendicular axis
+
+**Done when:**
+- [x] Active cell renders with a yellow background; remaining word cells render blue
+- [x] Clicking/tapping the already-active cell toggles direction and updates the blue highlight
+- [x] Pressing a perpendicular arrow key toggles the active direction
+- [x] No visual regression on existing grid layouts
+
+---
+
+## Milestone 16 — Pencil Mode [full-overhaul]
+**Branch:** milestone-16-full-overhaul
+**Goal:** Let the user toggle between Pen mode (black letters) and Pencil mode (grey letters).
+
+**Tasks:**
+- Add a pencil/pen toggle button to the toolbar
+- Store a `mode` value (`pen` | `pencil`) in component state
+- Apply distinct styling to pencil-mode cells so their text renders grey
+- Ensure pencil letters are treated identically to pen letters in Check and win detection
+
+**Done when:**
+- [ ] A pen/pencil toggle button is present and switches between modes
+- [ ] Letters typed in pencil mode render grey; letters typed in pen mode render black
+- [ ] Switching mode does not affect already-entered letters
+- [ ] Check and win detection treat pencil letters identically to pen letters
+
+---
+
+## Milestone 17 — Full Keyboard Navigation Spec [full-overhaul]
+**Branch:** milestone-17-full-overhaul
+**Goal:** Implement remaining keyboard behaviours: Tab/Shift+Tab between clues, Spacebar direction toggle, Backspace on empty cell, and Escape for Rebus.
+
+**Tasks:**
+- Implement Tab: advance cursor to first cell of next clue, wrapping across directions
+- Implement Shift+Tab: retreat to first cell of previous clue
+- Implement Spacebar: toggle active direction
+- Fix Backspace edge case: if active cell is empty, move backward and delete that cell's letter
+- Wire Escape key to trigger Rebus mode (allow multi-character cell input)
+
+**Done when:**
+- [ ] Tab moves cursor to the first cell of the next clue (wrapping across directions)
+- [ ] Shift+Tab moves cursor to the first cell of the previous clue
+- [ ] Spacebar toggles direction between Across and Down
+- [ ] Backspace on an empty cell moves backward and deletes the previous cell's letter
+- [ ] Pressing Escape enables Rebus mode for the active cell
+
+---
+
+## Milestone 18 — Clue Bar & Clue List Enhancements [full-overhaul]
+**Branch:** milestone-18-full-overhaul
+**Goal:** Add a persistent clue bar showing the active clue above (desktop) or below (mobile) the grid, grey out completed clues, and add swipe clue navigation on mobile.
+
+**Tasks:**
+- Add a clue bar component displaying the full text of the currently active clue
+- Position the clue bar above the grid on desktop and between the grid and keyboard on mobile
+- Grey out clues in the list when their word is fully and correctly filled
+- Add left/right swipe gesture and arrow buttons on the mobile clue bar to navigate clues
+- Selecting a clue from the expanded list still moves cursor to its first empty cell
+
+**Done when:**
+- [ ] Clue bar shows the full active clue text at all times
+- [ ] On desktop the bar appears above the grid; on mobile between grid and keyboard
+- [ ] Completed clues are greyed out in the clue list but remain clickable
+- [ ] Swiping left/right on the mobile clue bar navigates to the next/previous clue
+- [ ] Clicking a clue in the list moves the cursor to its first empty cell
+
+---
+
+## Milestone 19 — Timer Pause & Visibility Setting [full-overhaul]
+**Branch:** milestone-19-full-overhaul
+**Goal:** Allow the user to pause the timer (obscuring the grid) and optionally hide the timer entirely.
+
+**Tasks:**
+- Add a pause/resume control to the timer display
+- When paused, show an overlay that obscures the grid
+- Add a "Hide timer" toggle to settings that replaces the timer with a static label
+- Persist the hide-timer preference in localStorage
+
+**Done when:**
+- [ ] Clicking the timer or pause button pauses the timer and shows a grid overlay
+- [ ] Resuming removes the overlay and continues counting from where it stopped
+- [ ] A "Hide timer" setting replaces the timer with a static label
+- [ ] The hide-timer preference persists across page reloads
+
+---
+
+## Milestone 20 — Check Sub-Menu & Autocheck Mode [full-overhaul]
+**Branch:** milestone-20-full-overhaul
+**Goal:** Replace the single Check button with a Square/Word/Puzzle sub-menu and add an Autocheck toggle.
+
+**Tasks:**
+- Convert the Check button to a menu with three options: Check Square, Check Word, Check Puzzle
+- Check Square: verify only the active cell (correct → blue, incorrect → red)
+- Check Word: verify all cells in the active word
+- Check Puzzle: verify all filled cells in the grid
+- Add an Autocheck toggle in settings; when on, incorrect cells are highlighted immediately on each keystroke
+- When Autocheck is on, ensure Backspace skips confirmed-correct cells
+
+**Done when:**
+- [ ] Check menu offers Square, Word, and Puzzle options
+- [ ] Each scope correctly marks cells blue (correct) or red (incorrect)
+- [ ] Autocheck mode highlights errors in real time as the user types
+- [ ] With Autocheck on, Backspace skips confirmed-correct cells when moving backward
+
+---
+
+## Milestone 21 — Reveal Sub-Menu & Reset Confirmation [full-overhaul]
+**Branch:** milestone-21-full-overhaul
+**Goal:** Replace the single Reveal button with a Square/Word/Puzzle sub-menu and add confirmation dialogs before Reveal and Reset.
+
+**Tasks:**
+- Convert the Reveal button to a menu: Reveal Square, Reveal Word, Reveal Puzzle
+- Show a confirmation dialog before any Reveal action
+- Show a confirmation dialog before Reset Puzzle
+- Ensure Reveal fills correct letter(s) in red (reusing revealed-cell styling from visual-ux)
+- Ensure Reset clears all letters and resets the timer to 00:00
+
+**Done when:**
+- [ ] Reveal menu offers Square, Word, and Puzzle options
+- [ ] A confirmation dialog is shown before each Reveal action
+- [ ] A confirmation dialog is shown before Reset Puzzle
+- [ ] Revealed cells display in red and are not overwritten by subsequent Check actions
+- [ ] Reset clears all entered letters and resets the timer to 00:00
+
+---
+
+## Milestone 22 — Cursor Movement Settings [full-overhaul]
+**Branch:** milestone-22-full-overhaul
+**Goal:** Add three configurable cursor movement behaviours accessible from a settings panel.
+
+**Tasks:**
+- Add a settings panel (via gear icon) with three toggles:
+  1. **Skip filled squares** — auto-advance skips already-filled cells
+  2. **Jump to next clue** — completing a word moves cursor to the next incomplete clue
+  3. **Spacebar behaviour** — "Toggle direction only" vs "Clear cell + advance"
+- Persist all three settings in localStorage
+- Wire each setting into the relevant input-handling code paths
+
+**Done when:**
+- [ ] Settings panel shows all three cursor movement toggles
+- [ ] "Skip filled squares" on: auto-advance skips filled cells; off: advances to next cell regardless
+- [ ] "Jump to next clue" on: cursor jumps to first empty cell of next incomplete clue when word is completed
+- [ ] Spacebar behaviour setting changes spacebar action accordingly
+- [ ] All three settings persist across page reloads
+
+---
+
+## Milestone 23 — Completion Celebration & Share [full-overhaul]
+**Branch:** milestone-23-full-overhaul
+**Goal:** Add a congratulatory grid animation and sound on completion, and a Share button to the completion modal.
+
+**Tasks:**
+- Implement a brief cell animation (e.g. ripple or flash) on correct completion
+- Add a short completion jingle (audio clip) that plays on win, with a mute/settings toggle
+- Add a Share button to the completion modal
+- Share button generates a spoiler-free text result (e.g. "I solved the Small Indy in 0:42!") and copies to clipboard or triggers system share sheet on mobile
+
+**Done when:**
+- [ ] A brief grid animation plays on correct completion
+- [ ] A short jingle plays on correct completion (respecting a mute setting)
+- [ ] The completion modal includes a Share button
+- [ ] The Share button copies or shares a spoiler-free result with the puzzle URL
+- [ ] Completion still only triggers when all cells are correctly filled
+
+---
+
+## Milestone 24 — Mobile Custom Keyboard [full-overhaul]
+**Branch:** milestone-24-full-overhaul
+**Goal:** Replace the system keyboard on mobile with a custom A–Z game keyboard that avoids autocorrect and keeps the clue bar visible.
+
+**Tasks:**
+- Build a custom on-screen keyboard component (A–Z grid + Backspace key)
+- Add a secondary layout button for Rebus/special character input
+- Show the custom keyboard when a cell is active on touch devices; hide it otherwise
+- Ensure the active clue bar remains visible above the custom keyboard
+- Suppress the system keyboard (e.g. `inputmode="none"` or focus-trap approach)
+
+**Done when:**
+- [ ] Custom A–Z + Backspace keyboard appears when a cell is active on mobile
+- [ ] System keyboard does not appear; no autocorrect or autocapitalise
+- [ ] The active clue bar is visible above the custom keyboard at all times
+- [ ] A secondary layout button is present for Rebus input
+- [ ] Keyboard hides when no cell is active
+
+---
+
+## Milestone 25 — Desktop Layout & Settings Panel [full-overhaul]
+**Branch:** milestone-25-full-overhaul
+**Goal:** Move clue lists to a panel beside the grid on desktop, add a settings gear icon, and confirm full responsive fidelity from 320px to 1280px.
+
+**Tasks:**
+- Restructure the desktop layout so Across and Down clue lists sit in a panel beside (or flanking) the grid
+- Add a settings gear icon (⚙) to the toolbar that opens the settings panel (consolidating toggles from M19, M20, M22)
+- Confirm layout is functional and unbroken at 320px and 1280px viewports
+- Final cross-device QA: Chrome/Safari mobile, Chrome/Firefox desktop
+
+**Done when:**
+- [ ] On desktop (≥768px), clue lists are displayed beside the grid rather than below it
+- [ ] A settings gear icon is present and opens a panel with all available settings
+- [ ] Layout is functional and unbroken at 320px and 1280px viewport widths
+- [ ] No console errors in the production build
+- [ ] Manual QA passes on Chrome/Safari mobile and Chrome/Firefox desktop

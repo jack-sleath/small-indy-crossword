@@ -259,17 +259,21 @@ export default function PlayPage() {
         }
       }
     } else if (e.key === 'ArrowRight') {
-      e.preventDefault(); setDirection('across')
-      const next = getAdjacentCell(grid, row, col, 0, 1); if (next) setSelected(next)
+      e.preventDefault()
+      if (direction !== 'across') { setDirection('across') }
+      else { const next = getAdjacentCell(grid, row, col, 0, 1); if (next) setSelected(next) }
     } else if (e.key === 'ArrowLeft') {
-      e.preventDefault(); setDirection('across')
-      const next = getAdjacentCell(grid, row, col, 0, -1); if (next) setSelected(next)
+      e.preventDefault()
+      if (direction !== 'across') { setDirection('across') }
+      else { const next = getAdjacentCell(grid, row, col, 0, -1); if (next) setSelected(next) }
     } else if (e.key === 'ArrowDown') {
-      e.preventDefault(); setDirection('down')
-      const next = getAdjacentCell(grid, row, col, 1, 0); if (next) setSelected(next)
+      e.preventDefault()
+      if (direction !== 'down') { setDirection('down') }
+      else { const next = getAdjacentCell(grid, row, col, 1, 0); if (next) setSelected(next) }
     } else if (e.key === 'ArrowUp') {
-      e.preventDefault(); setDirection('down')
-      const next = getAdjacentCell(grid, row, col, -1, 0); if (next) setSelected(next)
+      e.preventDefault()
+      if (direction !== 'down') { setDirection('down') }
+      else { const next = getAdjacentCell(grid, row, col, -1, 0); if (next) setSelected(next) }
     } else if (e.key === 'Tab') {
       e.preventDefault()
       const entry = activeEntry ?? getEntryAt(entries, row, col, direction)
