@@ -136,3 +136,145 @@ export function assignmentToEntries(assignment) {
     { poolId: assignment.D4.id, row: 0, col: 4, direction: 'down',   answer: assignment.D4.answer, clue: assignment.D4.clue },
   ]
 }
+
+// ── Generic pattern-based solver ────────────────────────────────────────────
+
+/** Derive word slots (length ≥ 2) from a list of black cell positions. */
+function deriveSlots(blackCells) {
+  const isBlack = (r, c) => blackCells.some(([br, bc]) => br === r && bc === c)
+  const slots = []
+
+  // Across
+  for (let r = 0; r < 5; r++) {
+    let c = 0
+    while (c < 5) {
+      if (!isBlack(r, c)) {
+        const startC = c
+        while (c < 5 && !isBlack(r, c)) c++
+        const len = c - startC
+        if (len >= 2) slots.push({ direction: 'across', row: r, col: startC, length: len })
+      } else {
+        c++
+      }
+    }
+  }
+
+  // Down
+  for (let c = 0; c < 5; c++) {
+    let r = 0
+    while (r < 5) {
+      if (!isBlack(r, c)) {
+        const startR = r
+        while (r < 5 && !isBlack(r, c)) r++
+        const len = r - startR
+        if (len >= 2) slots.push({ direction: 'down', row: startR, col: c, length: len })
+      } else {
+        r++
+      }
+    }
+  }
+
+  return slots
+}
+
+/** Derive all intersection constraints between across and down slots. */
+function deriveIntersections(slots) {
+  const intersections = []
+  const indexed = slots.map((s, idx) => ({ ...s, idx }))
+  const acrossSlots = indexed.filter((s) => s.direction === 'across')
+  const downSlots = indexed.filter((s) => s.direction === 'down')
+
+  for (const a of acrossSlots) {
+    for (const d of downSlots) {
+      const dCol = d.col
+      const dRowEnd = d.row + d.length - 1
+      const aColEnd = a.col + a.length - 1
+      if (dCol >= a.col && dCol <= aColEnd && a.row >= d.row && a.row <= dRowEnd) {
+        intersections.push({
+          aIdx: a.idx,
+          dIdx: d.idx,
+          aOffset: dCol - a.col,
+          dOffset: a.row - d.row,
+        })
+      }
+    }
+  }
+
+  return intersections
+}
+
+/**
+ * Generic pattern-based solver. Returns raw entries (same shape as decodeSeed output)
+ * or null if no valid assignment is found.
+ *
+ * @param {Array<{id, answer, clue}>} pool
+ * @param {{ name: string, blackCells: [number, number][] }} pattern
+ * @param {number} attempt - controls shuffle seed for variety on regenerate
+ * @returns {Array<{poolId, row, col, direction, answer, clue}> | null}
+ */
+export function solvePattern(pool, pattern, attempt = 0) {
+  const slots = deriveSlots(pattern.blackCells)
+  if (slots.length === 0) return null
+
+  // Pre-filter and shuffle pool entries by length
+  const byLength = {}
+  for (const slot of slots) {
+    if (!byLength[slot.length]) {
+      byLength[slot.length] = seededShuffle(
+        pool.filter((p) => p.answer.length === slot.length),
+        attempt
+      )
+    }
+  }
+
+  // Check we have enough distinct words for each required slot length
+  const lengthCounts = {}
+  for (const slot of slots) {
+    lengthCounts[slot.length] = (lengthCounts[slot.length] || 0) + 1
+  }
+  for (const [len, count] of Object.entries(lengthCounts)) {
+    if ((byLength[len]?.length ?? 0) < count) return null
+  }
+
+  const intersections = deriveIntersections(slots)
+  const assignment = new Array(slots.length).fill(null)
+  const usedIds = new Set()
+
+  function canPlace(slotIdx, word) {
+    for (const ix of intersections) {
+      if (ix.aIdx === slotIdx && assignment[ix.dIdx] !== null) {
+        if (word.answer[ix.aOffset] !== assignment[ix.dIdx].answer[ix.dOffset]) return false
+      }
+      if (ix.dIdx === slotIdx && assignment[ix.aIdx] !== null) {
+        if (word.answer[ix.dOffset] !== assignment[ix.aIdx].answer[ix.aOffset]) return false
+      }
+    }
+    return true
+  }
+
+  function backtrack(slotIdx) {
+    if (slotIdx === slots.length) return true
+    const words = byLength[slots[slotIdx].length]
+    for (const word of words) {
+      if (usedIds.has(word.id)) continue
+      if (!canPlace(slotIdx, word)) continue
+      assignment[slotIdx] = word
+      usedIds.add(word.id)
+      if (backtrack(slotIdx + 1)) return true
+      assignment[slotIdx] = null
+      usedIds.delete(word.id)
+    }
+    return false
+  }
+
+  if (!backtrack(0)) return null
+
+  return slots.map((slot, i) => ({
+    poolId: assignment[i].id,
+    row: slot.row,
+    col: slot.col,
+    direction: slot.direction,
+    answer: assignment[i].answer,
+    clue: assignment[i].clue,
+  }))
+}
