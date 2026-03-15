@@ -69,6 +69,8 @@ export default function PlayPage() {
   const [pencilCells, setPencilCells] = useState(new Set())
   const [isPaused, setIsPaused] = useState(false)
   const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
+  const [autocheck, setAutocheck] = useState(() => localStorage.getItem('autocheck') === 'true')
+  const [showCheckMenu, setShowCheckMenu] = useState(false)
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -225,9 +227,21 @@ export default function PlayPage() {
       : letter
     const newValues = { ...cellValues, [key]: newLetter }
     setCellValues(newValues)
-    setIncorrectCells(new Set())
-    if (correctCells.has(key)) {
-      const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
+    if (autocheck) {
+      // Real-time check: mark the just-typed cell immediately
+      const isCorrect = newValues[key] === answerMap[key]
+      setIncorrectCells(isCorrect ? new Set() : new Set([key]))
+      setCorrectCells(prev => {
+        const s = new Set(prev)
+        if (isCorrect && !revealedCells.has(key)) s.add(key)
+        else s.delete(key)
+        return s
+      })
+    } else {
+      setIncorrectCells(new Set())
+      if (correctCells.has(key)) {
+        const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
+      }
     }
     // Track pencil vs pen mode for this cell
     setPencilCells(prev => {
@@ -310,17 +324,26 @@ export default function PlayPage() {
       e.preventDefault()
       startTimerIfNeeded()
       const key = `${row},${col}`
-      setIncorrectCells(new Set())
+      if (!autocheck) setIncorrectCells(new Set())
       if (cellValues[key]) {
         const n = { ...cellValues }; delete n[key]; setCellValues(n)
         setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
+        if (autocheck) { setIncorrectCells(new Set()); setCorrectCells(prev => { const s = new Set(prev); s.delete(key); return s }) }
       } else if (activeEntry) {
-        const prev = getPrevCellInEntry(activeEntry, row, col)
-        if (prev) {
-          setSelected(prev)
-          const prevKey = `${prev.row},${prev.col}`
-          const n = { ...cellValues }; delete n[prevKey]; setCellValues(n)
-          setPencilCells(ps => { const s = new Set(ps); s.delete(prevKey); return s })
+        // Find the previous non-confirmed cell (skip correctCells when autocheck is on)
+        const cells = getCellsInEntry(activeEntry)
+        const idx = cells.findIndex(c => c.row === row && c.col === col)
+        let target = null
+        for (let i = idx - 1; i >= 0; i--) {
+          const c = cells[i]
+          if (!autocheck || !correctCells.has(`${c.row},${c.col}`)) { target = c; break }
+        }
+        if (target) {
+          setSelected(target)
+          const targetKey = `${target.row},${target.col}`
+          const n = { ...cellValues }; delete n[targetKey]; setCellValues(n)
+          setPencilCells(ps => { const s = new Set(ps); s.delete(targetKey); return s })
+          if (autocheck) setCorrectCells(prev => { const s = new Set(prev); s.delete(targetKey); return s })
         }
       }
     } else if (e.key === 'ArrowRight') {
@@ -369,13 +392,14 @@ export default function PlayPage() {
     e.target.value = ''
   }
 
-  // ── Check ─────────────────────────────────────────────────────────────────
-  function handleCheck() {
+  // ── Check helpers ─────────────────────────────────────────────────────────
+  function checkKeys(keysToCheck) {
     if (isWon) return
     const wrong = new Set()
     const correct = new Set(correctCells)
-    for (const [key, letter] of Object.entries(cellValues)) {
-      if (!answerMap[key]) continue
+    for (const key of keysToCheck) {
+      const letter = cellValues[key]
+      if (!letter || !answerMap[key]) continue
       if (letter === answerMap[key]) {
         if (!revealedCells.has(key)) correct.add(key)
       } else {
@@ -384,7 +408,32 @@ export default function PlayPage() {
     }
     setIncorrectCells(wrong)
     setCorrectCells(correct)
-    setTimeout(() => setIncorrectCells(new Set()), 3000)
+    if (wrong.size > 0) setTimeout(() => setIncorrectCells(new Set()), 3000)
+  }
+
+  function handleCheckSquare() {
+    if (!selected) return
+    checkKeys([`${selected.row},${selected.col}`])
+    setShowCheckMenu(false)
+  }
+
+  function handleCheckWord() {
+    if (!activeEntry) return
+    checkKeys(getCellsInEntry(activeEntry).map(c => `${c.row},${c.col}`))
+    setShowCheckMenu(false)
+  }
+
+  function handleCheckPuzzle() {
+    checkKeys(Object.keys(answerMap))
+    setShowCheckMenu(false)
+  }
+
+  function handleToggleAutocheck() {
+    setAutocheck(a => {
+      const next = !a
+      localStorage.setItem('autocheck', String(next))
+      return next
+    })
   }
 
   // ── Reveal cell ───────────────────────────────────────────────────────────
@@ -535,7 +584,33 @@ export default function PlayPage() {
         >
           {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
         </button>
-        <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
+        <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
+          <button
+            className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
+            onClick={() => setShowCheckMenu(m => !m)}
+            disabled={isWon}
+            aria-haspopup="true"
+            aria-expanded={showCheckMenu}
+          >
+            Check ▾
+          </button>
+          {showCheckMenu && (
+            <div className={styles.menuDropdown} role="menu">
+              <button className={styles.menuItem} onClick={handleCheckSquare} disabled={!selected} role="menuitem">Check Square</button>
+              <button className={styles.menuItem} onClick={handleCheckWord} disabled={!activeEntry} role="menuitem">Check Word</button>
+              <button className={styles.menuItem} onClick={handleCheckPuzzle} role="menuitem">Check Puzzle</button>
+              <hr className={styles.menuDivider} />
+              <button
+                className={`${styles.menuItem}${autocheck ? ` ${styles.menuItemActive}` : ''}`}
+                onClick={handleToggleAutocheck}
+                role="menuitemcheckbox"
+                aria-checked={autocheck}
+              >
+                {autocheck ? '✓ ' : ''}Autocheck
+              </button>
+            </div>
+          )}
+        </div>
         <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
         <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
       </div>
