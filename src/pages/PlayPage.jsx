@@ -73,6 +73,11 @@ export default function PlayPage() {
   const [showCheckMenu, setShowCheckMenu] = useState(false)
   const [showRevealMenu, setShowRevealMenu] = useState(false)
   const [pendingConfirm, setPendingConfirm] = useState(null) // { message, onConfirm }
+  // ── Cursor movement settings (persisted in localStorage) ─────────────────
+  const [skipFilled, setSkipFilled] = useState(() => localStorage.getItem('skipFilled') !== 'false')
+  const [jumpToNextClue, setJumpToNextClue] = useState(() => localStorage.getItem('jumpToNextClue') !== 'false')
+  const [spacebarClearAdvance, setSpacebarClearAdvance] = useState(() => localStorage.getItem('spacebarClearAdvance') === 'true')
+  const [showSettings, setShowSettings] = useState(false)
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -255,22 +260,26 @@ export default function PlayPage() {
     checkForWin(newValues, answerMap)
     if (!activeEntry || rebusMode) return
 
-    // If the current word is now complete, jump to the first empty cell of the
-    // next incomplete entry. Otherwise skip to the next empty cell in this word.
+    // If the current word is now complete, optionally jump to the next clue.
     if (isEntryComplete(activeEntry, newValues)) {
-      const nextEntry = getNextIncompleteEntry(entries, activeEntry, newValues)
-      if (nextEntry) {
-        const firstEmpty = getFirstEmptyCellInEntry(nextEntry, newValues)
-        setSelected(firstEmpty ?? { row: nextEntry.row, col: nextEntry.col })
-        setDirection(nextEntry.direction)
+      if (jumpToNextClue) {
+        const nextEntry = getNextIncompleteEntry(entries, activeEntry, newValues)
+        if (nextEntry) {
+          const firstEmpty = getFirstEmptyCellInEntry(nextEntry, newValues)
+          setSelected(firstEmpty ?? { row: nextEntry.row, col: nextEntry.col })
+          setDirection(nextEntry.direction)
+        }
       }
+      // else: stay at end of word
     } else {
-      const nextEmpty = getNextEmptyCellInEntry(activeEntry, row, col, newValues)
-      if (nextEmpty) {
-        setSelected(nextEmpty)
+      // Advance to next empty cell (skipFilled=true) or just next cell (skipFilled=false)
+      if (skipFilled) {
+        const nextEmpty = getNextEmptyCellInEntry(activeEntry, row, col, newValues)
+        if (nextEmpty) setSelected(nextEmpty)
+        // else: all empty cells are before cursor — stay put
       } else {
-        // All empty cells in this entry are before the cursor — word will be
-        // complete on a future keystroke; just stay put.
+        const nextCell = getNextCellInEntry(activeEntry, row, col)
+        if (nextCell) setSelected(nextCell)
       }
     }
   }
@@ -374,8 +383,18 @@ export default function PlayPage() {
       }
     } else if (e.key === ' ') {
       e.preventDefault()
-      const other = direction === 'across' ? 'down' : 'across'
-      if (getEntryAt(entries, row, col, other)) setDirection(other)
+      if (spacebarClearAdvance) {
+        // Clear cell + advance to next
+        const key = `${row},${col}`
+        const n = { ...cellValues }; delete n[key]; setCellValues(n)
+        setIncorrectCells(new Set())
+        const next = activeEntry ? getNextCellInEntry(activeEntry, row, col) : null
+        if (next) setSelected(next)
+      } else {
+        // Toggle direction only
+        const other = direction === 'across' ? 'down' : 'across'
+        if (getEntryAt(entries, row, col, other)) setDirection(other)
+      }
     } else if (e.key === 'Escape') {
       e.preventDefault()
       setRebusMode(r => !r)
@@ -489,6 +508,15 @@ export default function PlayPage() {
     })
   }
 
+  // ── Settings toggles ──────────────────────────────────────────────────────
+  function toggleSetting(key, setter) {
+    setter(prev => {
+      const next = !prev
+      localStorage.setItem(key, String(next))
+      return next
+    })
+  }
+
   // ── Share ─────────────────────────────────────────────────────────────────
   function handleShare() {
     if (!seedParam) return
@@ -531,10 +559,32 @@ export default function PlayPage() {
     <main className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Mini Crossword</h1>
+        <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
+          ⚙
+        </button>
         <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
+
+      {showSettings && (
+        <div className={styles.settingsPanel} role="dialog" aria-label="Settings">
+          <h2 className={styles.settingsHeading}>Settings</h2>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={skipFilled} onChange={() => toggleSetting('skipFilled', setSkipFilled)} />
+            Skip filled squares
+          </label>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={jumpToNextClue} onChange={() => toggleSetting('jumpToNextClue', setJumpToNextClue)} />
+            Jump to next clue on word complete
+          </label>
+          <label className={styles.settingRow}>
+            <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
+            Spacebar clears cell &amp; advances (instead of toggle direction)
+          </label>
+          <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
+        </div>
+      )}
 
       <div className={styles.timerRow}>
         {hideTimer ? (
