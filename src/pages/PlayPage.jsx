@@ -62,6 +62,8 @@ export default function PlayPage() {
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [revealedCells, setRevealedCells] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
+  const [pencilMode, setPencilMode] = useState(false)
+  const [pencilCells, setPencilCells] = useState(new Set())
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -189,6 +191,13 @@ export default function PlayPage() {
     if (correctCells.has(key)) {
       const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
     }
+    // Track pencil vs pen mode for this cell
+    setPencilCells(prev => {
+      const next = new Set(prev)
+      if (pencilMode) next.add(key)
+      else next.delete(key)
+      return next
+    })
     checkForWin(newValues, answerMap)
     if (!activeEntry) return
 
@@ -251,11 +260,14 @@ export default function PlayPage() {
       setIncorrectCells(new Set())
       if (cellValues[key]) {
         const n = { ...cellValues }; delete n[key]; setCellValues(n)
+        setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
       } else if (activeEntry) {
         const prev = getPrevCellInEntry(activeEntry, row, col)
         if (prev) {
           setSelected(prev)
-          const n = { ...cellValues }; delete n[`${prev.row},${prev.col}`]; setCellValues(n)
+          const prevKey = `${prev.row},${prev.col}`
+          const n = { ...cellValues }; delete n[prevKey]; setCellValues(n)
+          setPencilCells(ps => { const s = new Set(ps); s.delete(prevKey); return s })
         }
       }
     } else if (e.key === 'ArrowRight') {
@@ -320,6 +332,7 @@ export default function PlayPage() {
     setIsAssisted(true)
     setIncorrectCells(new Set())
     setRevealedCells(prev => new Set([...prev, key]))
+    setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
     const newValues = { ...cellValues, [key]: answer }
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
@@ -331,6 +344,7 @@ export default function PlayPage() {
     setIsAssisted(true)
     setIncorrectCells(new Set())
     setRevealedCells(new Set(Object.keys(answerMap)))
+    setPencilCells(new Set())
     setCellValues({ ...answerMap })
     setIsWon(true)
     setShowModal(true)
@@ -359,6 +373,7 @@ export default function PlayPage() {
     setIncorrectCells(new Set())
     setRevealedCells(new Set())
     setCorrectCells(new Set())
+    setPencilCells(new Set())
     setIsAssisted(false)
     startTimeRef.current = null
     clearInterval(intervalRef.current)
@@ -405,12 +420,21 @@ export default function PlayPage() {
         incorrectCells={incorrectCells}
         revealedCells={revealedCells}
         correctCells={correctCells}
+        pencilCells={pencilCells}
         onCellClick={handleCellClick}
         onKeyDown={handleKeyDown}
         isActive={selected !== null}
       />
 
       <div className={styles.controls} role="group" aria-label="Puzzle controls">
+        <button
+          className={pencilMode ? `${styles.btn} ${styles.btnActive}` : styles.btn}
+          onClick={() => setPencilMode(m => !m)}
+          aria-pressed={pencilMode}
+          title={pencilMode ? 'Switch to Pen' : 'Switch to Pencil'}
+        >
+          {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
+        </button>
         <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
         <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
         <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
