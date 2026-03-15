@@ -48,6 +48,12 @@
   background: var(--color-bg-incorrect);
 }
 
+/* Rebus mode — dashed border on the active cell */
+.cellRebus {
+  outline: 2px dashed var(--color-primary);
+  outline-offset: -2px;
+}
+
 .clueNumber {
   position: absolute;
   top: 2px;
@@ -69,6 +75,13 @@
   text-transform: uppercase;
   line-height: 1;
   animation: popIn 0.12s ease-out;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.letterRebus {
+  font-size: clamp(7px, 2vw, 11px);
+  letter-spacing: -0.02em;
 }
 
 @keyframes popIn {

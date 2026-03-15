@@ -15,6 +15,7 @@ import {
   isEntryComplete,
   getPrevCellInEntry,
   getNextEntry,
+  getPrevEntry,
   getAdjacentCell,
   getActiveWordKeys,
 } from '../utils/puzzleHelpers'
@@ -62,6 +63,7 @@ export default function PlayPage() {
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [revealedCells, setRevealedCells] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
+  const [rebusMode, setRebusMode] = useState(false)
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -183,14 +185,18 @@ export default function PlayPage() {
     const { row, col } = selected
     const key = `${row},${col}`
     startTimerIfNeeded()
-    const newValues = { ...cellValues, [key]: letter }
+    // In rebus mode, append characters (up to 5); otherwise replace
+    const newLetter = rebusMode
+      ? ((cellValues[key] ?? '') + letter).slice(0, 5)
+      : letter
+    const newValues = { ...cellValues, [key]: newLetter }
     setCellValues(newValues)
     setIncorrectCells(new Set())
     if (correctCells.has(key)) {
       const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
     }
     checkForWin(newValues, answerMap)
-    if (!activeEntry) return
+    if (!activeEntry || rebusMode) return
 
     // If the current word is now complete, jump to the first empty cell of the
     // next incomplete entry. Otherwise skip to the next empty cell in this word.
@@ -274,10 +280,17 @@ export default function PlayPage() {
       e.preventDefault()
       const entry = activeEntry ?? getEntryAt(entries, row, col, direction)
       if (entry) {
-        const next = getNextEntry(entries, entry)
+        const next = e.shiftKey ? getPrevEntry(entries, entry) : getNextEntry(entries, entry)
         setSelected({ row: next.row, col: next.col })
         setDirection(next.direction)
       }
+    } else if (e.key === ' ') {
+      e.preventDefault()
+      const other = direction === 'across' ? 'down' : 'across'
+      if (getEntryAt(entries, row, col, other)) setDirection(other)
+    } else if (e.key === 'Escape') {
+      e.preventDefault()
+      setRebusMode(r => !r)
     }
   }
 
@@ -359,6 +372,7 @@ export default function PlayPage() {
     setIncorrectCells(new Set())
     setRevealedCells(new Set())
     setCorrectCells(new Set())
+    setRebusMode(false)
     setIsAssisted(false)
     startTimeRef.current = null
     clearInterval(intervalRef.current)
@@ -405,6 +419,7 @@ export default function PlayPage() {
         incorrectCells={incorrectCells}
         revealedCells={revealedCells}
         correctCells={correctCells}
+        rebusMode={rebusMode}
         onCellClick={handleCellClick}
         onKeyDown={handleKeyDown}
         isActive={selected !== null}
