@@ -2,11 +2,12 @@ import styles from './ClueList.module.css'
 
 /**
  * Props:
- *   entries         — array of entry objects
- *   activeEntryId   — id of the currently active entry (for highlighting)
- *   onClueClick     — (entry) => void
+ *   entries            — array of entry objects
+ *   activeEntryId      — id of the currently active entry (for highlighting)
+ *   completedEntryIds  — Set of entry ids whose words are fully filled (greyed out)
+ *   onClueClick        — (entry) => void
  */
-export default function ClueList({ entries, activeEntryId, onClueClick }) {
+export default function ClueList({ entries, activeEntryId, completedEntryIds = new Set(), onClueClick }) {
   const across = entries
     .filter((e) => e.direction === 'across')
     .sort((a, b) => a.clueNumber - b.clueNumber)
@@ -17,10 +18,14 @@ export default function ClueList({ entries, activeEntryId, onClueClick }) {
 
   function renderEntry(entry) {
     const isActive = entry.id === activeEntryId
+    const isComplete = completedEntryIds.has(entry.id)
+    let className = styles.item
+    if (isActive) className += ` ${styles.itemActive}`
+    else if (isComplete) className += ` ${styles.itemComplete}`
     return (
       <li
         key={entry.id}
-        className={isActive ? `${styles.item} ${styles.itemActive}` : styles.item}
+        className={className}
         onClick={() => onClueClick?.(entry)}
         role="button"
         tabIndex={-1}
