@@ -89,7 +89,10 @@ export function solve(pool, attempt = 0) {
           word.answer[2] === a.A2?.answer[2]
         )
       case 'A4':
-        return word.answer[0] === a.D0?.answer[4]
+        return (
+          word.answer[0] === a.D0?.answer[4] &&
+          word.answer[2] === a.D2?.answer[4]
+        )
       case 'D4':
         return (
           word.answer[0] === a.A0?.answer[4] &&

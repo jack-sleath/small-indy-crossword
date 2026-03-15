@@ -4,7 +4,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import ClueList from '../components/ClueList'
 import { solvePattern, validatePool } from '../utils/solver'
 import { PATTERNS } from '../utils/patterns'
-import { buildPuzzle } from '../utils/buildPuzzle'
+import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
 import { encodeSeed } from '../utils/seed'
 import { useTheme } from '../utils/useTheme'
 import styles from './GeneratePage.module.css'
@@ -49,6 +49,12 @@ export default function GeneratePage() {
     const pattern = PATTERNS[attempt % PATTERNS.length]
     const rawEntries = solvePattern(pool, pattern, attempt)
     if (!rawEntries) {
+      setNoSolution(true)
+      setPuzzle(null)
+      setSeed(null)
+      return
+    }
+    if (hasIntersectionConflict(rawEntries)) {
       setNoSolution(true)
       setPuzzle(null)
       setSeed(null)
