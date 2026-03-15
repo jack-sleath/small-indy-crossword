@@ -62,6 +62,8 @@ export default function PlayPage() {
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [revealedCells, setRevealedCells] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
+  const [isPaused, setIsPaused] = useState(false)
+  const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -109,6 +111,31 @@ export default function PlayPage() {
     intervalRef.current = setInterval(() => {
       setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
     }, 500)
+  }
+
+  function handleTogglePause() {
+    if (isWon || startTimeRef.current === null) return
+    if (isPaused) {
+      // Resume: restart interval from current elapsed
+      startTimeRef.current = Date.now() - elapsed * 1000
+      intervalRef.current = setInterval(() => {
+        setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
+      }, 500)
+      setIsPaused(false)
+    } else {
+      // Pause: freeze elapsed, stop interval
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+      setIsPaused(true)
+    }
+  }
+
+  function handleToggleHideTimer() {
+    setHideTimer(h => {
+      const next = !h
+      localStorage.setItem('hideTimer', String(next))
+      return next
+    })
   }
 
   const checkForWin = useCallback((values, aMap) => {
@@ -355,6 +382,7 @@ export default function PlayPage() {
     setDirection('across')
     setElapsed(0)
     setIsWon(false)
+    setIsPaused(false)
     setShowModal(false)
     setIncorrectCells(new Set())
     setRevealedCells(new Set())
@@ -374,8 +402,27 @@ export default function PlayPage() {
         </button>
       </div>
 
-      <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
-        {formatTime(elapsed)}
+      <div className={styles.timerRow}>
+        {hideTimer ? (
+          <span className={styles.timer} aria-label="Timer hidden">⏱ —:——</span>
+        ) : (
+          <button
+            className={`${styles.timer} ${styles.timerBtn}${isPaused ? ` ${styles.timerPaused}` : ''}`}
+            onClick={handleTogglePause}
+            aria-label={isPaused ? 'Resume timer' : `Time elapsed: ${formatTime(elapsed)} — click to pause`}
+            title={isPaused ? 'Click to resume' : 'Click to pause'}
+          >
+            {isPaused ? '⏸ Paused' : formatTime(elapsed)}
+          </button>
+        )}
+        <button
+          className={styles.timerToggle}
+          onClick={handleToggleHideTimer}
+          aria-label={hideTimer ? 'Show timer' : 'Hide timer'}
+          title={hideTimer ? 'Show timer' : 'Hide timer'}
+        >
+          {hideTimer ? '👁' : '🙈'}
+        </button>
       </div>
 
       {/*
@@ -397,18 +444,26 @@ export default function PlayPage() {
         onChange={handleHiddenInputChange}
       />
 
-      <CrosswordGrid
-        puzzle={puzzle}
-        cellValues={cellValues}
-        selected={selected}
-        activeWordKeys={activeWordKeys}
-        incorrectCells={incorrectCells}
-        revealedCells={revealedCells}
-        correctCells={correctCells}
-        onCellClick={handleCellClick}
-        onKeyDown={handleKeyDown}
-        isActive={selected !== null}
-      />
+      <div className={styles.gridWrapper}>
+        <CrosswordGrid
+          puzzle={puzzle}
+          cellValues={cellValues}
+          selected={selected}
+          activeWordKeys={activeWordKeys}
+          incorrectCells={incorrectCells}
+          revealedCells={revealedCells}
+          correctCells={correctCells}
+          onCellClick={isPaused ? undefined : handleCellClick}
+          onKeyDown={isPaused ? undefined : handleKeyDown}
+          isActive={!isPaused && selected !== null}
+        />
+        {isPaused && (
+          <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
+            <span>⏸ Paused</span>
+            <span className={styles.pauseHint}>Tap to resume</span>
+          </div>
+        )}
+      </div>
 
       <div className={styles.controls} role="group" aria-label="Puzzle controls">
         <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
