@@ -81,6 +81,16 @@
   background: var(--color-bg-btn-hover);
 }
 
+.btnActive {
+  background: var(--color-bg-item-active);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btnActive:hover:not(:disabled) {
+  background: var(--color-bg-active-word);
+}
+
 .btn:disabled,
 .btnDanger:disabled {
   opacity: 0.4;

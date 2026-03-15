@@ -80,6 +80,10 @@
   color: var(--color-text-selected);
 }
 
+.letterPencil {
+  color: #888;
+}
+
 .letterRevealed {
   color: #d32f2f;
 }
