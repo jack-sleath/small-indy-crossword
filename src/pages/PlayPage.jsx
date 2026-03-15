@@ -4,7 +4,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
 import { decodeSeed } from '../utils/seed'
-import { buildPuzzle } from '../utils/buildPuzzle'
+import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
 import {
   getCellsInEntry,
   getEntryAt,
@@ -84,7 +84,7 @@ export default function PlayPage() {
   useEffect(() => {
     if (!pool || !seedParam) return
     const rawEntries = decodeSeed(seedParam, pool)
-    if (!rawEntries) {
+    if (!rawEntries || hasIntersectionConflict(rawEntries)) {
       setSeedError(true)
       return
     }

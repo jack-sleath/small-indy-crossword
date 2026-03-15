@@ -1,4 +1,22 @@
 /**
+ * Returns true if any two entries disagree on the letter for a shared cell.
+ * @param {Array<{row, col, direction, answer}>} rawEntries
+ */
+export function hasIntersectionConflict(rawEntries) {
+  const letterMap = {}
+  for (const entry of rawEntries) {
+    for (let i = 0; i < entry.answer.length; i++) {
+      const row = entry.direction === 'across' ? entry.row : entry.row + i
+      const col = entry.direction === 'across' ? entry.col + i : entry.col
+      const key = `${row},${col}`
+      if (letterMap[key] && letterMap[key] !== entry.answer[i]) return true
+      letterMap[key] = entry.answer[i]
+    }
+  }
+  return false
+}
+
+/**
  * Build a full puzzle structure ({ grid, entries }) from decoded seed entries.
  *
  * @param {Array<{poolId: string, row: number, col: number, direction: 'across'|'down', answer: string, clue: string}>} rawEntries
