@@ -48,6 +48,22 @@
   background: var(--color-bg-btn-hover);
 }
 
+.muteBtn {
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  opacity: 0.6;
+  border-radius: 3px;
+  margin-bottom: 0.25rem;
+}
+
+.muteBtn:hover {
+  opacity: 1;
+  background: var(--color-bg-btn-hover);
+}
+
 .timer {
   font-size: 1.1rem;
   font-weight: 600;
