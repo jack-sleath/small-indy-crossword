@@ -47,7 +47,9 @@ export default function GeneratePage() {
     const attempt = attemptRef.current
     attemptRef.current += 1
     const pattern = PATTERNS[attempt % PATTERNS.length]
+    console.time(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
     const rawEntries = solvePattern(pool, pattern, attempt)
+    console.timeEnd(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
     if (!rawEntries) {
       setNoSolution(true)
       setPuzzle(null)
