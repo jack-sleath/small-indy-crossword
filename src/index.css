@@ -10,7 +10,8 @@
   --color-bg-cell: #fff;
   --color-bg-black-cell: #000;
   --color-bg-active-word: #c0d8f7;
-  --color-bg-selected: #4a90d9;
+  --color-bg-selected: #f7dc6f;
+  --color-text-selected: #111;
   --color-bg-incorrect: #f7c0c0;
   --color-bg-btn: #f5f5f5;
   --color-bg-btn-hover: #e8e8e8;
@@ -41,7 +42,8 @@
   --color-bg-cell: #16213e;
   --color-bg-black-cell: #050505;
   --color-bg-active-word: #1e3a5f;
-  --color-bg-selected: #4a90d9;
+  --color-bg-selected: #c9a000;
+  --color-text-selected: #111;
   --color-bg-incorrect: #5a2020;
   --color-bg-btn: #2a2a3a;
   --color-bg-btn-hover: #363648;

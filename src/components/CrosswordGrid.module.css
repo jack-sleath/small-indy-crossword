@@ -60,7 +60,7 @@
 }
 
 .cellSelected .clueNumber {
-  color: #fff;
+  color: var(--color-text-selected);
 }
 
 .letter {
@@ -77,7 +77,7 @@
 }
 
 .cellSelected .letter {
-  color: #fff;
+  color: var(--color-text-selected);
 }
 
 .letterRevealed {

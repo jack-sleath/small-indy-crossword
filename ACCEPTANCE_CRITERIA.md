@@ -136,3 +136,57 @@ Jack (developer / puzzle creator)
 ### Out of Scope
 - Changes to the seed encoding format.
 - Validation of pool.json entries beyond what is already specified.
+
+---
+
+## Change Request — full-overhaul
+
+### Overview
+A comprehensive upgrade of the play experience to match NYT Mini Crossword fidelity. This covers: active cell yellow highlight, pencil mode, full keyboard navigation (Tab/Shift+Tab, Spacebar direction toggle, Backspace edge cases, Escape for Rebus), check/reveal sub-menus with autocheck mode, timer pause and hide, cursor movement settings, completion celebration (jingle + animation), post-solve share, mobile custom on-screen keyboard with swipe clue navigation, and a polished desktop layout with a clue panel beside the grid.
+
+### Raised By
+Jack (developer / puzzle creator)
+
+### Functional Requirements
+1. The active cell must be highlighted yellow; all other cells in the active word must be highlighted blue.
+2. The user can toggle direction (Across ↔ Down) by clicking/tapping the already-active cell.
+3. Pressing an arrow key on the perpendicular axis toggles the active direction.
+4. The user can toggle between Pen mode (black letters) and Pencil mode (grey letters).
+5. Tab advances the cursor to the first cell of the next clue; Shift+Tab retreats to the previous clue.
+6. Spacebar toggles the active direction; a settings option controls whether it also clears the cell and advances.
+7. Backspace on an empty cell moves the cursor back and deletes that cell's letter.
+8. A clue bar above (desktop) or below (mobile) the grid displays the full text of the active clue.
+9. Completed clues are greyed out in the clue list but remain selectable.
+10. The timer can be paused; pausing obscures the grid to prevent solving while paused.
+11. The timer can be hidden entirely via a settings control.
+12. The Check action provides a sub-menu: Check Square, Check Word, Check Puzzle.
+13. An Autocheck mode toggle highlights incorrect letters in real time as the user types.
+14. When Autocheck is on, Backspace skips over correctly confirmed cells when moving backward.
+15. The Reveal action provides a sub-menu: Reveal Square, Reveal Word, Reveal Puzzle.
+16. A confirmation dialog is shown before any Reveal action.
+17. A confirmation dialog is shown before Reset Puzzle.
+18. Reset Puzzle clears all entered letters and resets the timer to 00:00.
+19. A "Skip filled squares" setting controls whether auto-advance skips filled cells.
+20. A "Jump to next clue" setting controls whether completing a word jumps to the next incomplete clue.
+21. On correct completion, a brief congratulatory animation plays on the grid.
+22. The completion modal shows the solve time and includes a Share button.
+23. The Share button generates a spoiler-free shareable result with copy and share-sheet options.
+24. On mobile, a custom on-screen keyboard (A–Z + Backspace) replaces the system keyboard to avoid autocorrect.
+25. On mobile, swiping left/right on the clue bar navigates to the next/previous clue.
+26. On desktop, Across and Down clue lists are displayed in a panel beside the grid.
+27. A settings gear icon provides access to preferences (timer visibility, autocheck, cursor behaviour).
+28. The grid and active clue must be visible simultaneously on mobile without scrolling.
+
+### Non-Functional Requirements
+- Puzzle generation must remain under 2 seconds after all UI changes.
+- The seed encoding must remain stable — all pre-existing seeds must continue to decode to the same puzzle.
+- The UI must be functional and unbroken at viewport widths from 320px to 1280px.
+- All UI interactions must respond within 100ms.
+
+### Out of Scope
+- User accounts, solve history, or cross-session streak tracking.
+- Leaderboards or competitive features.
+- Puzzle archive calendar with star icons.
+- Saturday 7×7 grid variant.
+- Full Rebus mode implementation beyond Escape key triggering it.
+- Pinch-to-zoom on the grid.
