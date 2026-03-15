@@ -4,6 +4,8 @@
   flex-wrap: wrap;
   margin-top: 1.25rem;
   width: min(90vw, 350px);
+  /* When rendered inside a constrained aside panel, don't overflow */
+  max-width: 100%;
 }
 
 .clueList section {

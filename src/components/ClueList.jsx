@@ -5,8 +5,9 @@ import styles from './ClueList.module.css'
  *   entries         — array of entry objects
  *   activeEntryId   — id of the currently active entry (for highlighting)
  *   onClueClick     — (entry) => void
+ *   filter          — 'across' | 'down' | undefined (default: show both)
  */
-export default function ClueList({ entries, activeEntryId, onClueClick }) {
+export default function ClueList({ entries, activeEntryId, onClueClick, filter }) {
   const across = entries
     .filter((e) => e.direction === 'across')
     .sort((a, b) => a.clueNumber - b.clueNumber)
@@ -32,16 +33,23 @@ export default function ClueList({ entries, activeEntryId, onClueClick }) {
     )
   }
 
+  const showAcross = !filter || filter === 'across'
+  const showDown = !filter || filter === 'down'
+
   return (
     <div className={styles.clueList}>
-      <section>
-        <h2 className={styles.heading}>Across</h2>
-        <ol className={styles.list}>{across.map(renderEntry)}</ol>
-      </section>
-      <section>
-        <h2 className={styles.heading}>Down</h2>
-        <ol className={styles.list}>{down.map(renderEntry)}</ol>
-      </section>
+      {showAcross && (
+        <section>
+          <h2 className={styles.heading}>Across</h2>
+          <ol className={styles.list}>{across.map(renderEntry)}</ol>
+        </section>
+      )}
+      {showDown && (
+        <section>
+          <h2 className={styles.heading}>Down</h2>
+          <ol className={styles.list}>{down.map(renderEntry)}</ol>
+        </section>
+      )}
     </div>
   )
 }

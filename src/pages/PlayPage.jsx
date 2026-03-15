@@ -66,6 +66,10 @@ export default function PlayPage() {
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
 
+  // Settings
+  const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
+  const [showSettings, setShowSettings] = useState(false)
+
   // Hidden input for mobile virtual keyboard; also used on desktop
   const hiddenInputRef = useRef(null)
   const startTimeRef = useRef(null)
@@ -372,11 +376,44 @@ export default function PlayPage() {
         <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+        <button
+          className={styles.themeToggle}
+          onClick={() => setShowSettings(s => !s)}
+          aria-label="Settings"
+        >
+          ⚙
+        </button>
       </div>
 
-      <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
-        {formatTime(elapsed)}
-      </div>
+      {showSettings && (
+        <div className={styles.settingsPanel}>
+          <div className={styles.settingRow}>
+            <label>
+              <input
+                type="checkbox"
+                checked={hideTimer}
+                onChange={e => {
+                  setHideTimer(e.target.checked)
+                  localStorage.setItem('hideTimer', String(e.target.checked))
+                }}
+              />
+              {' '}Hide timer
+            </label>
+          </div>
+          <button
+            className={styles.settingsClose}
+            onClick={() => setShowSettings(false)}
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      {!hideTimer && (
+        <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
+          {formatTime(elapsed)}
+        </div>
+      )}
 
       {/*
         Hidden input: receives focus when a cell is selected to trigger the
@@ -397,37 +434,63 @@ export default function PlayPage() {
         onChange={handleHiddenInputChange}
       />
 
-      <CrosswordGrid
-        puzzle={puzzle}
-        cellValues={cellValues}
-        selected={selected}
-        activeWordKeys={activeWordKeys}
-        incorrectCells={incorrectCells}
-        revealedCells={revealedCells}
-        correctCells={correctCells}
-        onCellClick={handleCellClick}
-        onKeyDown={handleKeyDown}
-        isActive={selected !== null}
-      />
+      {/* Desktop 3-column layout: Across | Grid+Controls | Down */}
+      <div className={styles.playLayout}>
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            onClueClick={handleClueClick}
+            filter="across"
+          />
+        </div>
 
-      <div className={styles.controls} role="group" aria-label="Puzzle controls">
-        <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
-        <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
-        <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
+        <div className={styles.centerCol}>
+          <CrosswordGrid
+            puzzle={puzzle}
+            cellValues={cellValues}
+            selected={selected}
+            activeWordKeys={activeWordKeys}
+            incorrectCells={incorrectCells}
+            revealedCells={revealedCells}
+            correctCells={correctCells}
+            onCellClick={handleCellClick}
+            onKeyDown={handleKeyDown}
+            isActive={selected !== null}
+          />
+
+          <div className={styles.controls} role="group" aria-label="Puzzle controls">
+            <button className={styles.btn} onClick={handleCheck} disabled={isWon}>Check</button>
+            <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
+            <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
+          </div>
+
+          <div className={styles.seedBar}>
+            <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+            <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
+              {copyFeedback ? 'Copied!' : 'Share'}
+            </button>
+          </div>
+
+          {/* Mobile-only: stacked clue list */}
+          <div className={styles.cluesMobile}>
+            <ClueList
+              entries={entries}
+              activeEntryId={activeEntry?.id ?? null}
+              onClueClick={handleClueClick}
+            />
+          </div>
+        </div>
+
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            onClueClick={handleClueClick}
+            filter="down"
+          />
+        </div>
       </div>
-
-      <div className={styles.seedBar}>
-        <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
-        <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
-          {copyFeedback ? 'Copied!' : 'Share'}
-        </button>
-      </div>
-
-      <ClueList
-        entries={entries}
-        activeEntryId={activeEntry?.id ?? null}
-        onClueClick={handleClueClick}
-      />
 
       {showModal && (
         <CompletionModal
