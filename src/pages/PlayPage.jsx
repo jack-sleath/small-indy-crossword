@@ -18,6 +18,7 @@ import {
   getAdjacentCell,
   getActiveWordKeys,
 } from '../utils/puzzleHelpers'
+import { useTheme } from '../utils/useTheme'
 import styles from './PlayPage.module.css'
 
 const BASE_URL = `${window.location.origin}/small-indy-crossword`
@@ -43,6 +44,7 @@ function checkWin(cellValues, answerMap) {
 }
 
 export default function PlayPage() {
+  const { theme, toggleTheme } = useTheme()
   const [searchParams] = useSearchParams()
   const seedParam = searchParams.get('seed')
 
@@ -120,7 +122,12 @@ export default function PlayPage() {
     if (!seedParam) {
       return (
         <main className={styles.page}>
-          <h1 className={styles.title}>Mini Crossword</h1>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Mini Crossword</h1>
+            <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </div>
           <div className={styles.noSeed}>
             <p>No puzzle loaded.</p>
             <Link to="/generate" className={styles.generateLink}>Generate a puzzle →</Link>
@@ -131,7 +138,12 @@ export default function PlayPage() {
     if (seedError) {
       return (
         <main className={styles.page}>
-          <h1 className={styles.title}>Mini Crossword</h1>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Mini Crossword</h1>
+            <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </div>
           <div className={styles.noSeed}>
             <p>Invalid or unrecognised seed.</p>
             <Link to="/generate" className={styles.generateLink}>Generate a new puzzle →</Link>
@@ -141,7 +153,12 @@ export default function PlayPage() {
     }
     return (
       <main className={styles.page}>
-        <h1 className={styles.title}>Mini Crossword</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Mini Crossword</h1>
+          <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+        </div>
         <p className={styles.loading}>Loading…</p>
       </main>
     )
@@ -334,7 +351,12 @@ export default function PlayPage() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>Mini Crossword</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Mini Crossword</h1>
+        <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+      </div>
 
       <div className={styles.timer} aria-live="polite" aria-label={`Time elapsed: ${formatTime(elapsed)}`}>
         {formatTime(elapsed)}

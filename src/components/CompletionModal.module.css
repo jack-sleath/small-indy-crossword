@@ -15,7 +15,7 @@
 }
 
 .modal {
-  background: #fff;
+  background: var(--color-bg-modal);
   border-radius: 10px;
   padding: 2rem 2.5rem;
   text-align: center;
@@ -45,7 +45,7 @@
 
 .assisted {
   font-size: 0.85rem;
-  color: #888;
+  color: var(--color-text-subtle);
   margin-bottom: 1rem;
 }
 
@@ -54,7 +54,7 @@
   padding: 0.5rem 1.5rem;
   font-size: 0.95rem;
   font-weight: 600;
-  background: #4a90d9;
+  background: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -62,5 +62,5 @@
 }
 
 .button:hover {
-  background: #357abd;
+  background: var(--color-primary-hover);
 }

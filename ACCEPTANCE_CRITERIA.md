@@ -57,3 +57,82 @@ A small private group of friends/family who want to play the same daily-style mi
 - Grids larger or smaller than 5×5.
 - Hints or penalty systems.
 - The generator is not intended as a public-facing tool — it is a utility for the puzzle creator.
+
+---
+
+## Change Request — visual-ux
+
+### Overview
+Add light/dark theme support and visual letter-state colouring (red for revealed letters, blue for correctly checked letters) to improve the play experience and accessibility across different environments.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The app must default to the user's OS/system colour scheme preference (light or dark) on first load.
+2. The user can manually toggle between light and dark mode via a control in the UI.
+3. The user's theme preference must persist across page reloads (e.g. via localStorage).
+4. When a cell is revealed using the "Reveal" action, its letter must be displayed in red.
+5. The red colouring on a revealed cell must persist even if the user subsequently types a different letter into that cell.
+6. When the "Check" action is used, letters that are correct must be highlighted in blue.
+7. Blue colouring from a "Check" action must not override red colouring on a revealed cell.
+
+### Non-Functional Requirements
+- Theme switching must respond within 100ms with no perceptible flash of the wrong theme on load.
+- All colour choices must maintain sufficient contrast in both light and dark modes.
+- No visual regressions at viewport widths from 320px to 1280px.
+
+### Out of Scope
+- Per-cell animation on theme switch.
+- High-contrast or other accessibility themes beyond light and dark.
+
+---
+
+## Change Request — variety
+
+### Overview
+Support multiple distinct 5×5 crossword grid patterns (varying which cells are black or white) so that puzzles are not always three full 5-letter across words and three full 5-letter down words, naturally producing words of different lengths.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The app must support at least 3 distinct 5×5 black/white cell patterns.
+2. Each pattern may produce words of varying lengths (2–5 letters) depending on where black cells fall.
+3. The constraint solver must work correctly with any supported pattern, not just the original fixed layout.
+4. The clue list must render correctly for any pattern, with accurate numbering.
+5. The grid renderer must display variable-length words correctly.
+6. All supported patterns must produce valid, fully solvable crosswords.
+
+### Non-Functional Requirements
+- Puzzle generation must still complete in under 2 seconds for all supported patterns.
+- The seed encoding must remain stable — existing seeds must continue to decode correctly.
+
+### Out of Scope
+- Grids larger or smaller than 5×5.
+- User-defined or custom grid patterns.
+- Dynamically generated patterns (patterns are predefined).
+
+---
+
+## Change Request — generation-fix
+
+### Overview
+Fix a bug in the constraint solver where intersecting across and down words are placed with conflicting letters at their shared cell, producing an unsolvable or incorrect puzzle (e.g. seed `YThhOWYxOjA6MDphLGgxeDluNDoyOjA6YSxuN2I4cDU6NDowOmEseTBxNGMzOjA6MDpkLHk0aTdjNjowOjI6ZCxyN2c5dTI6MDo0OmQ`).
+
+### Raised By
+Jack (developer / puzzle creator)
+
+### Functional Requirements
+1. The constraint solver must validate that every intersecting cell is covered by both an across and a down word that share the same letter at that position.
+2. The solver must reject any candidate word placement that would create an intersection conflict.
+3. The specific failing seed must produce a correct, conflict-free puzzle after the fix.
+4. All newly generated puzzles must be free of intersection conflicts.
+
+### Non-Functional Requirements
+- The fix must not increase generation time beyond the 2-second limit.
+- Existing valid seeds must continue to decode and render correctly after the fix.
+
+### Out of Scope
+- Changes to the seed encoding format.
+- Validation of pool.json entries beyond what is already specified.

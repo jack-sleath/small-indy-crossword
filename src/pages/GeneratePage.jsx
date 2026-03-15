@@ -5,11 +5,13 @@ import ClueList from '../components/ClueList'
 import { solve, assignmentToEntries, validatePool } from '../utils/solver'
 import { buildPuzzle } from '../utils/buildPuzzle'
 import { encodeSeed } from '../utils/seed'
+import { useTheme } from '../utils/useTheme'
 import styles from './GeneratePage.module.css'
 
 const BASE_URL = `${window.location.origin}/small-indy-crossword`
 
 export default function GeneratePage() {
+  const { theme, toggleTheme } = useTheme()
   const [pool, setPool] = useState(null)
   const [poolErrors, setPoolErrors] = useState([])
   const [puzzle, setPuzzle] = useState(null)
@@ -66,10 +68,19 @@ export default function GeneratePage() {
     })
   }
 
+  const pageHeader = (
+    <div className={styles.header}>
+      <h1 className={styles.title}>Generate Puzzle</h1>
+      <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+    </div>
+  )
+
   if (poolErrors.length > 0) {
     return (
       <main className={styles.page}>
-        <h1 className={styles.title}>Generate Puzzle</h1>
+        {pageHeader}
         <div className={styles.error}>
           <p><strong>Pool validation failed:</strong></p>
           <ul>{poolErrors.map((e, i) => <li key={i}>{e}</li>)}</ul>
@@ -81,7 +92,7 @@ export default function GeneratePage() {
   if (!pool) {
     return (
       <main className={styles.page}>
-        <h1 className={styles.title}>Generate Puzzle</h1>
+        {pageHeader}
         <p className={styles.loading}>Loading pool…</p>
       </main>
     )
@@ -90,7 +101,7 @@ export default function GeneratePage() {
   if (noSolution) {
     return (
       <main className={styles.page}>
-        <h1 className={styles.title}>Generate Puzzle</h1>
+        {pageHeader}
         <div className={styles.error}>
           <p>The pool is too small or has insufficient word variety to form a valid puzzle.</p>
           <p>Add more 5-letter words to <code>pool.json</code> and try again.</p>
@@ -103,7 +114,7 @@ export default function GeneratePage() {
   if (!puzzle) {
     return (
       <main className={styles.page}>
-        <h1 className={styles.title}>Generate Puzzle</h1>
+        {pageHeader}
         <p className={styles.loading}>Generating…</p>
       </main>
     )
@@ -113,7 +124,7 @@ export default function GeneratePage() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>Generate Puzzle</h1>
+      {pageHeader}
 
       {/* Read-only preview — hidden by default so the puzzle creator isn't spoiled */}
       <div className={styles.previewWrapper}>
