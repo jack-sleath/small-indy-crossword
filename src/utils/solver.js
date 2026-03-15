@@ -243,6 +243,32 @@ export function solvePattern(pool, pattern, attempt = 0) {
   }
 
   const intersections = deriveIntersections(slots)
+
+  // Order slots greedily: always fill the slot with the most intersections
+  // against already-placed slots first. This ensures each new word is
+  // constrained as early as possible, pruning bad branches quickly.
+  const slotOrder = (() => {
+    const placed = new Set()
+    const order = []
+    while (order.length < slots.length) {
+      let best = -1, bestPlaced = -1, bestTotal = -1
+      for (let i = 0; i < slots.length; i++) {
+        if (placed.has(i)) continue
+        const placedIx = intersections.filter(
+          ix => (ix.aIdx === i && placed.has(ix.dIdx)) ||
+                (ix.dIdx === i && placed.has(ix.aIdx))
+        ).length
+        const totalIx = intersections.filter(ix => ix.aIdx === i || ix.dIdx === i).length
+        if (placedIx > bestPlaced || (placedIx === bestPlaced && totalIx > bestTotal)) {
+          best = i; bestPlaced = placedIx; bestTotal = totalIx
+        }
+      }
+      placed.add(best)
+      order.push(best)
+    }
+    return order
+  })()
+
   const assignment = new Array(slots.length).fill(null)
   const usedIds = new Set()
 
@@ -258,15 +284,16 @@ export function solvePattern(pool, pattern, attempt = 0) {
     return true
   }
 
-  function backtrack(slotIdx) {
-    if (slotIdx === slots.length) return true
+  function backtrack(step) {
+    if (step === slots.length) return true
+    const slotIdx = slotOrder[step]
     const words = byLength[slots[slotIdx].length]
     for (const word of words) {
       if (usedIds.has(word.id)) continue
       if (!canPlace(slotIdx, word)) continue
       assignment[slotIdx] = word
       usedIds.add(word.id)
-      if (backtrack(slotIdx + 1)) return true
+      if (backtrack(step + 1)) return true
       assignment[slotIdx] = null
       usedIds.delete(word.id)
     }
