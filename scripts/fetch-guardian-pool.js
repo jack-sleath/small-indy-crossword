@@ -13,15 +13,15 @@
  *   https://www.theguardian.com/crosswords/quick/NNNNN.json
  */
 
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const START_ID = 13000;
-const END_ID = 16500;
-const MAX_PER_LENGTH = 1000;
+const START_ID = 9500;
+const END_ID = 13000;
+const MAX_PER_LENGTH = 2000;
 const TARGET_LENGTHS = new Set([3, 4, 5]);
 const DELAY_MS = 150; // be polite to the Guardian's servers
 
@@ -47,8 +47,18 @@ async function fetchPuzzle(id) {
 }
 
 async function main() {
-  // Map: answer -> { clue, count }
+  // Seed byAnswer from the existing pool so new fetch merges in rather than overwrites
   const byAnswer = new Map();
+  const existingPath = join(__dirname, '..', 'public', 'pool.json');
+  try {
+    const { pool: existing } = JSON.parse(readFileSync(existingPath, 'utf8'));
+    for (const { answer, clue } of existing) {
+      byAnswer.set(answer, { clue, count: 1 });
+    }
+    console.log(`Seeded ${byAnswer.size} entries from existing pool.json`);
+  } catch {
+    console.log('No existing pool.json found — starting fresh');
+  }
 
   let fetched = 0;
   let failed = 0;
