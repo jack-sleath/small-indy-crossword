@@ -4,6 +4,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import ClueBar from '../components/ClueBar'
 import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
+import MobileKeyboard from '../components/MobileKeyboard'
 import { decodeSeed } from '../utils/seed'
 import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
 import {
@@ -83,6 +84,13 @@ export default function PlayPage() {
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
+
+  // Detect touch device (pointer: coarse) for custom keyboard
+  const [isTouchDevice] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+  )
+  // Rebus mode — accumulates multiple characters in a single cell
+  const [rebusMode, setRebusMode] = useState(false)
 
   // Hidden input for mobile virtual keyboard; also used on desktop
   const hiddenInputRef = useRef(null)
@@ -251,11 +259,17 @@ export default function PlayPage() {
     const { row, col } = selected
     const key = `${row},${col}`
     startTimerIfNeeded()
-    // In rebus mode, append characters (up to 5); otherwise replace
-    const newLetter = rebusMode
-      ? ((cellValues[key] ?? '') + letter).slice(0, 5)
-      : letter
-    const newValues = { ...cellValues, [key]: newLetter }
+
+    // Rebus mode: accumulate up to 5 characters in the cell without advancing
+    if (rebusMode) {
+      const current = cellValues[key] ?? ''
+      if (current.length < 5) {
+        setCellValues(prev => ({ ...prev, [key]: current + letter }))
+      }
+      return
+    }
+
+    const newValues = { ...cellValues, [key]: letter }
     setCellValues(newValues)
     if (autocheck) {
       // Real-time check: mark the just-typed cell immediately
@@ -320,6 +334,24 @@ export default function PlayPage() {
     const prev = getPrevEntry(entries, activeEntry)
     setSelected({ row: prev.row, col: prev.col })
     setDirection(prev.direction)
+  }
+
+  // ── Mobile keyboard backspace ────────────────────────────────────────────
+  function handleMobileBackspace() {
+    if (!selected || isWon) return
+    const { row, col } = selected
+    startTimerIfNeeded()
+    const key = `${row},${col}`
+    setIncorrectCells(new Set())
+    if (cellValues[key]) {
+      const n = { ...cellValues }; delete n[key]; setCellValues(n)
+    } else if (activeEntry) {
+      const prev = getPrevCellInEntry(activeEntry, row, col)
+      if (prev) {
+        setSelected(prev)
+        const n = { ...cellValues }; delete n[`${prev.row},${prev.col}`]; setCellValues(n)
+      }
+    }
   }
 
   // ── Cell click ───────────────────────────────────────────────────────────
@@ -661,9 +693,10 @@ export default function PlayPage() {
       </div>
 
       {/*
-        Hidden input: receives focus when a cell is selected to trigger the
-        mobile virtual keyboard. onChange handles mobile letter input;
-        onKeyDown handles special keys and desktop letter input.
+        Hidden input: receives focus when a cell is selected.
+        On touch devices: inputMode="none" suppresses the system keyboard so
+        our custom MobileKeyboard handles all input.
+        On desktop: onChange handles letter input; onKeyDown handles special keys.
       */}
       <input
         ref={hiddenInputRef}
@@ -675,6 +708,7 @@ export default function PlayPage() {
         autoCorrect="off"
         autoComplete="off"
         spellCheck={false}
+        inputMode={isTouchDevice ? 'none' : undefined}
         onKeyDown={handleKeyDown}
         onChange={handleHiddenInputChange}
       />
@@ -785,6 +819,17 @@ export default function PlayPage() {
           {copyFeedback ? 'Copied!' : 'Share'}
         </button>
       </div>
+
+      {isTouchDevice && selected && (
+        <MobileKeyboard
+          onLetter={processLetter}
+          onBackspace={handleMobileBackspace}
+          onRebus={() => setRebusMode(r => !r)}
+          rebusActive={rebusMode}
+          clueLabel={activeEntry ? `${activeEntry.clueNumber}-${activeEntry.direction === 'across' ? 'A' : 'D'}` : ''}
+          clueText={activeEntry?.clue ?? ''}
+        />
+      )}
 
       <ClueList
         entries={entries}
