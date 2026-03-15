@@ -219,14 +219,17 @@ export function solvePattern(pool, pattern, attempt = 0) {
   const slots = deriveSlots(pattern.blackCells)
   if (slots.length === 0) return null
 
-  // Pre-filter and shuffle pool entries by length
+  // Pre-filter and shuffle pool entries by length.
+  // Cap each bucket to 500 words — the backtracker only needs a small
+  // working set and the seeded shuffle ensures variety across attempts.
+  const POOL_CAP = 500
   const byLength = {}
   for (const slot of slots) {
     if (!byLength[slot.length]) {
       byLength[slot.length] = seededShuffle(
         pool.filter((p) => p.answer.length === slot.length),
         attempt
-      )
+      ).slice(0, POOL_CAP)
     }
   }
 
