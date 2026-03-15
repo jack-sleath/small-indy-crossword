@@ -71,6 +71,8 @@ export default function PlayPage() {
   const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
   const [autocheck, setAutocheck] = useState(() => localStorage.getItem('autocheck') === 'true')
   const [showCheckMenu, setShowCheckMenu] = useState(false)
+  const [showRevealMenu, setShowRevealMenu] = useState(false)
+  const [pendingConfirm, setPendingConfirm] = useState(null) // { message, onConfirm }
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -436,33 +438,55 @@ export default function PlayPage() {
     })
   }
 
-  // ── Reveal cell ───────────────────────────────────────────────────────────
-  function handleRevealCell() {
-    if (!selected || isWon) return
-    const key = `${selected.row},${selected.col}`
-    const answer = answerMap[key]
-    if (!answer) return
+  // ── Reveal helpers ────────────────────────────────────────────────────────
+  function revealKeys(keys) {
     setIsAssisted(true)
     setIncorrectCells(new Set())
-    setRevealedCells(prev => new Set([...prev, key]))
-    setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
-    const newValues = { ...cellValues, [key]: answer }
+    const revealed = new Set(revealedCells)
+    const newValues = { ...cellValues }
+    for (const key of keys) {
+      if (answerMap[key]) {
+        revealed.add(key)
+        newValues[key] = answerMap[key]
+      }
+    }
+    setRevealedCells(revealed)
+    setPencilCells(prev => { const s = new Set(prev); for (const key of keys) s.delete(key); return s })
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
+    setShowRevealMenu(false)
   }
 
-  // ── Reveal all ────────────────────────────────────────────────────────────
-  function handleRevealAll() {
+  function handleRevealSquare() {
+    if (!selected || isWon) return
+    const key = `${selected.row},${selected.col}`
+    setPendingConfirm({
+      message: 'Reveal this square? This will mark it as assisted.',
+      onConfirm: () => revealKeys([key]),
+    })
+  }
+
+  function handleRevealWord() {
+    if (!activeEntry || isWon) return
+    const keys = getCellsInEntry(activeEntry).map(c => `${c.row},${c.col}`)
+    setPendingConfirm({
+      message: 'Reveal this word? This will mark it as assisted.',
+      onConfirm: () => revealKeys(keys),
+    })
+  }
+
+  function handleRevealPuzzle() {
     if (isWon) return
-    setIsAssisted(true)
-    setIncorrectCells(new Set())
-    setRevealedCells(new Set(Object.keys(answerMap)))
-    setPencilCells(new Set())
-    setCellValues({ ...answerMap })
-    setIsWon(true)
-    setShowModal(true)
-    clearInterval(intervalRef.current)
-    intervalRef.current = null
+    setPendingConfirm({
+      message: 'Reveal the entire puzzle? This will mark it as assisted.',
+      onConfirm: () => {
+        revealKeys(Object.keys(answerMap))
+        setIsWon(true)
+        setShowModal(true)
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      },
+    })
   }
 
   // ── Share ─────────────────────────────────────────────────────────────────
@@ -476,6 +500,13 @@ export default function PlayPage() {
   }
 
   // ── Reset (play again) ────────────────────────────────────────────────────
+  function handleResetConfirm() {
+    setPendingConfirm({
+      message: 'Reset puzzle? All entries will be cleared and the timer will restart.',
+      onConfirm: handleReset,
+    })
+  }
+
   function handleReset() {
     setCellValues({})
     setSelected(null)
@@ -489,6 +520,7 @@ export default function PlayPage() {
     setCorrectCells(new Set())
     setRebusMode(false)
     setPencilCells(new Set())
+    setPendingConfirm(null)
     setIsAssisted(false)
     startTimeRef.current = null
     clearInterval(intervalRef.current)
@@ -611,9 +643,39 @@ export default function PlayPage() {
             </div>
           )}
         </div>
-        <button className={styles.btn} onClick={handleRevealCell} disabled={!selected || isWon}>Reveal cell</button>
-        <button className={styles.btnDanger} onClick={handleRevealAll} disabled={isWon}>Reveal all</button>
+        <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowRevealMenu(false) }}>
+          <button
+            className={styles.btnDanger}
+            onClick={() => setShowRevealMenu(m => !m)}
+            disabled={isWon}
+            aria-haspopup="true"
+            aria-expanded={showRevealMenu}
+          >
+            Reveal ▾
+          </button>
+          {showRevealMenu && (
+            <div className={styles.menuDropdown} role="menu">
+              <button className={styles.menuItem} onClick={handleRevealSquare} disabled={!selected} role="menuitem">Reveal Square</button>
+              <button className={styles.menuItem} onClick={handleRevealWord} disabled={!activeEntry} role="menuitem">Reveal Word</button>
+              <button className={styles.menuItem} onClick={handleRevealPuzzle} role="menuitem">Reveal Puzzle</button>
+              <hr className={styles.menuDivider} />
+              <button className={styles.menuItem} onClick={handleResetConfirm} role="menuitem">Reset Puzzle</button>
+            </div>
+          )}
+        </div>
       </div>
+
+      {pendingConfirm && (
+        <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
+          <div className={styles.confirmBox}>
+            <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
+            <div className={styles.confirmButtons}>
+              <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
+              <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className={styles.seedBar}>
         <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
