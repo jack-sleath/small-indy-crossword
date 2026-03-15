@@ -101,6 +101,17 @@
   color: #d32f2f;
 }
 
+/* Celebration flash — triggered by .cellWon on each white cell */
+@keyframes celebrate {
+  0%   { background: var(--color-bg-cell); }
+  40%  { background: #f7dc6f; }
+  100% { background: var(--color-bg-cell); }
+}
+
+.cellWon {
+  animation: celebrate 0.6s ease-out forwards;
+}
+
 .letterCorrect {
   color: #1565c0;
 }

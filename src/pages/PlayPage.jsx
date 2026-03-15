@@ -78,6 +78,8 @@ export default function PlayPage() {
   const [jumpToNextClue, setJumpToNextClue] = useState(() => localStorage.getItem('jumpToNextClue') !== 'false')
   const [spacebarClearAdvance, setSpacebarClearAdvance] = useState(() => localStorage.getItem('spacebarClearAdvance') === 'true')
   const [showSettings, setShowSettings] = useState(false)
+  const [muteJingle, setMuteJingle] = useState(() => localStorage.getItem('muteJingle') === 'true')
+  const [shareFeedback, setShareFeedback] = useState(false)
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -152,14 +154,35 @@ export default function PlayPage() {
     })
   }
 
+  function playJingle() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)()
+      const notes = [523.25, 659.25, 783.99, 1046.5] // C5, E5, G5, C6
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain); gain.connect(ctx.destination)
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const start = ctx.currentTime + i * 0.12
+        gain.gain.setValueAtTime(0, start)
+        gain.gain.linearRampToValueAtTime(0.25, start + 0.02)
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35)
+        osc.start(start); osc.stop(start + 0.35)
+      })
+    } catch { /* AudioContext not available — silently ignore */ }
+  }
+
   const checkForWin = useCallback((values, aMap) => {
     if (!isWon && checkWin(values, aMap)) {
       setIsWon(true)
       setShowModal(true)
       clearInterval(intervalRef.current)
       intervalRef.current = null
+      if (!muteJingle) playJingle()
     }
-  }, [isWon])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isWon, muteJingle])
 
   if (!puzzle) {
     if (!seedParam) {
@@ -527,6 +550,30 @@ export default function PlayPage() {
     })
   }
 
+  function handleShareResult() {
+    if (!seedParam) return
+    const m = String(Math.floor(elapsed / 60)).padStart(2, '0')
+    const s = String(elapsed % 60).padStart(2, '0')
+    const shareUrl = `${BASE_URL}/?seed=${seedParam}`
+    const text = `I solved the Small Indy in ${m}:${s}!${isAssisted ? ' (with help)' : ''}\n${shareUrl}`
+    if (navigator.share) {
+      navigator.share({ text }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setShareFeedback(true)
+        setTimeout(() => setShareFeedback(false), 2000)
+      })
+    }
+  }
+
+  function handleToggleMute() {
+    setMuteJingle(m => {
+      const next = !m
+      localStorage.setItem('muteJingle', String(next))
+      return next
+    })
+  }
+
   // ── Reset (play again) ────────────────────────────────────────────────────
   function handleResetConfirm() {
     setPendingConfirm({
@@ -585,6 +632,10 @@ export default function PlayPage() {
           <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
         </div>
       )}
+
+      <button className={styles.muteBtn} onClick={handleToggleMute} aria-label={muteJingle ? 'Unmute completion sound' : 'Mute completion sound'} title={muteJingle ? 'Completion sound off' : 'Completion sound on'}>
+        {muteJingle ? '🔇' : '🔔'}
+      </button>
 
       <div className={styles.timerRow}>
         {hideTimer ? (
@@ -645,6 +696,7 @@ export default function PlayPage() {
           correctCells={correctCells}
           rebusMode={rebusMode}
           pencilCells={pencilCells}
+          isWon={isWon}
           onCellClick={isPaused ? undefined : handleCellClick}
           onKeyDown={isPaused ? undefined : handleKeyDown}
           isActive={!isPaused && selected !== null}
@@ -746,6 +798,8 @@ export default function PlayPage() {
           elapsed={elapsed}
           assisted={isAssisted}
           onClose={handleReset}
+          onShareResult={handleShareResult}
+          shareFeedback={shareFeedback}
         />
       )}
     </main>

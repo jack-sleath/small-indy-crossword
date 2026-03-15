@@ -20,6 +20,7 @@ function buildNumberMap(entries) {
  *   correctCells    — Set of "row,col" strings confirmed correct by Check (shown blue)
  *   rebusMode       — boolean: rebus mode is active (multi-char input)
  *   pencilCells     — Set of "row,col" strings entered in pencil mode (shown grey)
+ *   isWon           — boolean: puzzle is solved (triggers celebration animation)
  *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
  *   onKeyDown       — (e) => void (fallback for desktop when grid itself is focused)
@@ -35,6 +36,7 @@ export default function CrosswordGrid({
   correctCells = new Set(),
   rebusMode = false,
   pencilCells = new Set(),
+  isWon = false,
   isActive = false,
   onCellClick,
   onKeyDown,
@@ -70,8 +72,11 @@ export default function CrosswordGrid({
           const isRevealed = revealedCells.has(key)
           const isCorrect = !isRevealed && correctCells.has(key)
 
+          // Stagger celebration animation across cells (row*5+col gives 0..24)
+          const cellIdx = rowIdx * 5 + colIdx
           let cellClass = styles.cell
-          if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
+          if (isWon) cellClass += ` ${styles.cellWon}`
+          else if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
           else if (isSelected && rebusMode) cellClass = `${styles.cell} ${styles.cellSelected} ${styles.cellRebus}`
           else if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
@@ -87,6 +92,7 @@ export default function CrosswordGrid({
             <div
               key={key}
               className={cellClass}
+              style={isWon ? { animationDelay: `${cellIdx * 30}ms` } : undefined}
               onClick={() => onCellClick?.(rowIdx, colIdx)}
               role="gridcell"
               aria-label={`Row ${rowIdx + 1}, column ${colIdx + 1}${letter ? `, letter ${letter}` : ''}`}
