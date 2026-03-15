@@ -236,6 +236,58 @@
 
 ---
 
+## Milestone 12 — Solver Pool Cap [generation-fix]
+**Branch:** milestone-12-solver-pool-cap
+**Goal:** Cap the solver's working set per word length to prevent out-of-memory crashes on regenerate.
+
+**Tasks:**
+- Identify memory exhaustion source: `seededShuffle` was spreading the full filtered array (up to 100k+ items) into a new copy on every regenerate click
+- Cap each word-length bucket to 500 entries after the shuffle to bound memory usage
+- Preserve per-attempt variety by shuffling before capping rather than taking a static slice
+
+**Done when:**
+- [x] Repeated "Regenerate" clicks no longer crash or freeze the browser tab
+- [x] Solver still produces varied results across attempts
+- [x] Generation completes within the 2-second limit
+
+---
+
+## Milestone 13 — Pool Trim [generation-fix]
+**Branch:** milestone-13-trim-pool
+**Goal:** Reduce `pool.json` from 584k entries (40 MB) to ~1k per length (177 KB) so the page loads without freezing.
+
+**Tasks:**
+- Identify that `JSON.parse` of the 40 MB file was blocking the main thread on every page load
+- Spread-sample the pool evenly across the original alphabetic list (rather than taking only the first N) to preserve letter variety
+- Trim to 1,000 entries per word length; the solver already caps at 500, so extra entries were never used
+
+**Done when:**
+- [x] `pool.json` is ≤ 200 KB
+- [x] Page loads without blocking the main thread
+- [x] Pool still has alphabetic variety (not front-loaded)
+- [x] Generation still produces valid puzzles
+
+---
+
+## Milestone 14 — Solver Slot Ordering & Pool Rebuild [generation-fix]
+**Branch:** milestone-14-solver-ordering-pool
+**Goal:** Fix the generic backtracker's slot ordering so diamond/checker patterns are solvable, and rebuild the pool with global-friendly clues.
+
+**Tasks:**
+- Diagnose: the backtracker placed all across slots before any down slots, leaving every down word fully constrained at placement time — practically unsolvable for non-trivial patterns
+- Replace with a greedy "most-constrained-first" slot ordering that interleaves across and down entries
+- Rebuild `pool.json` from `data.csv` with 5,000 entries per word length (15k total, ~878 KB)
+- Filter out US-centric clues (abbreviations, state names, US sports leagues, American geography)
+- Spread-sample alphabetically for letter variety
+
+**Done when:**
+- [x] Diamond and checker grid patterns generate valid puzzles reliably
+- [x] Pool contains 5,000 entries per length, filtered to globally friendly clues
+- [x] Generation completes within the 2-second limit across all supported patterns
+- [x] No OOM errors from the pool file
+
+---
+
 ## Milestone 15 — Active Cell Highlight & Direction Toggle [full-overhaul]
 **Branch:** milestone-15-full-overhaul
 **Goal:** Distinguish the cursor cell (yellow) from the rest of the active word (blue), and allow direction toggle via re-click or perpendicular arrow key.
