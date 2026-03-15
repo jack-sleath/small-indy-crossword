@@ -644,6 +644,13 @@ export default function PlayPage() {
         <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+        <button
+          className={styles.themeToggle}
+          onClick={() => setShowSettings(s => !s)}
+          aria-label="Settings"
+        >
+          ⚙
+        </button>
       </div>
 
       {showSettings && (
@@ -713,130 +720,159 @@ export default function PlayPage() {
         onChange={handleHiddenInputChange}
       />
 
-      <ClueBar
-        activeEntry={activeEntry}
-        onPrevClue={handlePrevClue}
-        onNextClue={handleNextClue}
-      />
+      {/* Desktop 3-column layout: Across | Grid+Controls | Down */}
+      <div className={styles.playLayout}>
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            completedEntryIds={completedEntryIds}
+            onClueClick={handleClueClick}
+            filter="across"
+          />
+        </div>
 
-      <div className={styles.gridWrapper}>
-        <CrosswordGrid
-          puzzle={puzzle}
-          cellValues={cellValues}
-          selected={selected}
-          activeWordKeys={activeWordKeys}
-          incorrectCells={incorrectCells}
-          revealedCells={revealedCells}
-          correctCells={correctCells}
-          rebusMode={rebusMode}
-          pencilCells={pencilCells}
-          isWon={isWon}
-          onCellClick={isPaused ? undefined : handleCellClick}
-          onKeyDown={isPaused ? undefined : handleKeyDown}
-          isActive={!isPaused && selected !== null}
-        />
-        {isPaused && (
-          <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
-            <span>⏸ Paused</span>
-            <span className={styles.pauseHint}>Tap to resume</span>
+        <div className={styles.centerCol}>
+          <ClueBar
+            activeEntry={activeEntry}
+            onPrevClue={handlePrevClue}
+            onNextClue={handleNextClue}
+          />
+
+          <div className={styles.gridWrapper}>
+            <CrosswordGrid
+              puzzle={puzzle}
+              cellValues={cellValues}
+              selected={selected}
+              activeWordKeys={activeWordKeys}
+              incorrectCells={incorrectCells}
+              revealedCells={revealedCells}
+              correctCells={correctCells}
+              rebusMode={rebusMode}
+              pencilCells={pencilCells}
+              isWon={isWon}
+              onCellClick={isPaused ? undefined : handleCellClick}
+              onKeyDown={isPaused ? undefined : handleKeyDown}
+              isActive={!isPaused && selected !== null}
+            />
+            {isPaused && (
+              <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
+                <span>⏸ Paused</span>
+                <span className={styles.pauseHint}>Tap to resume</span>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <div className={styles.controls} role="group" aria-label="Puzzle controls">
-        <button
-          className={pencilMode ? `${styles.btn} ${styles.btnActive}` : styles.btn}
-          onClick={() => setPencilMode(m => !m)}
-          aria-pressed={pencilMode}
-          title={pencilMode ? 'Switch to Pen' : 'Switch to Pencil'}
-        >
-          {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
-        </button>
-        <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
-          <button
-            className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
-            onClick={() => setShowCheckMenu(m => !m)}
-            disabled={isWon}
-            aria-haspopup="true"
-            aria-expanded={showCheckMenu}
-          >
-            Check ▾
-          </button>
-          {showCheckMenu && (
-            <div className={styles.menuDropdown} role="menu">
-              <button className={styles.menuItem} onClick={handleCheckSquare} disabled={!selected} role="menuitem">Check Square</button>
-              <button className={styles.menuItem} onClick={handleCheckWord} disabled={!activeEntry} role="menuitem">Check Word</button>
-              <button className={styles.menuItem} onClick={handleCheckPuzzle} role="menuitem">Check Puzzle</button>
-              <hr className={styles.menuDivider} />
+          <div className={styles.controls} role="group" aria-label="Puzzle controls">
+            <button
+              className={pencilMode ? `${styles.btn} ${styles.btnActive}` : styles.btn}
+              onClick={() => setPencilMode(m => !m)}
+              aria-pressed={pencilMode}
+              title={pencilMode ? 'Switch to Pen' : 'Switch to Pencil'}
+            >
+              {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
+            </button>
+            <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
               <button
-                className={`${styles.menuItem}${autocheck ? ` ${styles.menuItemActive}` : ''}`}
-                onClick={handleToggleAutocheck}
-                role="menuitemcheckbox"
-                aria-checked={autocheck}
+                className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
+                onClick={() => setShowCheckMenu(m => !m)}
+                disabled={isWon}
+                aria-haspopup="true"
+                aria-expanded={showCheckMenu}
               >
-                {autocheck ? '✓ ' : ''}Autocheck
+                Check ▾
               </button>
+              {showCheckMenu && (
+                <div className={styles.menuDropdown} role="menu">
+                  <button className={styles.menuItem} onClick={handleCheckSquare} disabled={!selected} role="menuitem">Check Square</button>
+                  <button className={styles.menuItem} onClick={handleCheckWord} disabled={!activeEntry} role="menuitem">Check Word</button>
+                  <button className={styles.menuItem} onClick={handleCheckPuzzle} role="menuitem">Check Puzzle</button>
+                  <hr className={styles.menuDivider} />
+                  <button
+                    className={`${styles.menuItem}${autocheck ? ` ${styles.menuItemActive}` : ''}`}
+                    onClick={handleToggleAutocheck}
+                    role="menuitemcheckbox"
+                    aria-checked={autocheck}
+                  >
+                    {autocheck ? '✓ ' : ''}Autocheck
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowRevealMenu(false) }}>
-          <button
-            className={styles.btnDanger}
-            onClick={() => setShowRevealMenu(m => !m)}
-            disabled={isWon}
-            aria-haspopup="true"
-            aria-expanded={showRevealMenu}
-          >
-            Reveal ▾
-          </button>
-          {showRevealMenu && (
-            <div className={styles.menuDropdown} role="menu">
-              <button className={styles.menuItem} onClick={handleRevealSquare} disabled={!selected} role="menuitem">Reveal Square</button>
-              <button className={styles.menuItem} onClick={handleRevealWord} disabled={!activeEntry} role="menuitem">Reveal Word</button>
-              <button className={styles.menuItem} onClick={handleRevealPuzzle} role="menuitem">Reveal Puzzle</button>
-              <hr className={styles.menuDivider} />
-              <button className={styles.menuItem} onClick={handleResetConfirm} role="menuitem">Reset Puzzle</button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {pendingConfirm && (
-        <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
-          <div className={styles.confirmBox}>
-            <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
-            <div className={styles.confirmButtons}>
-              <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
-              <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
+            <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowRevealMenu(false) }}>
+              <button
+                className={styles.btnDanger}
+                onClick={() => setShowRevealMenu(m => !m)}
+                disabled={isWon}
+                aria-haspopup="true"
+                aria-expanded={showRevealMenu}
+              >
+                Reveal ▾
+              </button>
+              {showRevealMenu && (
+                <div className={styles.menuDropdown} role="menu">
+                  <button className={styles.menuItem} onClick={handleRevealSquare} disabled={!selected} role="menuitem">Reveal Square</button>
+                  <button className={styles.menuItem} onClick={handleRevealWord} disabled={!activeEntry} role="menuitem">Reveal Word</button>
+                  <button className={styles.menuItem} onClick={handleRevealPuzzle} role="menuitem">Reveal Puzzle</button>
+                  <hr className={styles.menuDivider} />
+                  <button className={styles.menuItem} onClick={handleResetConfirm} role="menuitem">Reset Puzzle</button>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      )}
 
-      <div className={styles.seedBar}>
-        <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
-        <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
-          {copyFeedback ? 'Copied!' : 'Share'}
-        </button>
+          {pendingConfirm && (
+            <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
+              <div className={styles.confirmBox}>
+                <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
+                <div className={styles.confirmButtons}>
+                  <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
+                  <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.seedBar}>
+            <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+            <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
+              {copyFeedback ? 'Copied!' : 'Share'}
+            </button>
+          </div>
+
+          {isTouchDevice && selected && (
+            <MobileKeyboard
+              onLetter={processLetter}
+              onBackspace={handleMobileBackspace}
+              onRebus={() => setRebusMode(r => !r)}
+              rebusActive={rebusMode}
+              clueLabel={activeEntry ? `${activeEntry.clueNumber}-${activeEntry.direction === 'across' ? 'A' : 'D'}` : ''}
+              clueText={activeEntry?.clue ?? ''}
+            />
+          )}
+
+          {/* Mobile-only: stacked clue list */}
+          <div className={styles.cluesMobile}>
+            <ClueList
+              entries={entries}
+              activeEntryId={activeEntry?.id ?? null}
+              completedEntryIds={completedEntryIds}
+              onClueClick={handleClueClick}
+            />
+          </div>
+        </div>
+
+        <div className={styles.clueAside}>
+          <ClueList
+            entries={entries}
+            activeEntryId={activeEntry?.id ?? null}
+            completedEntryIds={completedEntryIds}
+            onClueClick={handleClueClick}
+            filter="down"
+          />
+        </div>
       </div>
 
-      {isTouchDevice && selected && (
-        <MobileKeyboard
-          onLetter={processLetter}
-          onBackspace={handleMobileBackspace}
-          onRebus={() => setRebusMode(r => !r)}
-          rebusActive={rebusMode}
-          clueLabel={activeEntry ? `${activeEntry.clueNumber}-${activeEntry.direction === 'across' ? 'A' : 'D'}` : ''}
-          clueText={activeEntry?.clue ?? ''}
-        />
-      )}
-
-      <ClueList
-        entries={entries}
-        activeEntryId={activeEntry?.id ?? null}
-        completedEntryIds={completedEntryIds}
-        onClueClick={handleClueClick}
-      />
 
       {showModal && (
         <CompletionModal
