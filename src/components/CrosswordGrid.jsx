@@ -18,6 +18,7 @@ function buildNumberMap(entries) {
  *   incorrectCells  — Set of "row,col" strings to highlight as incorrect
  *   revealedCells   — Set of "row,col" strings with revealed letters (shown red)
  *   correctCells    — Set of "row,col" strings confirmed correct by Check (shown blue)
+ *   rebusMode       — boolean: rebus mode is active (multi-char input)
  *   pencilCells     — Set of "row,col" strings entered in pencil mode (shown grey)
  *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
@@ -32,6 +33,7 @@ export default function CrosswordGrid({
   incorrectCells = new Set(),
   revealedCells = new Set(),
   correctCells = new Set(),
+  rebusMode = false,
   pencilCells = new Set(),
   isActive = false,
   onCellClick,
@@ -70,14 +72,16 @@ export default function CrosswordGrid({
 
           let cellClass = styles.cell
           if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
+          else if (isSelected && rebusMode) cellClass = `${styles.cell} ${styles.cellSelected} ${styles.cellRebus}`
           else if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
 
+          const isMultiChar = letter.length > 1
           const isPencil = pencilCells.has(key)
-          let letterClass = styles.letter
-          if (isRevealed) letterClass = `${styles.letter} ${styles.letterRevealed}`
-          else if (isCorrect) letterClass = `${styles.letter} ${styles.letterCorrect}`
-          else if (isPencil) letterClass = `${styles.letter} ${styles.letterPencil}`
+          let letterClass = isMultiChar ? `${styles.letter} ${styles.letterRebus}` : styles.letter
+          if (isRevealed) letterClass += ` ${styles.letterRevealed}`
+          else if (isCorrect) letterClass += ` ${styles.letterCorrect}`
+          else if (isPencil) letterClass += ` ${styles.letterPencil}`
 
           return (
             <div
