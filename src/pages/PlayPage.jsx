@@ -66,8 +66,6 @@ export default function PlayPage() {
   const [revealedCells, setRevealedCells] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
   const [rebusMode, setRebusMode] = useState(false)
-  const [pencilMode, setPencilMode] = useState(false)
-  const [pencilCells, setPencilCells] = useState(new Set())
   const [isPaused, setIsPaused] = useState(false)
   const [hideTimer, setHideTimer] = useState(() => localStorage.getItem('hideTimer') === 'true')
   const [autocheck, setAutocheck] = useState(() => localStorage.getItem('autocheck') === 'true')
@@ -256,6 +254,7 @@ export default function PlayPage() {
     if (!selected || isWon) return
     const { row, col } = selected
     const key = `${row},${col}`
+    if (revealedCells.has(key) || correctCells.has(key)) return
     startTimerIfNeeded()
 
     // Rebus mode: accumulate up to 5 characters in the cell without advancing
@@ -285,13 +284,7 @@ export default function PlayPage() {
         const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
       }
     }
-    // Track pencil vs pen mode for this cell
-    setPencilCells(prev => {
-      const next = new Set(prev)
-      if (pencilMode) next.add(key)
-      else next.delete(key)
-      return next
-    })
+
     checkForWin(newValues, answerMap)
     if (!activeEntry || rebusMode) return
 
@@ -389,24 +382,24 @@ export default function PlayPage() {
       startTimerIfNeeded()
       const key = `${row},${col}`
       if (!autocheck) setIncorrectCells(new Set())
-      if (cellValues[key]) {
+      const isLocked = revealedCells.has(key) || correctCells.has(key)
+      if (cellValues[key] && !isLocked) {
         const n = { ...cellValues }; delete n[key]; setCellValues(n)
-        setPencilCells(prev => { const s = new Set(prev); s.delete(key); return s })
         if (autocheck) { setIncorrectCells(new Set()); setCorrectCells(prev => { const s = new Set(prev); s.delete(key); return s }) }
       } else if (activeEntry) {
-        // Find the previous non-confirmed cell (skip correctCells when autocheck is on)
+        // Find the previous unlocked cell (skip revealed and confirmed-correct cells)
         const cells = getCellsInEntry(activeEntry)
         const idx = cells.findIndex(c => c.row === row && c.col === col)
         let target = null
         for (let i = idx - 1; i >= 0; i--) {
           const c = cells[i]
-          if (!autocheck || !correctCells.has(`${c.row},${c.col}`)) { target = c; break }
+          const ck = `${c.row},${c.col}`
+          if (!revealedCells.has(ck) && !correctCells.has(ck)) { target = c; break }
         }
         if (target) {
           setSelected(target)
           const targetKey = `${target.row},${target.col}`
           const n = { ...cellValues }; delete n[targetKey]; setCellValues(n)
-          setPencilCells(ps => { const s = new Set(ps); s.delete(targetKey); return s })
           if (autocheck) setCorrectCells(prev => { const s = new Set(prev); s.delete(targetKey); return s })
         }
       }
@@ -523,7 +516,6 @@ export default function PlayPage() {
       }
     }
     setRevealedCells(revealed)
-    setPencilCells(prev => { const s = new Set(prev); for (const key of keys) s.delete(key); return s })
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
     setShowRevealMenu(false)
@@ -624,7 +616,6 @@ export default function PlayPage() {
     setRevealedCells(new Set())
     setCorrectCells(new Set())
     setRebusMode(false)
-    setPencilCells(new Set())
     setPendingConfirm(null)
     setIsAssisted(false)
     startTimeRef.current = null
@@ -641,13 +632,6 @@ export default function PlayPage() {
         </button>
         <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-        <button
-          className={styles.themeToggle}
-          onClick={() => setShowSettings(s => !s)}
-          aria-label="Settings"
-        >
-          ⚙
         </button>
       </div>
 
@@ -747,7 +731,7 @@ export default function PlayPage() {
               revealedCells={revealedCells}
               correctCells={correctCells}
               rebusMode={rebusMode}
-              pencilCells={pencilCells}
+    
               isWon={isWon}
               onCellClick={isPaused ? undefined : handleCellClick}
               onKeyDown={isPaused ? undefined : handleKeyDown}
@@ -762,14 +746,6 @@ export default function PlayPage() {
           </div>
 
           <div className={styles.controls} role="group" aria-label="Puzzle controls">
-            <button
-              className={pencilMode ? `${styles.btn} ${styles.btnActive}` : styles.btn}
-              onClick={() => setPencilMode(m => !m)}
-              aria-pressed={pencilMode}
-              title={pencilMode ? 'Switch to Pen' : 'Switch to Pencil'}
-            >
-              {pencilMode ? '✏️ Pencil' : '🖊️ Pen'}
-            </button>
             <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
               <button
                 className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
@@ -876,6 +852,7 @@ export default function PlayPage() {
         <CompletionModal
           elapsed={elapsed}
           assisted={isAssisted}
+          onDismiss={() => setShowModal(false)}
           onClose={handleReset}
           onShareResult={handleShareResult}
           shareFeedback={shareFeedback}

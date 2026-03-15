@@ -19,7 +19,7 @@ function buildNumberMap(entries) {
  *   revealedCells   — Set of "row,col" strings with revealed letters (shown red)
  *   correctCells    — Set of "row,col" strings confirmed correct by Check (shown blue)
  *   rebusMode       — boolean: rebus mode is active (multi-char input)
- *   pencilCells     — Set of "row,col" strings entered in pencil mode (shown grey)
+
  *   isWon           — boolean: puzzle is solved (triggers celebration animation)
  *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
@@ -35,7 +35,7 @@ export default function CrosswordGrid({
   revealedCells = new Set(),
   correctCells = new Set(),
   rebusMode = false,
-  pencilCells = new Set(),
+
   isWon = false,
   isActive = false,
   onCellClick,
@@ -82,11 +82,10 @@ export default function CrosswordGrid({
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
 
           const isMultiChar = letter.length > 1
-          const isPencil = pencilCells.has(key)
+
           let letterClass = isMultiChar ? `${styles.letter} ${styles.letterRebus}` : styles.letter
           if (isRevealed) letterClass += ` ${styles.letterRevealed}`
           else if (isCorrect) letterClass += ` ${styles.letterCorrect}`
-          else if (isPencil) letterClass += ` ${styles.letterPencil}`
 
           return (
             <div
