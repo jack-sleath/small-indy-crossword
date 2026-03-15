@@ -16,6 +16,8 @@ function buildNumberMap(entries) {
  *   selected        — { row, col } | null
  *   activeWordKeys  — Set of "row,col" strings for the active word
  *   incorrectCells  — Set of "row,col" strings to highlight as incorrect
+ *   revealedCells   — Set of "row,col" strings with revealed letters (shown red)
+ *   correctCells    — Set of "row,col" strings confirmed correct by Check (shown blue)
  *   isActive        — boolean: whether the grid is "active" (a cell is selected)
  *   onCellClick     — (row, col) => void
  *   onKeyDown       — (e) => void (fallback for desktop when grid itself is focused)
@@ -27,6 +29,8 @@ export default function CrosswordGrid({
   selected = null,
   activeWordKeys = new Set(),
   incorrectCells = new Set(),
+  revealedCells = new Set(),
+  correctCells = new Set(),
   isActive = false,
   onCellClick,
   onKeyDown,
@@ -59,11 +63,17 @@ export default function CrosswordGrid({
           const isActiveWord = activeWordKeys.has(key)
 
           const isIncorrect = incorrectCells.has(key)
+          const isRevealed = revealedCells.has(key)
+          const isCorrect = !isRevealed && correctCells.has(key)
 
           let cellClass = styles.cell
           if (isIncorrect) cellClass = `${styles.cell} ${styles.cellIncorrect}`
           else if (isSelected) cellClass = `${styles.cell} ${styles.cellSelected}`
           else if (isActiveWord) cellClass = `${styles.cell} ${styles.cellActiveWord}`
+
+          let letterClass = styles.letter
+          if (isRevealed) letterClass = `${styles.letter} ${styles.letterRevealed}`
+          else if (isCorrect) letterClass = `${styles.letter} ${styles.letterCorrect}`
 
           return (
             <div
@@ -76,7 +86,7 @@ export default function CrosswordGrid({
               {clueNum != null && (
                 <span className={styles.clueNumber}>{clueNum}</span>
               )}
-              {letter && <span className={styles.letter}>{letter}</span>}
+              {letter && <span className={letterClass}>{letter}</span>}
             </div>
           )
         })

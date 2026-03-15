@@ -58,6 +58,8 @@ export default function PlayPage() {
   const [elapsed, setElapsed] = useState(0)
   const [isWon, setIsWon] = useState(false)
   const [incorrectCells, setIncorrectCells] = useState(new Set())
+  const [revealedCells, setRevealedCells] = useState(new Set())
+  const [correctCells, setCorrectCells] = useState(new Set())
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
@@ -162,10 +164,14 @@ export default function PlayPage() {
   function processLetter(letter) {
     if (!selected || isWon) return
     const { row, col } = selected
+    const key = `${row},${col}`
     startTimerIfNeeded()
-    const newValues = { ...cellValues, [`${row},${col}`]: letter }
+    const newValues = { ...cellValues, [key]: letter }
     setCellValues(newValues)
     setIncorrectCells(new Set())
+    if (correctCells.has(key)) {
+      const next = new Set(correctCells); next.delete(key); setCorrectCells(next)
+    }
     checkForWin(newValues, answerMap)
     if (!activeEntry) return
 
@@ -273,12 +279,18 @@ export default function PlayPage() {
   // ── Check ─────────────────────────────────────────────────────────────────
   function handleCheck() {
     if (isWon) return
-    const wrong = new Set(
-      Object.entries(cellValues)
-        .filter(([key, letter]) => answerMap[key] && letter !== answerMap[key])
-        .map(([key]) => key)
-    )
+    const wrong = new Set()
+    const correct = new Set(correctCells)
+    for (const [key, letter] of Object.entries(cellValues)) {
+      if (!answerMap[key]) continue
+      if (letter === answerMap[key]) {
+        if (!revealedCells.has(key)) correct.add(key)
+      } else {
+        wrong.add(key)
+      }
+    }
     setIncorrectCells(wrong)
+    setCorrectCells(correct)
     setTimeout(() => setIncorrectCells(new Set()), 3000)
   }
 
@@ -286,11 +298,12 @@ export default function PlayPage() {
   function handleRevealCell() {
     if (!selected || isWon) return
     const key = `${selected.row},${selected.col}`
-    const correct = answerMap[key]
-    if (!correct) return
+    const answer = answerMap[key]
+    if (!answer) return
     setIsAssisted(true)
     setIncorrectCells(new Set())
-    const newValues = { ...cellValues, [key]: correct }
+    setRevealedCells(prev => new Set([...prev, key]))
+    const newValues = { ...cellValues, [key]: answer }
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
   }
@@ -300,6 +313,7 @@ export default function PlayPage() {
     if (isWon) return
     setIsAssisted(true)
     setIncorrectCells(new Set())
+    setRevealedCells(new Set(Object.keys(answerMap)))
     setCellValues({ ...answerMap })
     setIsWon(true)
     setShowModal(true)
@@ -326,6 +340,8 @@ export default function PlayPage() {
     setIsWon(false)
     setShowModal(false)
     setIncorrectCells(new Set())
+    setRevealedCells(new Set())
+    setCorrectCells(new Set())
     setIsAssisted(false)
     startTimeRef.current = null
     clearInterval(intervalRef.current)
@@ -365,6 +381,8 @@ export default function PlayPage() {
         selected={selected}
         activeWordKeys={activeWordKeys}
         incorrectCells={incorrectCells}
+        revealedCells={revealedCells}
+        correctCells={correctCells}
         onCellClick={handleCellClick}
         onKeyDown={handleKeyDown}
         isActive={selected !== null}

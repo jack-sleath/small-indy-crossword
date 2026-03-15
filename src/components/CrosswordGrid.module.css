@@ -79,3 +79,11 @@
 .cellSelected .letter {
   color: #fff;
 }
+
+.letterRevealed {
+  color: #d32f2f;
+}
+
+.letterCorrect {
+  color: #1565c0;
+}
