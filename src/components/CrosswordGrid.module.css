@@ -4,20 +4,20 @@
   grid-template-rows: repeat(5, 1fr);
   width: min(90vw, 350px);
   height: min(90vw, 350px);
-  border: 2px solid #000;
+  border: 2px solid var(--color-border);
   gap: 0;
   outline: none;
 }
 
 .gridActive {
-  outline: 2px solid #4a90d9;
+  outline: 2px solid var(--color-border-active);
   outline-offset: 2px;
 }
 
 .cell,
 .cellBlack {
   position: relative;
-  border: 1px solid #000;
+  border: 1px solid var(--color-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -27,25 +27,25 @@
 }
 
 .cell {
-  background: #fff;
+  background: var(--color-bg-cell);
   transition: background-color 0.12s ease;
 }
 
 .cellBlack {
-  background: #000;
+  background: var(--color-bg-black-cell);
   cursor: default;
 }
 
 .cellActiveWord {
-  background: #c0d8f7;
+  background: var(--color-bg-active-word);
 }
 
 .cellSelected {
-  background: #4a90d9;
+  background: var(--color-bg-selected);
 }
 
 .cellIncorrect {
-  background: #f7c0c0;
+  background: var(--color-bg-incorrect);
 }
 
 .clueNumber {
@@ -55,7 +55,7 @@
   font-size: clamp(7px, 1.8vw, 10px);
   line-height: 1;
   font-weight: bold;
-  color: #000;
+  color: var(--color-clue-number);
   user-select: none;
 }
 

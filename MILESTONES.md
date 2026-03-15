@@ -151,3 +151,85 @@
 - [x] App passes manual QA on Chrome/Safari mobile and Chrome/Firefox desktop
 - [x] README documents how to update puzzle content and deploy
 - [x] No console errors in production build
+
+---
+
+## Milestone 8 — Theme Support [visual-ux]
+**Branch:** milestone-8-visual-ux
+**Goal:** Add light and dark mode to the app, defaulting to system preference with a manual override that persists.
+
+**Tasks:**
+- Introduce CSS custom properties (variables) for all colours used in the app
+- Detect `prefers-color-scheme` on load and apply the matching theme class/attribute
+- Add a theme toggle button to the play and generate pages
+- Persist the user's manual theme choice in `localStorage`
+- Restore persisted preference on page load, falling back to system preference
+
+**Done when:**
+- [ ] App renders correctly in both light and dark modes
+- [ ] On first load, theme matches the OS/system preference with no flash of the wrong theme
+- [ ] Toggling the theme control switches the UI immediately (< 100ms)
+- [ ] Theme preference is preserved across a full page reload
+- [ ] No visual regressions at 320px and 1280px viewport widths
+
+---
+
+## Milestone 9 — Letter State Colouring [visual-ux]
+**Branch:** milestone-9-visual-ux
+**Goal:** Revealed letters are permanently marked red; correctly checked letters are marked blue.
+
+**Tasks:**
+- Extend cell state model to track `revealed` and `checked-correct` flags alongside the letter value
+- Apply red styling to any cell marked `revealed`
+- Ensure red styling is not overwritten when the user types into a revealed cell
+- Apply blue styling to cells marked `checked-correct` when the Check action is used
+- Ensure blue does not override red (revealed cells are never styled blue)
+
+**Done when:**
+- [ ] Using "Reveal cell" or "Reveal all" marks the affected cell(s) red immediately
+- [ ] Red colouring persists if the user subsequently types a new letter into a revealed cell
+- [ ] Using "Check" marks correctly filled (non-revealed) cells blue
+- [ ] Cells that are both revealed and correct remain red, not blue
+- [ ] Colouring is visible and correct in both light and dark themes
+
+---
+
+## Milestone 10 — Grid Pattern Variety [variety]
+**Branch:** milestone-10-variety
+**Goal:** Support at least 3 distinct 5×5 black/white cell patterns so puzzles can contain words of varying lengths.
+
+**Tasks:**
+- Define a data structure for describing a 5×5 grid pattern (which cells are black)
+- Implement at least 3 predefined patterns that differ from the original full 3-across/3-down layout
+- Update the constraint solver to accept an arbitrary pattern and correctly derive word slots (across and down) of varying lengths
+- Update `encodeSeed` / `decodeSeed` to remain compatible with variable-length word entries
+- Update the `CrosswordGrid` and `ClueList` components to render words of length 2–5 correctly
+- Update clue numbering logic to handle arbitrary patterns
+- Add the new patterns to `/generate` so the generator picks from them
+
+**Done when:**
+- [ ] At least 3 distinct 5×5 patterns are available and selectable by the generator
+- [ ] Each pattern renders with the correct black/white cell layout
+- [ ] Words of lengths 2–5 display correctly in both the grid and clue list
+- [ ] Clue numbering is accurate for each pattern
+- [ ] All patterns produce valid, fully solvable crosswords within the 2-second generation limit
+- [ ] Existing seeds (original pattern) still decode and render correctly
+
+---
+
+## Milestone 11 — Intersection Constraint Fix [generation-fix]
+**Branch:** milestone-11-generation-fix
+**Goal:** Fix the constraint solver so that intersecting across and down words always share the same letter at their crossing cell.
+
+**Tasks:**
+- Audit the intersection validation logic in the constraint solver
+- Identify why the solver can place words that conflict at a shared cell (e.g. the failing seed `YThhOW...`)
+- Fix the validation so any candidate placement is rejected if it creates a letter conflict at any intersection
+- Verify the fix against the known failing seed
+- Confirm generation still completes within 2 seconds after the fix
+
+**Done when:**
+- [ ] The failing seed (`YThhOWYxOjA6MDphLGgxeDluNDoyOjA6YSxuN2I4cDU6NDowOmEseTBxNGMzOjA6MDpkLHk0aTdjNjowOjI6ZCxyN2c5dTI6MDo0OmQ`) loads and displays a correct, conflict-free puzzle
+- [ ] All newly generated puzzles pass intersection validation (no crossing cell letter conflicts)
+- [ ] Generation still completes in under 2 seconds
+- [ ] Existing valid seeds continue to decode and render correctly
