@@ -89,8 +89,6 @@ export default function PlayPage() {
   const [isTouchDevice] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
   )
-  // Rebus mode — accumulates multiple characters in a single cell
-  const [rebusMode, setRebusMode] = useState(false)
 
   // Hidden input for mobile virtual keyboard; also used on desktop
   const hiddenInputRef = useRef(null)
