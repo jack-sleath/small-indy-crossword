@@ -244,24 +244,52 @@ export function solvePattern(pool, pattern, attempt = 0) {
 
   const intersections = deriveIntersections(slots)
 
-  // Order slots greedily: always fill the slot with the most intersections
-  // against already-placed slots first. This ensures each new word is
-  // constrained as early as possible, pruning bad branches quickly.
+  // Build a position-letter index for O(1) constrained candidate lookup.
+  // letterIndex[len][pos][letter] = array of words of that length with that letter at pos.
+  const letterIndex = {}
+  for (const [len, words] of Object.entries(byLength)) {
+    letterIndex[len] = {}
+    for (const word of words) {
+      for (let i = 0; i < word.answer.length; i++) {
+        const letter = word.answer[i]
+        if (!letterIndex[len][i]) letterIndex[len][i] = {}
+        if (!letterIndex[len][i][letter]) letterIndex[len][i][letter] = []
+        letterIndex[len][i][letter].push(word)
+      }
+    }
+  }
+
+  // Order slots greedily for efficient backtracking:
+  //   1. Fully-constrained slots (active constraints == slot length) become
+  //      immediate checks — highest priority so we fail fast.
+  //   2. Otherwise prefer slots with more active constraints (most constrained
+  //      variable), breaking ties by longer length (more candidates = wider search).
+  //   3. First slot (none placed yet): pick the one with most total intersections,
+  //      tiebreak by length.
   const slotOrder = (() => {
     const placed = new Set()
     const order = []
+    const totalIx = slots.map((_, i) =>
+      intersections.filter(ix => ix.aIdx === i || ix.dIdx === i).length
+    )
     while (order.length < slots.length) {
-      let best = -1, bestPlaced = -1, bestTotal = -1
+      let best = -1, bestScore = -Infinity
       for (let i = 0; i < slots.length; i++) {
         if (placed.has(i)) continue
-        const placedIx = intersections.filter(
+        const active = intersections.filter(
           ix => (ix.aIdx === i && placed.has(ix.dIdx)) ||
                 (ix.dIdx === i && placed.has(ix.aIdx))
         ).length
-        const totalIx = intersections.filter(ix => ix.aIdx === i || ix.dIdx === i).length
-        if (placedIx > bestPlaced || (placedIx === bestPlaced && totalIx > bestTotal)) {
-          best = i; bestPlaced = placedIx; bestTotal = totalIx
+        let score
+        if (placed.size === 0) {
+          score = totalIx[i] * 100 + slots[i].length
+        } else if (active === slots[i].length) {
+          // All positions determined — check it immediately, shorter first
+          score = 1_000_000 - slots[i].length
+        } else {
+          score = active * 10_000 + slots[i].length * 100 + totalIx[i]
         }
+        if (score > bestScore) { bestScore = score; best = i }
       }
       placed.add(best)
       order.push(best)
@@ -269,31 +297,113 @@ export function solvePattern(pool, pattern, attempt = 0) {
     return order
   })()
 
+  // Precompute which slots share an intersection with each slot (for forward checking).
+  const intersectsWithSlot = Array.from({ length: slots.length }, (_, i) =>
+    new Set(
+      intersections
+        .filter(ix => ix.aIdx === i || ix.dIdx === i)
+        .map(ix => ix.aIdx === i ? ix.dIdx : ix.aIdx)
+    )
+  )
+
   const assignment = new Array(slots.length).fill(null)
   const usedIds = new Set()
 
-  function canPlace(slotIdx, word) {
+  // Shared logic: gather active constraints for a slot from already-placed neighbours.
+  function getConstraints(slotIdx) {
+    const constraints = []
     for (const ix of intersections) {
       if (ix.aIdx === slotIdx && assignment[ix.dIdx] !== null) {
-        if (word.answer[ix.aOffset] !== assignment[ix.dIdx].answer[ix.dOffset]) return false
+        constraints.push({ pos: ix.aOffset, letter: assignment[ix.dIdx].answer[ix.dOffset] })
       }
       if (ix.dIdx === slotIdx && assignment[ix.aIdx] !== null) {
-        if (word.answer[ix.dOffset] !== assignment[ix.aIdx].answer[ix.aOffset]) return false
+        constraints.push({ pos: ix.dOffset, letter: assignment[ix.aIdx].answer[ix.aOffset] })
       }
     }
-    return true
+    return constraints
+  }
+
+  // Returns true if at least one valid (unused) candidate exists for slotIdx.
+  // Used by forward checking — returns early without allocating an array.
+  function hasCandidates(slotIdx) {
+    const len = slots[slotIdx].length
+    const idx = letterIndex[len]
+    const constraints = getConstraints(slotIdx)
+
+    if (constraints.length === 0) {
+      return byLength[len].some(w => !usedIds.has(w.id))
+    }
+
+    let smallest = null
+    for (const { pos, letter } of constraints) {
+      const list = idx?.[pos]?.[letter] ?? []
+      if (!smallest || list.length < smallest.length) smallest = list
+    }
+    if (!smallest || smallest.length === 0) return false
+
+    for (const word of smallest) {
+      if (usedIds.has(word.id)) continue
+      let ok = true
+      for (const { pos, letter } of constraints) {
+        if (word.answer[pos] !== letter) { ok = false; break }
+      }
+      if (ok) return true
+    }
+    return false
+  }
+
+  // Return candidates for slotIdx that satisfy all active intersection constraints.
+  // Uses the letter index to intersect small per-position sets rather than
+  // scanning the full word list — O(smallest_set) instead of O(all_words).
+  function getCandidates(slotIdx) {
+    const len = slots[slotIdx].length
+    const idx = letterIndex[len]
+    const constraints = getConstraints(slotIdx)
+
+    if (constraints.length === 0) return byLength[len]
+
+    // Find the smallest per-position list to iterate over
+    let smallest = null
+    for (const { pos, letter } of constraints) {
+      const list = idx?.[pos]?.[letter] ?? []
+      if (!smallest || list.length < smallest.length) smallest = list
+    }
+    if (!smallest || smallest.length === 0) return []
+
+    // Filter by remaining constraints using direct character comparison —
+    // avoids allocating Sets on every call (critical for backtracking performance)
+    return smallest.filter(word => {
+      for (const { pos, letter } of constraints) {
+        if (word.answer[pos] !== letter) return false
+      }
+      return true
+    })
   }
 
   function backtrack(step) {
     if (step === slots.length) return true
     const slotIdx = slotOrder[step]
-    const words = byLength[slots[slotIdx].length]
-    for (const word of words) {
+    const candidates = getCandidates(slotIdx)
+    for (const word of candidates) {
       if (usedIds.has(word.id)) continue
-      if (!canPlace(slotIdx, word)) continue
       assignment[slotIdx] = word
       usedIds.add(word.id)
-      if (backtrack(step + 1)) return true
+
+      // Forward check: after placing this word, verify that all not-yet-placed
+      // slots which intersect it still have at least one valid candidate.
+      // This prunes branches where a 3-letter corner word becomes impossible
+      // before we've wasted time exploring deeper levels.
+      let forwardOk = true
+      for (let futureStep = step + 1; futureStep < slotOrder.length; futureStep++) {
+        const futureSlotIdx = slotOrder[futureStep]
+        if (intersectsWithSlot[slotIdx].has(futureSlotIdx) &&
+            !hasCandidates(futureSlotIdx)) {
+          forwardOk = false
+          break
+        }
+      }
+
+      if (forwardOk && backtrack(step + 1)) return true
       assignment[slotIdx] = null
       usedIds.delete(word.id)
     }
