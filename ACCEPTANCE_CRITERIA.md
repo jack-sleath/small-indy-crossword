@@ -1,7 +1,7 @@
 # Acceptance Criteria
 
 ## Overview
-A responsive, static React web app that recreates the NYT Mini crossword experience. A `/generate` route runs a constraint solver to build a 5×5 crossword from a pool of clues, producing a shareable seed. The main `/` play route decodes that seed and lets users solve the puzzle with a timer and completion state.
+A responsive, static React web app that recreates the NYT Mini crossword experience. A `/generate` route runs a constraint solver to build a 5×5 crossword from a pool of clues, producing a shareable seed. The `/` play route decodes that seed and lets users solve the puzzle with a timer and completion state. The `/daily` route serves a different pre-generated puzzle each UTC day, shared by all users.
 
 ## Target User
 A small private group of friends/family who want to play the same daily-style mini crossword puzzle together.
@@ -22,13 +22,13 @@ A small private group of friends/family who want to play the same daily-style mi
 5. The user can navigate between cells using arrow keys and the Tab key.
 6. The user can click a clue in the clue list to jump to its starting cell.
 7. The active clue (Across or Down) must be highlighted visually as the user navigates the grid.
-8. The app must display a timer that starts when the user first interacts with the grid.
+8. The app must display a timer that starts when the user first clicks a cell (not on first keystroke); clues are blurred until this first click occurs.
 9. The app must detect when all cells are correctly filled and show a completion/win state.
 10. The completion state must display the user's solve time.
 11. The user can check their current answers (highlighting incorrect cells).
 12. The user can reveal the solution for a selected cell or the entire grid.
 13. The play route must display the short seed code and a share button at all times.
-14. The share button copies the seeded URL and short code to the clipboard.
+14. The share button copies the puzzle URL and short code to the clipboard. On seed-based puzzles the URL is `/?seed=<code>`; on the daily page the URL is `/daily`.
 
 ### Generator Route (`/generate`)
 15. The `/generate` page runs a constraint solver to select entries from the pool and arrange them into a valid solvable 5×5 crossword grid.
@@ -38,7 +38,7 @@ A small private group of friends/family who want to play the same daily-style mi
 19. The generator provides a direct link to the play route pre-loaded with the generated seed.
 
 ### Shared
-20. The user can share a puzzle via a URL containing the seed (e.g. `/?seed=abc123`).
+20. The user can share a seed-based puzzle via a URL containing the seed (e.g. `/?seed=abc123`). The user can share the daily puzzle via the `/daily` URL.
 21. The user can share via a short alphanumeric code that can be entered manually.
 22. Anyone who opens the seeded URL or enters the short code receives the exact same puzzle.
 23. The app must be fully usable on both mobile (touch) and desktop (keyboard + mouse).
