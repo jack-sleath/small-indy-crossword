@@ -193,7 +193,7 @@ export default function PlayPage() {
       return (
         <main className={styles.page}>
           <div className={styles.header}>
-            <h1 className={styles.title}>Mini Crossword</h1>
+            <h1 className={styles.title}>Small Indy</h1>
             <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
               {theme === 'dark' ? '☀️' : '🌙'}
             </button>
@@ -209,7 +209,7 @@ export default function PlayPage() {
       return (
         <main className={styles.page}>
           <div className={styles.header}>
-            <h1 className={styles.title}>Mini Crossword</h1>
+            <h1 className={styles.title}>Small Indy</h1>
             <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
               {theme === 'dark' ? '☀️' : '🌙'}
             </button>
@@ -224,7 +224,7 @@ export default function PlayPage() {
     return (
       <main className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Mini Crossword</h1>
+          <h1 className={styles.title}>Small Indy</h1>
           <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
             {theme === 'dark' ? '☀️' : '🌙'}
           </button>
@@ -626,7 +626,7 @@ export default function PlayPage() {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Mini Crossword</h1>
+        <h1 className={styles.title}>Small Indy</h1>
         <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
           ⚙
         </button>
@@ -650,6 +650,7 @@ export default function PlayPage() {
             <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
             Spacebar clears cell &amp; advances (instead of toggle direction)
           </label>
+          <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
           <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
         </div>
       )}
