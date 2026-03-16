@@ -369,6 +369,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // ── Cell click ───────────────────────────────────────────────────────────
   function handleCellClick(row, col) {
     if (isWon) return
+    startTimerIfNeeded()
     if (selected && selected.row === row && selected.col === col) {
       const other = direction === 'across' ? 'down' : 'across'
       if (getEntryAt(entries, row, col, other)) setDirection(other)
