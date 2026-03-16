@@ -1,7 +1,7 @@
 # Acceptance Criteria
 
 ## Overview
-A responsive, static React web app that recreates the NYT Mini crossword experience. A `/generate` route runs a constraint solver to build a 5×5 crossword from a pool of clues, producing a shareable seed. The main `/` play route decodes that seed and lets users solve the puzzle with a timer and completion state.
+A responsive, static React web app that recreates the NYT Mini crossword experience. A `/generate` route runs a constraint solver to build a 5×5 crossword from a pool of clues, producing a shareable seed. The `/` play route decodes that seed and lets users solve the puzzle with a timer and completion state. The `/daily` route serves a different pre-generated puzzle each UTC day, shared by all users.
 
 ## Target User
 A small private group of friends/family who want to play the same daily-style mini crossword puzzle together.
@@ -22,13 +22,13 @@ A small private group of friends/family who want to play the same daily-style mi
 5. The user can navigate between cells using arrow keys and the Tab key.
 6. The user can click a clue in the clue list to jump to its starting cell.
 7. The active clue (Across or Down) must be highlighted visually as the user navigates the grid.
-8. The app must display a timer that starts when the user first interacts with the grid.
+8. The app must display a timer that starts when the user first clicks a cell (not on first keystroke); clues are blurred until this first click occurs.
 9. The app must detect when all cells are correctly filled and show a completion/win state.
 10. The completion state must display the user's solve time.
 11. The user can check their current answers (highlighting incorrect cells).
 12. The user can reveal the solution for a selected cell or the entire grid.
 13. The play route must display the short seed code and a share button at all times.
-14. The share button copies the seeded URL and short code to the clipboard.
+14. The share button copies the puzzle URL and short code to the clipboard. On seed-based puzzles the URL is `/?seed=<code>`; on the daily page the URL is `/daily`.
 
 ### Generator Route (`/generate`)
 15. The `/generate` page runs a constraint solver to select entries from the pool and arrange them into a valid solvable 5×5 crossword grid.
@@ -38,7 +38,7 @@ A small private group of friends/family who want to play the same daily-style mi
 19. The generator provides a direct link to the play route pre-loaded with the generated seed.
 
 ### Shared
-20. The user can share a puzzle via a URL containing the seed (e.g. `/?seed=abc123`).
+20. The user can share a seed-based puzzle via a URL containing the seed (e.g. `/?seed=abc123`). The user can share the daily puzzle via the `/daily` URL.
 21. The user can share via a short alphanumeric code that can be entered manually.
 22. Anyone who opens the seeded URL or enters the short code receives the exact same puzzle.
 23. The app must be fully usable on both mobile (touch) and desktop (keyboard + mouse).
@@ -136,6 +136,84 @@ Jack (developer / puzzle creator)
 ### Out of Scope
 - Changes to the seed encoding format.
 - Validation of pool.json entries beyond what is already specified.
+
+---
+
+## Change Request — rename-and-generator-link
+
+### Overview
+Rebrand the app from "Mini Crossword" to "Small Indy" and add a navigation link to the generator from within the settings panel.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. All visible text in the app must use "Small Indy" — no remaining "Mini Crossword" references.
+2. The settings panel must include a link to the `/generate` route.
+
+### Out of Scope
+- Changes to URL paths or seed encoding.
+
+---
+
+## Change Request — daily-puzzle
+
+### Overview
+Add a `/daily` route that serves a new pre-generated puzzle each UTC day. All users on the same UTC day see the same puzzle, and a countdown shows how long until the next one.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The app must have a `/daily` route that is distinct from the seed-based `/` route.
+2. Each UTC day must map deterministically to a single pre-generated puzzle seed.
+3. All users accessing `/daily` on the same UTC day must receive the same puzzle, regardless of their local timezone.
+4. The daily page must display a live countdown (HH:MM:SS) to the next UTC midnight.
+5. The day number must be shown so users can identify and discuss which puzzle they are on.
+
+### Non-Functional Requirements
+- The seed selection logic must be purely client-side and require no network calls beyond loading `daily-seeds.json` at startup.
+- The countdown timer must update every second.
+
+### Out of Scope
+- A back-catalogue or archive of past daily puzzles.
+- Server-side puzzle scheduling.
+
+---
+
+## Change Request — clue-blur-and-timer-start
+
+### Overview
+Blur the clues on page load so users can choose when to start, and tie the timer to that first cell click rather than the first keystroke.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. Clue text must be blurred/hidden when the page first loads, before any cell is selected.
+2. Clicking (or tapping) the first cell must simultaneously unblur the clues and start the timer.
+3. The timer must not start from typing alone — a cell must be clicked first.
+
+### Out of Scope
+- A manual "Start" button to unblur without selecting a cell.
+
+---
+
+## Change Request — daily-share-link
+
+### Overview
+When sharing from the daily puzzle page, the shared URL should point to `/daily` so that recipients land on the same daily puzzle rather than a seed-specific URL.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The share button on the daily puzzle page must produce a URL of the form `<baseUrl>/daily`.
+2. The share button on a seed-based puzzle page must continue to produce a `<baseUrl>/?seed=<code>` URL.
+3. Both the toolbar share button and the completion modal share button must follow this rule.
+
+### Out of Scope
+- Changes to the share text content beyond the URL.
 
 ---
 
