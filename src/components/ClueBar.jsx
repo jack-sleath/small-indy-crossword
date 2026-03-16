@@ -7,7 +7,7 @@ import styles from './ClueBar.module.css'
  *   onPrevClue   — () => void — navigate to previous clue
  *   onNextClue   — () => void — navigate to next clue
  */
-export default function ClueBar({ activeEntry, onPrevClue, onNextClue }) {
+export default function ClueBar({ activeEntry, onPrevClue, onNextClue, blurred = false }) {
   const touchStartX = useRef(null)
 
   function handleTouchStart(e) {
@@ -44,7 +44,7 @@ export default function ClueBar({ activeEntry, onPrevClue, onNextClue }) {
       >
         ‹
       </button>
-      <span className={styles.clueText}>
+      <span className={`${styles.clueText}${blurred ? ` ${styles.blurred}` : ''}`}>
         {activeEntry ? (
           <>
             <span className={styles.clueLabel}>{label} </span>

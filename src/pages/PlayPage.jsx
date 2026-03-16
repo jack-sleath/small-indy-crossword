@@ -735,6 +735,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
             filter="across"
+            blurred={selected === null}
           />
         </div>
 
@@ -743,6 +744,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             activeEntry={activeEntry}
             onPrevClue={handlePrevClue}
             onNextClue={handleNextClue}
+            blurred={selected === null}
           />
 
           <div className={styles.gridWrapper}>
@@ -860,6 +862,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
               activeEntryId={activeEntry?.id ?? null}
               completedEntryIds={completedEntryIds}
               onClueClick={handleClueClick}
+              blurred={selected === null}
             />
           </div>
         </div>
@@ -871,6 +874,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
             filter="down"
+            blurred={selected === null}
           />
         </div>
       </div>
