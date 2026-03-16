@@ -82,6 +82,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
+  const [nextPuzzleIn, setNextPuzzleIn] = useState('')
 
   // Detect touch device (pointer: coarse) for custom keyboard
   const [isTouchDevice] = useState(() =>
@@ -114,6 +115,26 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     setPuzzle(built)
     setAnswerMap(buildAnswerMap(built))
   }, [pool, seedParam])
+
+  // Countdown to next daily puzzle (midnight UTC)
+  useEffect(() => {
+    if (!dailyNumber) return
+    function tick() {
+      const MS_PER_DAY = 86_400_000
+      const now = Date.now()
+      const nextMidnightUTC = Math.ceil(now / MS_PER_DAY) * MS_PER_DAY
+      const rem = nextMidnightUTC - now
+      const h = Math.floor(rem / 3_600_000)
+      const m = Math.floor((rem % 3_600_000) / 60_000)
+      const s = Math.floor((rem % 60_000) / 1_000)
+      setNextPuzzleIn(
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+      )
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [dailyNumber])
 
   // Focus the hidden input whenever a cell is selected (triggers mobile keyboard)
   useEffect(() => {
@@ -816,6 +837,10 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
               {copyFeedback ? 'Copied!' : 'Share'}
             </button>
           </div>
+
+          {dailyNumber && nextPuzzleIn && (
+            <p className={styles.nextPuzzle}>Next puzzle in <span className={styles.nextPuzzleCountdown}>{nextPuzzleIn}</span></p>
+          )}
 
           {isTouchDevice && selected && (
             <MobileKeyboard

@@ -16,8 +16,10 @@ export default function DailyPage() {
     fetch(DAILY_SEEDS_URL)
       .then(r => r.json())
       .then(({ startDate, seeds }) => {
-        const start = new Date(startDate).getTime()
-        const dayIndex = Math.max(0, Math.floor((Date.now() - start) / 86_400_000)) % seeds.length
+        // Parse startDate as UTC midnight (ISO date-only strings are always UTC).
+        // Date.now() is UTC epoch ms, so this division gives the UTC day number.
+        const startUTC = new Date(startDate).getTime()
+        const dayIndex = Math.max(0, Math.floor((Date.now() - startUTC) / 86_400_000)) % seeds.length
         setDayNumber(dayIndex + 1)
         setSeed(seeds[dayIndex])
       })
