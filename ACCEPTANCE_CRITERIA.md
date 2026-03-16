@@ -139,6 +139,84 @@ Jack (developer / puzzle creator)
 
 ---
 
+## Change Request — rename-and-generator-link
+
+### Overview
+Rebrand the app from "Mini Crossword" to "Small Indy" and add a navigation link to the generator from within the settings panel.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. All visible text in the app must use "Small Indy" — no remaining "Mini Crossword" references.
+2. The settings panel must include a link to the `/generate` route.
+
+### Out of Scope
+- Changes to URL paths or seed encoding.
+
+---
+
+## Change Request — daily-puzzle
+
+### Overview
+Add a `/daily` route that serves a new pre-generated puzzle each UTC day. All users on the same UTC day see the same puzzle, and a countdown shows how long until the next one.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The app must have a `/daily` route that is distinct from the seed-based `/` route.
+2. Each UTC day must map deterministically to a single pre-generated puzzle seed.
+3. All users accessing `/daily` on the same UTC day must receive the same puzzle, regardless of their local timezone.
+4. The daily page must display a live countdown (HH:MM:SS) to the next UTC midnight.
+5. The day number must be shown so users can identify and discuss which puzzle they are on.
+
+### Non-Functional Requirements
+- The seed selection logic must be purely client-side and require no network calls beyond loading `daily-seeds.json` at startup.
+- The countdown timer must update every second.
+
+### Out of Scope
+- A back-catalogue or archive of past daily puzzles.
+- Server-side puzzle scheduling.
+
+---
+
+## Change Request — clue-blur-and-timer-start
+
+### Overview
+Blur the clues on page load so users can choose when to start, and tie the timer to that first cell click rather than the first keystroke.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. Clue text must be blurred/hidden when the page first loads, before any cell is selected.
+2. Clicking (or tapping) the first cell must simultaneously unblur the clues and start the timer.
+3. The timer must not start from typing alone — a cell must be clicked first.
+
+### Out of Scope
+- A manual "Start" button to unblur without selecting a cell.
+
+---
+
+## Change Request — daily-share-link
+
+### Overview
+When sharing from the daily puzzle page, the shared URL should point to `/daily` so that recipients land on the same daily puzzle rather than a seed-specific URL.
+
+### Raised By
+Jack (end user / puzzle creator)
+
+### Functional Requirements
+1. The share button on the daily puzzle page must produce a URL of the form `<baseUrl>/daily`.
+2. The share button on a seed-based puzzle page must continue to produce a `<baseUrl>/?seed=<code>` URL.
+3. Both the toolbar share button and the completion modal share button must follow this rule.
+
+### Out of Scope
+- Changes to the share text content beyond the URL.
+
+---
+
 ## Change Request — full-overhaul
 
 ### Overview
