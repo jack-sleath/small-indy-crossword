@@ -423,6 +423,16 @@
   cursor: pointer;
 }
 
+.settingsGenerateLink {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.settingsGenerateLink:hover {
+  text-decoration: underline;
+}
+
 .settingsClose {
   align-self: flex-end;
   margin-top: 0.4rem;
