@@ -55,3 +55,9 @@
   font-weight: 700;
   min-width: 1.2em;
 }
+
+.blurred .list {
+  filter: blur(4px);
+  transition: filter 0.25s ease;
+  user-select: none;
+}

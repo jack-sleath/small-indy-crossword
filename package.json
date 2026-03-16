@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
-    "build-pool": "node scripts/fetch-guardian-pool.js"
+    "build-pool": "node scripts/fetch-guardian-pool.js",
+    "generate-seeds": "node scripts/generate-daily-seeds.mjs"
   },
   "repository": {
     "type": "git",

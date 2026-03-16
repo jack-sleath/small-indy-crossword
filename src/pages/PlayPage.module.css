@@ -277,6 +277,20 @@
   background: var(--color-primary-hover);
 }
 
+/* ── Daily puzzle countdown ───────────────────────────────────────────── */
+.nextPuzzle {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.nextPuzzleCountdown {
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
 /* ── Check/Reveal dropdown menus ─────────────────────────────────────── */
 .menuWrapper {
   position: relative;

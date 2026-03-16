@@ -46,10 +46,10 @@ function checkWin(cellValues, answerMap) {
   return Object.entries(answerMap).every(([key, letter]) => cellValues[key] === letter)
 }
 
-export default function PlayPage() {
+export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const { theme, toggleTheme } = useTheme()
   const [searchParams] = useSearchParams()
-  const seedParam = searchParams.get('seed')
+  const seedParam = overrideSeed ?? searchParams.get('seed')
 
   const [pool, setPool] = useState(null)
   const [puzzle, setPuzzle] = useState(null)
@@ -82,6 +82,7 @@ export default function PlayPage() {
   const [isAssisted, setIsAssisted] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
+  const [nextPuzzleIn, setNextPuzzleIn] = useState('')
 
   // Detect touch device (pointer: coarse) for custom keyboard
   const [isTouchDevice] = useState(() =>
@@ -114,6 +115,26 @@ export default function PlayPage() {
     setPuzzle(built)
     setAnswerMap(buildAnswerMap(built))
   }, [pool, seedParam])
+
+  // Countdown to next daily puzzle (midnight UTC)
+  useEffect(() => {
+    if (!dailyNumber) return
+    function tick() {
+      const MS_PER_DAY = 86_400_000
+      const now = Date.now()
+      const nextMidnightUTC = Math.ceil(now / MS_PER_DAY) * MS_PER_DAY
+      const rem = nextMidnightUTC - now
+      const h = Math.floor(rem / 3_600_000)
+      const m = Math.floor((rem % 3_600_000) / 60_000)
+      const s = Math.floor((rem % 60_000) / 1_000)
+      setNextPuzzleIn(
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+      )
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [dailyNumber])
 
   // Focus the hidden input whenever a cell is selected (triggers mobile keyboard)
   useEffect(() => {
@@ -348,6 +369,7 @@ export default function PlayPage() {
   // ── Cell click ───────────────────────────────────────────────────────────
   function handleCellClick(row, col) {
     if (isWon) return
+    startTimerIfNeeded()
     if (selected && selected.row === row && selected.col === col) {
       const other = direction === 'across' ? 'down' : 'across'
       if (getEntryAt(entries, row, col, other)) setDirection(other)
@@ -626,7 +648,9 @@ export default function PlayPage() {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Small Indy</h1>
+        <h1 className={styles.title}>
+          Small Indy{dailyNumber ? ` — Day ${dailyNumber}` : ''}
+        </h1>
         <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
           ⚙
         </button>
@@ -712,6 +736,7 @@ export default function PlayPage() {
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
             filter="across"
+            blurred={selected === null}
           />
         </div>
 
@@ -720,6 +745,7 @@ export default function PlayPage() {
             activeEntry={activeEntry}
             onPrevClue={handlePrevClue}
             onNextClue={handleNextClue}
+            blurred={selected === null}
           />
 
           <div className={styles.gridWrapper}>
@@ -815,6 +841,10 @@ export default function PlayPage() {
             </button>
           </div>
 
+          {dailyNumber && nextPuzzleIn && (
+            <p className={styles.nextPuzzle}>Next puzzle in <span className={styles.nextPuzzleCountdown}>{nextPuzzleIn}</span></p>
+          )}
+
           {isTouchDevice && selected && (
             <MobileKeyboard
               onLetter={processLetter}
@@ -833,6 +863,7 @@ export default function PlayPage() {
               activeEntryId={activeEntry?.id ?? null}
               completedEntryIds={completedEntryIds}
               onClueClick={handleClueClick}
+              blurred={selected === null}
             />
           </div>
         </div>
@@ -844,6 +875,7 @@ export default function PlayPage() {
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
             filter="down"
+            blurred={selected === null}
           />
         </div>
       </div>
