@@ -46,10 +46,10 @@ function checkWin(cellValues, answerMap) {
   return Object.entries(answerMap).every(([key, letter]) => cellValues[key] === letter)
 }
 
-export default function PlayPage() {
+export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const { theme, toggleTheme } = useTheme()
   const [searchParams] = useSearchParams()
-  const seedParam = searchParams.get('seed')
+  const seedParam = overrideSeed ?? searchParams.get('seed')
 
   const [pool, setPool] = useState(null)
   const [puzzle, setPuzzle] = useState(null)
@@ -626,7 +626,9 @@ export default function PlayPage() {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Small Indy</h1>
+        <h1 className={styles.title}>
+          Small Indy{dailyNumber ? ` — Day ${dailyNumber}` : ''}
+        </h1>
         <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
           ⚙
         </button>
