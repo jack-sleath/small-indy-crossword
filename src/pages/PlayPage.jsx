@@ -146,6 +146,16 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // Clean up timer on unmount
   useEffect(() => () => clearInterval(intervalRef.current), [])
 
+  // Defensive invariant: a locked cell must always have a letter.
+  // If cellValues loses a letter (e.g. via state inconsistency), remove it from
+  // revealedCells / correctCells so it doesn't stay locked-and-empty.
+  useEffect(() => {
+    const emptyLocked = [...revealedCells, ...correctCells].filter(k => !cellValues[k])
+    if (emptyLocked.length === 0) return
+    setRevealedCells(prev => { const s = new Set(prev); emptyLocked.forEach(k => s.delete(k)); return s })
+    setCorrectCells(prev => { const s = new Set(prev); emptyLocked.forEach(k => s.delete(k)); return s })
+  }, [cellValues]) // eslint-disable-line react-hooks/exhaustive-deps
+
   function startTimerIfNeeded() {
     if (startTimeRef.current !== null || isWon) return
     startTimeRef.current = Date.now()
@@ -452,9 +462,11 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     } else if (e.key === ' ') {
       e.preventDefault()
       if (spacebarClearAdvance) {
-        // Clear cell + advance to next
+        // Clear cell + advance to next (only if not revealed/locked)
         const key = `${row},${col}`
-        const n = { ...cellValues }; delete n[key]; setCellValues(n)
+        if (!revealedCells.has(key) && !correctCells.has(key)) {
+          const n = { ...cellValues }; delete n[key]; setCellValues(n)
+        }
         setIncorrectCells(new Set())
         const next = activeEntry ? getNextCellInEntry(activeEntry, row, col) : null
         if (next) setSelected(next)
