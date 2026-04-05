@@ -34,6 +34,8 @@ const PATTERNS = [
   { name: 'stripe',  blackCells: [[2,0],[2,4]] },
   { name: 'slash',   blackCells: [[0,4],[4,0]] },
   { name: 'bridge',  blackCells: [[0,4],[1,1],[1,3],[3,1],[3,3],[4,0]] },
+  { name: 'backslash', blackCells: [[0,0],[4,4]] },
+  { name: 'arch',   blackCells: [[0,0],[1,1],[1,3],[3,1],[3,3],[4,4]] },
 ]
 
 // ── Seed encoding (Node equivalent of src/utils/seed.js) ─────────────────────

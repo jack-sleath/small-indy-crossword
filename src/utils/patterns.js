@@ -143,4 +143,30 @@ export const PATTERNS = [
     name: 'bridge',
     blackCells: [[0, 4], [1, 1], [1, 3], [3, 1], [3, 3], [4, 0]],
   },
+  {
+    /**
+     * Backslash: opposite corners blocked (mirror of slash).
+     *
+     *   # W W W W
+     *   W W W W W
+     *   W W W W W
+     *   W W W W W
+     *   W W W W #
+     */
+    name: 'backslash',
+    blackCells: [[0, 0], [4, 4]],
+  },
+  {
+    /**
+     * Arch: mirror of bridge, with central spine and opposite corners blocked.
+     *
+     *   # W W W W
+     *   W # W # W
+     *   W W W W W
+     *   W # W # W
+     *   W W W W #
+     */
+    name: 'arch',
+    blackCells: [[0, 0], [1, 1], [1, 3], [3, 1], [3, 3], [4, 4]],
+  },
 ]
