@@ -129,4 +129,18 @@ export const PATTERNS = [
     name: 'slash',
     blackCells: [[0, 4], [4, 0]],
   },
+  {
+    /**
+     * Bridge: two platforms connected by a central row and column, with
+     * interior cells blocked either side of the spine.
+     *
+     *   W W W W #
+     *   W # W # W
+     *   W W W W W
+     *   W # W # W
+     *   # W W W W
+     */
+    name: 'bridge',
+    blackCells: [[0, 4], [1, 1], [1, 3], [3, 1], [3, 3], [4, 0]],
+  },
 ]

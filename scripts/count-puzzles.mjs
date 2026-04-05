@@ -26,6 +26,7 @@ const PATTERNS = [
   { name: 'pillar',   blackCells: [[0,2],[1,2],[3,2],[4,2]] },
   { name: 'stripe',   blackCells: [[2,0],[2,4]] },
   { name: 'slash',    blackCells: [[0,4],[4,0]] },
+  { name: 'bridge',   blackCells: [[0,4],[1,1],[1,3],[3,1],[3,3],[4,0]] },
 ]
 
 // ── Slot derivation ───────────────────────────────────────────────────────────
