@@ -65,19 +65,21 @@ export default function GeneratePage() {
   function generate() {
     if (!pool) return
     setNoSolution(false)
-    const attempt = attemptRef.current
-    attemptRef.current += 1
-    const pattern = PATTERNS[attempt % PATTERNS.length]
-    console.time(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
-    const rawEntries = solvePattern(pool, pattern, attempt)
-    console.timeEnd(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
-    if (!rawEntries) {
-      setNoSolution(true)
-      setPuzzle(null)
-      setSeed(null)
-      return
+    const MAX_TRIES = 5
+    let rawEntries = null
+    for (let i = 0; i < MAX_TRIES; i++) {
+      const attempt = attemptRef.current
+      attemptRef.current += 1
+      const pattern = PATTERNS[attempt % PATTERNS.length]
+      console.time(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
+      const result = solvePattern(pool, pattern, attempt)
+      console.timeEnd(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
+      if (result && !hasIntersectionConflict(result)) {
+        rawEntries = result
+        break
+      }
     }
-    if (hasIntersectionConflict(rawEntries)) {
+    if (!rawEntries) {
       setNoSolution(true)
       setPuzzle(null)
       setSeed(null)

@@ -610,7 +610,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // ── Share ─────────────────────────────────────────────────────────────────
   function handleShare() {
     if (!seedParam) return
-    const shareUrl = dailyNumber ? `${BASE_URL}/daily` : `${BASE_URL}/?seed=${seedParam}`
+    const poolSuffix = poolParam ? `&pool=${poolParam}` : ''
+    const shareUrl = dailyNumber ? `${BASE_URL}/daily` : `${BASE_URL}/?seed=${seedParam}${poolSuffix}`
     navigator.clipboard.writeText(`${shareUrl}\nCode: ${seedParam}`).then(() => {
       setCopyFeedback(true)
       setTimeout(() => setCopyFeedback(false), 2000)
@@ -621,7 +622,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     if (!seedParam) return
     const m = String(Math.floor(elapsed / 60)).padStart(2, '0')
     const s = String(elapsed % 60).padStart(2, '0')
-    const shareUrl = dailyNumber ? `${BASE_URL}/daily` : `${BASE_URL}/?seed=${seedParam}`
+    const poolSuffix = poolParam ? `&pool=${poolParam}` : ''
+    const shareUrl = dailyNumber ? `${BASE_URL}/daily` : `${BASE_URL}/?seed=${seedParam}${poolSuffix}`
     const text = `I solved the Small Indy in ${m}:${s}!${isAssisted ? ' (with help)' : ''}\n${shareUrl}`
     if (navigator.share) {
       navigator.share({ text }).catch(() => {})
