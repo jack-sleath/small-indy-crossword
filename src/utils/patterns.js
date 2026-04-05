@@ -50,4 +50,69 @@ export const PATTERNS = [
     name: 'checker',
     blackCells: [[1, 0], [1, 4], [3, 0], [3, 4]],
   },
+  {
+    /**
+     * Donut: hollow 3×3 centre, leaving only the outer frame playable.
+     *
+     *   W W W W W
+     *   W # # # W
+     *   W # # # W
+     *   W # # # W
+     *   W W W W W
+     */
+    name: 'donut',
+    blackCells: [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]],
+  },
+  {
+    /**
+     * Steps: diagonal black cells creating a staircase feel.
+     *
+     *   # W W W W
+     *   W W W W W
+     *   W W # W W
+     *   W W W W W
+     *   W W W W #
+     */
+    name: 'steps',
+    blackCells: [[0, 0], [2, 2], [4, 4]],
+  },
+  {
+    /**
+     * H-Shape: black cells inset from corners, creating an H-like silhouette.
+     *
+     *   W # W # W
+     *   W W W W W
+     *   W W W W W
+     *   W W W W W
+     *   W # W # W
+     */
+    name: 'h-shape',
+    blackCells: [[0, 1], [0, 3], [4, 1], [4, 3]],
+  },
+  {
+    /**
+     * Pillar: vertical divider with a gap in the centre row.
+     *
+     *   W W # W W
+     *   W W # W W
+     *   W W W W W
+     *   W W # W W
+     *   W W # W W
+     */
+    name: 'pillar',
+    blackCells: [[0, 2], [1, 2], [3, 2], [4, 2]],
+  },
+  {
+    /**
+     * Stripe: two black cells on the middle row edges, very open grid.
+     *
+     *   W W W W W
+     *   W W W W W
+     *   # W W W #
+     *   W W W W W
+     *   W W W W W
+     */
+    name: 'stripe',
+    blackCells: [[2, 0], [2, 4]],
+  },
 ]
