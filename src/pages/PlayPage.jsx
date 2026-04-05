@@ -52,6 +52,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const seedParam = overrideSeed ?? searchParams.get('seed')
 
   const [pool, setPool] = useState(null)
+  const [poolName, setPoolName] = useState(null)
   const [puzzle, setPuzzle] = useState(null)
   const [answerMap, setAnswerMap] = useState({})
   const [seedError, setSeedError] = useState(false)
@@ -107,6 +108,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           pools.find((p) => p.slug === poolParam) ??
           pools.find((p) => p.default) ??
           pools[0]
+        setPoolName(entry.default ? null : entry.name)
         return fetch(`${BASE}/${entry.file}`)
       })
       .then((r) => r.json())
@@ -679,6 +681,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
       </div>
+      {poolName && <p className={styles.poolSubtitle}>{poolName}</p>}
 
       {showSettings && (
         <div className={styles.settingsPanel} role="dialog" aria-label="Settings">

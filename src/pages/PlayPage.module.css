@@ -48,6 +48,16 @@
   background: var(--color-bg-btn-hover);
 }
 
+.poolSubtitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  margin-top: -0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .muteBtn {
   font-size: 1rem;
   background: none;

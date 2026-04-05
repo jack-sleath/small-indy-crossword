@@ -9,10 +9,13 @@ import { encodeSeed } from '../utils/seed'
 import { useTheme } from '../utils/useTheme'
 import styles from './GeneratePage.module.css'
 
-const BASE_URL = `${window.location.origin}/small-indy-crossword`
+const BASE = '/small-indy-crossword'
+const BASE_URL = `${window.location.origin}${BASE}`
 
 export default function GeneratePage() {
   const { theme, toggleTheme } = useTheme()
+  const [pools, setPools] = useState([])
+  const [selectedSlug, setSelectedSlug] = useState(null)
   const [pool, setPool] = useState(null)
   const [poolErrors, setPoolErrors] = useState([])
   const [puzzle, setPuzzle] = useState(null)
@@ -22,11 +25,28 @@ export default function GeneratePage() {
   const [previewVisible, setPreviewVisible] = useState(false)
   const attemptRef = useRef(0)
 
+  // Load manifest on mount, select the default pool
   useEffect(() => {
-    fetch('/small-indy-crossword/pool.json')
+    fetch(`${BASE}/pools.json`)
+      .then((r) => r.json())
+      .then(({ pools: p }) => {
+        setPools(p)
+        const defaultEntry = p.find((e) => e.default) ?? p[0]
+        setSelectedSlug(defaultEntry.slug)
+      })
+  }, [])
+
+  // When selected pool changes, fetch and validate the pool file
+  useEffect(() => {
+    if (!selectedSlug || pools.length === 0) return
+    const entry = pools.find((p) => p.slug === selectedSlug) ?? pools.find((p) => p.default) ?? pools[0]
+    setPool(null)
+    setPoolErrors([])
+    setPuzzle(null)
+    setSeed(null)
+    fetch(`${BASE}/${entry.file}`)
       .then((r) => r.json())
       .then(({ pool: p }) => {
-        console.log('pool.json (GeneratePage):', p)
         const { valid, errors } = validatePool(p)
         if (!valid) {
           setPoolErrors(errors)
@@ -34,8 +54,9 @@ export default function GeneratePage() {
         }
         setPool(p)
       })
-  }, [])
+  }, [selectedSlug, pools])
 
+  // Auto-generate when pool loads
   useEffect(() => {
     if (pool) generate()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,9 +90,12 @@ export default function GeneratePage() {
     setPreviewVisible(false)
   }
 
+  const isDefaultPool = pools.find((p) => p.slug === selectedSlug)?.default ?? true
+  const poolSuffix = selectedSlug && !isDefaultPool ? `&pool=${selectedSlug}` : ''
+
   function handleCopy() {
     if (!seed) return
-    const shareUrl = `${BASE_URL}/?seed=${seed}`
+    const shareUrl = `${BASE_URL}/?seed=${seed}${poolSuffix}`
     navigator.clipboard.writeText(`${shareUrl}\nCode: ${seed}`).then(() => {
       setCopyFeedback(true)
       setTimeout(() => setCopyFeedback(false), 2000)
@@ -87,10 +111,27 @@ export default function GeneratePage() {
     </div>
   )
 
+  const poolSelector = pools.length > 0 && (
+    <div className={styles.poolSelector}>
+      <label htmlFor="pool-select" className={styles.poolLabel}>Pool</label>
+      <select
+        id="pool-select"
+        className={styles.poolSelect}
+        value={selectedSlug ?? ''}
+        onChange={(e) => setSelectedSlug(e.target.value)}
+      >
+        {pools.map((p) => (
+          <option key={p.slug} value={p.slug}>{p.name}</option>
+        ))}
+      </select>
+    </div>
+  )
+
   if (poolErrors.length > 0) {
     return (
       <main className={styles.page}>
         {pageHeader}
+        {poolSelector}
         <div className={styles.error}>
           <p><strong>Pool validation failed:</strong></p>
           <ul>{poolErrors.map((e, i) => <li key={i}>{e}</li>)}</ul>
@@ -103,6 +144,7 @@ export default function GeneratePage() {
     return (
       <main className={styles.page}>
         {pageHeader}
+        {poolSelector}
         <p className={styles.loading}>Loading pool…</p>
       </main>
     )
@@ -112,9 +154,10 @@ export default function GeneratePage() {
     return (
       <main className={styles.page}>
         {pageHeader}
+        {poolSelector}
         <div className={styles.error}>
           <p>The pool is too small or has insufficient word variety to form a valid puzzle.</p>
-          <p>Add more 5-letter words to <code>pool.json</code> and try again.</p>
+          <p>Add more 5-letter words to the pool and try again.</p>
         </div>
         <button className={styles.btn} onClick={generate}>Regenerate</button>
       </main>
@@ -125,16 +168,18 @@ export default function GeneratePage() {
     return (
       <main className={styles.page}>
         {pageHeader}
+        {poolSelector}
         <p className={styles.loading}>Generating…</p>
       </main>
     )
   }
 
-  const playUrl = `/?seed=${seed}`
+  const playUrl = `/?seed=${seed}${poolSuffix}`
 
   return (
     <main className={styles.page}>
       {pageHeader}
+      {poolSelector}
 
       {/* Read-only preview — hidden by default so the puzzle creator isn't spoiled */}
       <div className={styles.previewWrapper}>
