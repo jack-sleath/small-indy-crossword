@@ -90,7 +90,7 @@ export default function GeneratePage() {
     setPreviewVisible(false)
   }
 
-  const isDefaultPool = pools.find((p) => p.slug === selectedSlug)?.default ?? true
+  const isDefaultPool = pools.find((p) => p.slug === selectedSlug)?.default ?? false
   const poolSuffix = selectedSlug && !isDefaultPool ? `&pool=${selectedSlug}` : ''
 
   function handleCopy() {
