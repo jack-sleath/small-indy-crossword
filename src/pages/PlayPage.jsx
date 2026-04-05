@@ -56,6 +56,9 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const [answerMap, setAnswerMap] = useState({})
   const [seedError, setSeedError] = useState(false)
 
+  // Daily puzzles always use the Guardian pool; URL ?pool param is for generated puzzles only
+  const poolParam = overrideSeed ? null : searchParams.get('pool')
+
   // Game state
   const [cellValues, setCellValues] = useState({})
   const [selected, setSelected] = useState(null)
@@ -94,15 +97,21 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const startTimeRef = useRef(null)
   const intervalRef = useRef(null)
 
-  // Load pool.json, then decode seed
+  // Load the correct pool via manifest, then decode seed
   useEffect(() => {
-    fetch('/small-indy-crossword/pool.json')
+    const BASE = '/small-indy-crossword'
+    fetch(`${BASE}/pools.json`)
       .then((r) => r.json())
-      .then(({ pool: p }) => {
-        console.log('pool.json (PlayPage):', p)
-        setPool(p)
+      .then(({ pools }) => {
+        const entry =
+          pools.find((p) => p.slug === poolParam) ??
+          pools.find((p) => p.default) ??
+          pools[0]
+        return fetch(`${BASE}/${entry.file}`)
       })
-  }, [])
+      .then((r) => r.json())
+      .then(({ pool: p }) => setPool(p))
+  }, [poolParam])
 
   useEffect(() => {
     if (!pool || !seedParam) return
