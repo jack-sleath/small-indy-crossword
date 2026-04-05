@@ -23,7 +23,7 @@ export default function GeneratePage() {
   const [noSolution, setNoSolution] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState(false)
   const [previewVisible, setPreviewVisible] = useState(false)
-  const attemptRef = useRef(0)
+  const attemptRef = useRef(Math.floor(Math.random() * 65536))
 
   // Load manifest on mount, select the default pool
   useEffect(() => {
