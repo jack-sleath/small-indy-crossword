@@ -68,16 +68,16 @@ Pool IDs are encoded in seeds and must not clash across pools. Rule: new pool fi
 
 A validation script enforces uniqueness across all pools in the manifest before any pool ships.
 
-### 5. What Pools Make Sense
+### 5. Pools
 
-| Slug | Content | Source idea |
-|------|---------|-------------|
-| `guardian` | General knowledge, ~4,384 entries | Already exists |
-| `sports` | Athletes, teams, events, equipment | Manual curation |
-| `film-tv` | Films, directors, characters, shows | Manual curation |
-| `music` | Artists, albums, instruments, genres | Manual curation |
+| Slug | Name | File |
+|------|------|------|
+| `guardian` | Guardian Quick | `pool.json` (existing) |
+| `lol` | League of Legends | `pool-lol.json` |
+| `nyt-mini` | NYT Mini | `pool-nyt-mini.json` |
+| `star-wars` | Star Wars | `pool-star-wars.json` |
 
-Start with one additional pool to prove out the system before expanding.
+All three new pool files exist as empty scaffolding — ready to populate.
 
 ---
 
