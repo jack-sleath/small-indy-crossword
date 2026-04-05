@@ -126,32 +126,17 @@ All three new pool files exist as empty scaffolding — ready to populate.
 
 ---
 
-### Milestone 4 — Custom / Private Pool (URL-hosted)
-
-**Goal:** A group can maintain a private word list and generate puzzles from it.
-
-**Approach:** Custom pool hosted at any stable URL (GitHub Gist, group server, etc.).
-
-- Generate page gains a "Custom pool URL" input field
-- On submit, fetch and validate the JSON from that URL client-side
-- Share URL carries the pool as a URL param: `&pool=custom&poolUrl=<encoded-url>`
-- Play page reads `poolUrl` param and fetches it directly
-- Security note: pool is fetched client-side; only use URLs you trust
-
-**Done when:** A group can paste a Gist URL, generate a puzzle, share the full link, and anyone with the link can play with that custom word list loaded automatically.
-
----
-
 ## Sequencing
 
 ```
-M1 (manifest + Play page loading)
-  → M2 (Generate page dropdown)     ← needs at least one more pool to be useful
-  → M3 (first additional pool)      ← can be done in parallel with M2 UI work
-  → M4 (custom URL pool)
+M1 (manifest + Play page loading)   ✅ done
+  → M2 (Generate page dropdown)     ✅ done
+  → M3 (populate pools + CI)        ✅ script done / pools pending content
 ```
 
 Daily puzzle is never in scope for pool switching — it always uses Guardian.
+
+See `docs/possible-expanded-features/` for parked ideas.
 
 ---
 
