@@ -2,6 +2,7 @@
   "name": "small-indy-crossword",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -9,7 +10,8 @@
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
     "build-pool": "node scripts/fetch-guardian-pool.js",
-    "generate-seeds": "node scripts/generate-daily-seeds.mjs"
+    "generate-seeds": "node scripts/generate-daily-seeds.mjs",
+    "validate-pools": "node scripts/validate-pools.js"
   },
   "repository": {
     "type": "git",
