@@ -115,4 +115,18 @@ export const PATTERNS = [
     name: 'stripe',
     blackCells: [[2, 0], [2, 4]],
   },
+  {
+    /**
+     * Slash: opposite corners blocked, producing 4-letter words on the top/bottom
+     * rows and left/right columns with 5-letter words elsewhere.
+     *
+     *   W W W W #
+     *   W W W W W
+     *   W W W W W
+     *   W W W W W
+     *   # W W W W
+     */
+    name: 'slash',
+    blackCells: [[0, 4], [4, 0]],
+  },
 ]
