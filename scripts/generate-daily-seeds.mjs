@@ -1,5 +1,5 @@
 /**
- * Generates 365 daily crossword seeds, cycling through the three grid patterns.
+ * Generates 365 daily crossword seeds, cycling through the grid patterns.
  *
  * Constraint: no pool IDs (and therefore no clues/answers) are shared between
  * any two consecutive days.
@@ -27,6 +27,11 @@ const PATTERNS = [
   { name: 'classic', blackCells: [[1,1],[1,3],[3,1],[3,3]] },
   { name: 'diamond', blackCells: [[0,0],[0,4],[4,0],[4,4]] },
   { name: 'checker', blackCells: [[1,0],[1,4],[3,0],[3,4]] },
+  { name: 'donut',   blackCells: [[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[3,2],[3,3]] },
+  { name: 'steps',   blackCells: [[0,0],[2,2],[4,4]] },
+  { name: 'h-shape', blackCells: [[0,1],[0,3],[4,1],[4,3]] },
+  { name: 'pillar',  blackCells: [[0,2],[1,2],[3,2],[4,2]] },
+  { name: 'stripe',  blackCells: [[2,0],[2,4]] },
 ]
 
 // ── Seed encoding (Node equivalent of src/utils/seed.js) ─────────────────────
