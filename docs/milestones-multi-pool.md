@@ -107,22 +107,22 @@ All three new pool files exist as empty scaffolding — ready to populate.
 - Selecting a different pool re-fetches that pool file and re-triggers generation
 - Share URL includes `&pool=<slug>` when pool is not Guardian; copy button copies full URL
 - Pool name + entry count shown in the dropdown option label
+- `PlayPage` displays the pool name as a subtitle (e.g. "League of Legends") sourced from the manifest
 
-**Done when:** You pick a pool from the dropdown, hit Generate, get a puzzle from that pool, and the copied share URL correctly loads it for players.
+**Done when:** You pick a pool, hit Generate, get a puzzle from that pool, the copied share URL loads it for players, and the pool name is visible during play.
 
 ---
 
-### Milestone 3 — First Additional Pool
+### Milestone 3 — Populate the Pools
 
-**Goal:** A real second pool file with enough entries for reliable standalone generation.
+**Goal:** All three themed pools reach 500 entries and pass validation.
 
 **Changes:**
 
-- `public/pool-sports.json` (or `pool-film-tv.json`) with ≥500 entries; IDs prefixed with slug
-- `scripts/validate-pool.js` — checks format, word lengths, ID uniqueness across all pools in manifest. Hooked into CI.
-- `pools.json` updated to include the new pool
+- `pool-lol.json`, `pool-nyt-mini.json`, `pool-star-wars.json` each populated to 500 entries (IDs prefixed with slug)
+- `scripts/validate-pool.js` — checks format, word lengths (2–5 uppercase letters), ID uniqueness across all pools in manifest. Hooked into CI.
 
-**Done when:** Selecting "Sports" in the Generate dropdown produces a puzzle with sports-only clues. CI validates pool integrity on every push.
+**Done when:** Each themed pool generates a valid puzzle standalone. CI validates pool integrity on every push.
 
 ---
 
@@ -155,12 +155,12 @@ Daily puzzle is never in scope for pool switching — it always uses Guardian.
 
 ---
 
-## Open Questions
+## Resolved Decisions
 
-1. **Entry count floor**: What's the minimum pool size to reliably generate a puzzle? The solver needs enough 5-letter word variety. Empirically, 4,384 entries is very reliable. A themed pool of 200–300 may struggle. Worth benchmarking before committing a minimum — 500 entries is a reasonable starting target.
+1. **Entry count floor**: Each pool will be populated to exactly 500 entries before being wired up.
 
-2. **Clue style consistency**: Mixed pools aren't supported in this design (one pool per puzzle), which sidesteps tonal clashing. If blending is ever wanted, revisit.
+2. **No blending**: One pool per puzzle, always. No multi-pool merging needed.
 
-3. **Pool attribution in Play UI**: Should solvers see "Sports pool" during play? Low priority but friendly — could be a subtitle on the puzzle page.
+3. **Pool attribution in Play UI**: Yes — display the pool name to solvers (e.g. as a subtitle on the Play page). Needs to be fetched from the manifest using the `?pool` param.
 
-4. **Pool update policy**: Entries can be added or clues edited freely. IDs must never be removed (breaks existing seeds). No tombstone/deprecation mechanism needed for now.
+4. **Pool update policy**: Entries can be added and clues edited freely. IDs will never be removed.
