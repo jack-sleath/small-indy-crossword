@@ -1,297 +1,864 @@
 {
   "pool": [
-    {"id": "lo0000", "answer": "OP", "clue": "Overpowered, in gamer speak"},
-    {"id": "lo0001", "answer": "CC", "clue": "Stun or root, abbr."},
-    {"id": "lo0002", "answer": "GG", "clue": "Post-game 'well played'"},
-    {"id": "lo0003", "answer": "FF", "clue": "Surrender vote, abbr."},
-    {"id": "lo0004", "answer": "LP", "clue": "Ranked points, abbr."},
-    {"id": "lo0005", "answer": "CS", "clue": "Minion kill count, abbr."},
-    {"id": "lo0006", "answer": "AD", "clue": "Physical damage stat, abbr."},
-    {"id": "lo0007", "answer": "AP", "clue": "Magic damage stat, abbr."},
-    {"id": "lo0008", "answer": "VI", "clue": "Piltover enforcer champion"},
-    {"id": "lo0009", "answer": "EZ", "clue": "Ezreal's nickname"},
-    {"id": "lo000a", "answer": "WW", "clue": "Warwick, abbr."},
-    {"id": "lo000b", "answer": "TF", "clue": "Twisted Fate, abbr."},
-    {"id": "lo000c", "answer": "MF", "clue": "Miss Fortune, abbr."},
-    {"id": "lo000d", "answer": "HP", "clue": "Health bar stat, abbr."},
-    {"id": "lo000e", "answer": "XP", "clue": "Level-up currency, abbr."},
-    {"id": "lo000f", "answer": "ZED", "clue": "Master of Shadows champion"},
-    {"id": "lo0010", "answer": "LUX", "clue": "Lady of Luminosity champion"},
-    {"id": "lo0011", "answer": "JAX", "clue": "Grandmaster At Arms champion"},
-    {"id": "lo0012", "answer": "VEX", "clue": "Gloomy yordle mage"},
-    {"id": "lo0013", "answer": "ZAC", "clue": "Secret Weapon of Zaun"},
-    {"id": "lo0014", "answer": "ZOE", "clue": "Aspect of Twilight champion"},
-    {"id": "lo0015", "answer": "ADC", "clue": "Bot lane carry, abbr."},
-    {"id": "lo0016", "answer": "MID", "clue": "Center lane"},
-    {"id": "lo0017", "answer": "TOP", "clue": "Baron-side lane"},
-    {"id": "lo0018", "answer": "BOT", "clue": "Dragon-side lane"},
-    {"id": "lo0019", "answer": "JNG", "clue": "Jungle role, abbr."},
-    {"id": "lo001a", "answer": "SUP", "clue": "Support role, abbr."},
-    {"id": "lo001b", "answer": "APC", "clue": "AP carry, abbr."},
-    {"id": "lo001c", "answer": "KDA", "clue": "Kill/death/assist ratio"},
-    {"id": "lo001d", "answer": "ELO", "clue": "Chess-borrowed rank metric"},
-    {"id": "lo001e", "answer": "DPS", "clue": "Damage per second, abbr."},
-    {"id": "lo001f", "answer": "AOE", "clue": "Area of effect, abbr."},
-    {"id": "lo0020", "answer": "DOT", "clue": "Damage over time, abbr."},
-    {"id": "lo0021", "answer": "CDR", "clue": "Cooldown reduction, abbr."},
-    {"id": "lo0022", "answer": "DMG", "clue": "Spell output, abbr."},
-    {"id": "lo0023", "answer": "ATK", "clue": "Basic attack, abbr."},
-    {"id": "lo0024", "answer": "DEF", "clue": "Resistances, abbr."},
-    {"id": "lo0025", "answer": "OOM", "clue": "Spellcaster's nightmare"},
-    {"id": "lo0026", "answer": "ARP", "clue": "Armor penetration, abbr."},
-    {"id": "lo0027", "answer": "AFK", "clue": "Away from keyboard, abbr."},
-    {"id": "lo0028", "answer": "MIA", "clue": "Enemy missing, abbr."},
-    {"id": "lo0029", "answer": "OTP", "clue": "One-champ specialist, abbr."},
-    {"id": "lo002a", "answer": "INT", "clue": "Feed intentionally, slang"},
-    {"id": "lo002b", "answer": "PRO", "clue": "Competitive player"},
-    {"id": "lo002c", "answer": "BAN", "clue": "Draft exclusion"},
-    {"id": "lo002d", "answer": "LAG", "clue": "High ping frustration"},
-    {"id": "lo002e", "answer": "POG", "clue": "Streamer hype reaction"},
-    {"id": "lo002f", "answer": "GAP", "clue": "Skill difference"},
-    {"id": "lo0030", "answer": "REP", "clue": "Report a player, for short"},
-    {"id": "lo0031", "answer": "LFG", "clue": "Looking for group, abbr."},
-    {"id": "lo0032", "answer": "WTF", "clue": "Shocked gamer reaction, abbr."},
-    {"id": "lo0033", "answer": "URF", "clue": "Ultra Rapid Fire mode, abbr."},
-    {"id": "lo0034", "answer": "TFT", "clue": "LoL's autobattler spinoff, abbr."},
-    {"id": "lo0035", "answer": "OFA", "clue": "One for All mode, abbr."},
-    {"id": "lo0036", "answer": "OBJ", "clue": "Baron or dragon, briefly"},
-    {"id": "lo0037", "answer": "RED", "clue": "Lizard elder buff color"},
-    {"id": "lo0038", "answer": "HEX", "clue": "Hextech crystal type"},
-    {"id": "lo0039", "answer": "PIT", "clue": "Dragon's lair"},
-    {"id": "lo003a", "answer": "ICE", "clue": "___ Drake (slowing dragon)"},
-    {"id": "lo003b", "answer": "SKT", "clue": "Faker's old team, abbr."},
-    {"id": "lo003c", "answer": "RNG", "clue": "Royal Never Give Up, abbr."},
-    {"id": "lo003d", "answer": "FNC", "clue": "Fnatic, abbr."},
-    {"id": "lo003e", "answer": "TSM", "clue": "North American org, abbr."},
-    {"id": "lo003f", "answer": "DRX", "clue": "Korean LoL team, abbr."},
-    {"id": "lo0040", "answer": "EDG", "clue": "Edward Gaming, abbr."},
-    {"id": "lo0041", "answer": "JDG", "clue": "JD Gaming, abbr."},
-    {"id": "lo0042", "answer": "GEN", "clue": "Gen.G, abbr."},
-    {"id": "lo0043", "answer": "FPX", "clue": "FunPlus Phoenix, abbr."},
-    {"id": "lo0044", "answer": "LCS", "clue": "NA pro league, abbr."},
-    {"id": "lo0045", "answer": "LCK", "clue": "Korean pro league, abbr."},
-    {"id": "lo0046", "answer": "LEC", "clue": "European pro league, abbr."},
-    {"id": "lo0047", "answer": "LPL", "clue": "Chinese pro league, abbr."},
-    {"id": "lo0048", "answer": "MSI", "clue": "Mid-Season Invitational, abbr."},
-    {"id": "lo0049", "answer": "WIN", "clue": "Take the nexus"},
-    {"id": "lo004a", "answer": "ACE", "clue": "Kill all five enemies"},
-    {"id": "lo004b", "answer": "DIE", "clue": "Meet the respawn timer"},
-    {"id": "lo004c", "answer": "HIT", "clue": "Land a skillshot"},
-    {"id": "lo004d", "answer": "RUN", "clue": "Flee from a gank"},
-    {"id": "lo004e", "answer": "MAP", "clue": "Minimap view"},
-    {"id": "lo004f", "answer": "LEE", "clue": "Lee ___ (blind monk)"},
-    {"id": "lo0050", "answer": "SIN", "clue": "___ Lee (blind monk)"},
-    {"id": "lo0051", "answer": "KOG", "clue": "Kog'___ (void chomper)"},
-    {"id": "lo0052", "answer": "CHO", "clue": "Cho'___ (terror of void)"},
-    {"id": "lo0053", "answer": "EVE", "clue": "Evelynn's nickname"},
-    {"id": "lo0054", "answer": "KHA", "clue": "Kha'___ (void hunter)"},
-    {"id": "lo0055", "answer": "REK", "clue": "Rek'___ (void burrower)"},
-    {"id": "lo0056", "answer": "VEL", "clue": "Vel'___ (void researcher)"},
-    {"id": "lo0057", "answer": "PBE", "clue": "Test server, abbr."},
-    {"id": "lo0058", "answer": "NET", "clue": "Caitlyn's E ability type"},
-    {"id": "lo0059", "answer": "GOD", "clue": "Dominant player status"},
-    {"id": "lo005a", "answer": "PRE", "clue": "___ season (offseason)"},
-    {"id": "lo005b", "answer": "ALT", "clue": "Smurf account type"},
-    {"id": "lo005c", "answer": "BIG", "clue": "Fed champion status"},
-    {"id": "lo005d", "answer": "ASHE", "clue": "Freljord archer champion"},
-    {"id": "lo005e", "answer": "GNAR", "clue": "The Missing Link champion"},
-    {"id": "lo005f", "answer": "JHIN", "clue": "Virtuoso marksman champion"},
-    {"id": "lo0060", "answer": "LULU", "clue": "Fae sorceress champion"},
-    {"id": "lo0061", "answer": "NAMI", "clue": "Tide-caller support champion"},
-    {"id": "lo0062", "answer": "SION", "clue": "Undead Noxian juggernaut"},
-    {"id": "lo0063", "answer": "SHEN", "clue": "Eye of Twilight ninja"},
-    {"id": "lo0064", "answer": "RYZE", "clue": "Rune Mage champion"},
-    {"id": "lo0065", "answer": "EKKO", "clue": "Boy Who Shattered Time"},
-    {"id": "lo0066", "answer": "OLAF", "clue": "Berserker champion"},
-    {"id": "lo0067", "answer": "ZERI", "clue": "Spark of Zaun champion"},
-    {"id": "lo0068", "answer": "BARD", "clue": "Wandering Caretaker champion"},
-    {"id": "lo0069", "answer": "KLED", "clue": "Cantankerous Cavalier champion"},
-    {"id": "lo006a", "answer": "ORNN", "clue": "Fire Below the Mountain champion"},
-    {"id": "lo006b", "answer": "YONE", "clue": "The Unforgotten champion"},
-    {"id": "lo006c", "answer": "RELL", "clue": "Iron Maiden champion"},
-    {"id": "lo006d", "answer": "NUNU", "clue": "Boy and his yeti champion"},
-    {"id": "lo006e", "answer": "AHRI", "clue": "Nine-Tailed Fox mage"},
-    {"id": "lo006f", "answer": "AZIR", "clue": "Emperor of the Sands"},
-    {"id": "lo0070", "answer": "FIZZ", "clue": "Tidal Trickster champion"},
-    {"id": "lo0071", "answer": "JINX", "clue": "Loose Cannon champion"},
-    {"id": "lo0072", "answer": "KAYN", "clue": "Shadow Reaper champion"},
-    {"id": "lo0073", "answer": "UDYR", "clue": "Spirit Walker champion"},
-    {"id": "lo0074", "answer": "ZYRA", "clue": "Rise of the Thorns champion"},
-    {"id": "lo0075", "answer": "PYKE", "clue": "Bloodharbor Ripper champion"},
-    {"id": "lo0076", "answer": "SETT", "clue": "The Boss champion"},
-    {"id": "lo0077", "answer": "GWEN", "clue": "Hallowed Seamstress champion"},
-    {"id": "lo0078", "answer": "LANE", "clue": "Map pathway"},
-    {"id": "lo0079", "answer": "GANK", "clue": "Jungle ambush"},
-    {"id": "lo007a", "answer": "WARD", "clue": "Vision trinket"},
-    {"id": "lo007b", "answer": "BUFF", "clue": "Power-up from jungle camp"},
-    {"id": "lo007c", "answer": "POKE", "clue": "Ranged harassment"},
-    {"id": "lo007d", "answer": "DIVE", "clue": "Attack under tower"},
-    {"id": "lo007e", "answer": "PUSH", "clue": "Advance minion wave"},
-    {"id": "lo007f", "answer": "TILT", "clue": "Losing-streak frustration"},
-    {"id": "lo0080", "answer": "FARM", "clue": "Collect minion gold"},
-    {"id": "lo0081", "answer": "KITE", "clue": "Attack while retreating"},
-    {"id": "lo0082", "answer": "HOOK", "clue": "Blitzcrank's signature Q"},
-    {"id": "lo0083", "answer": "RUNE", "clue": "Pre-game keystone setup"},
-    {"id": "lo0084", "answer": "SKIN", "clue": "Champion cosmetic"},
-    {"id": "lo0085", "answer": "GOLD", "clue": "In-game currency"},
-    {"id": "lo0086", "answer": "MANA", "clue": "Spellcasting resource"},
-    {"id": "lo0087", "answer": "HEAL", "clue": "Summoner spell"},
-    {"id": "lo0088", "answer": "RIFT", "clue": "Summoner's ___ (main map)"},
-    {"id": "lo0089", "answer": "ROLE", "clue": "Player position"},
-    {"id": "lo008a", "answer": "TEAM", "clue": "Group of five"},
-    {"id": "lo008b", "answer": "SOLO", "clue": "Playing without a duo"},
-    {"id": "lo008c", "answer": "RANK", "clue": "Competitive tier"},
-    {"id": "lo008d", "answer": "RIOT", "clue": "Game's developer"},
-    {"id": "lo008e", "answer": "NERF", "clue": "Power reduction patch"},
-    {"id": "lo008f", "answer": "KILL", "clue": "Eliminate an enemy"},
-    {"id": "lo0090", "answer": "BASE", "clue": "Fountain area"},
-    {"id": "lo0091", "answer": "TRAP", "clue": "Caitlyn's W ability"},
-    {"id": "lo0092", "answer": "SLOW", "clue": "Speed-reducing debuff"},
-    {"id": "lo0093", "answer": "STUN", "clue": "Immobilizing CC"},
-    {"id": "lo0094", "answer": "DASH", "clue": "Quick movement ability"},
-    {"id": "lo0095", "answer": "SHOP", "clue": "Buy items here"},
-    {"id": "lo0096", "answer": "PING", "clue": "Alert teammates"},
-    {"id": "lo0097", "answer": "META", "clue": "Current dominant strategy"},
-    {"id": "lo0098", "answer": "BLUE", "clue": "Golem camp buff color"},
-    {"id": "lo0099", "answer": "VOID", "clue": "Kha'Zix's origin realm"},
-    {"id": "lo009a", "answer": "ZEAL", "clue": "Attack speed item component"},
-    {"id": "lo009b", "answer": "IRON", "clue": "Lowest rank tier"},
-    {"id": "lo009c", "answer": "LORE", "clue": "Champion backstory"},
-    {"id": "lo009d", "answer": "FONT", "clue": "___ of Life (support rune)"},
-    {"id": "lo009e", "answer": "WAVE", "clue": "Minion formation"},
-    {"id": "lo009f", "answer": "CAMP", "clue": "Jungle monster group"},
-    {"id": "lo00a0", "answer": "ITEM", "clue": "Shop purchase"},
-    {"id": "lo00a1", "answer": "DRAG", "clue": "Dragon, informally"},
-    {"id": "lo00a2", "answer": "FEED", "clue": "Die repeatedly"},
-    {"id": "lo00a3", "answer": "ROAM", "clue": "Leave lane to assist"},
-    {"id": "lo00a4", "answer": "PULL", "clue": "Blitzcrank Q force effect"},
-    {"id": "lo00a5", "answer": "SWAP", "clue": "Lane exchange"},
-    {"id": "lo00a6", "answer": "DUEL", "clue": "1v1 fight"},
-    {"id": "lo00a7", "answer": "RISE", "clue": "Climb in ranked"},
-    {"id": "lo00a8", "answer": "FALL", "clue": "Lose rank position"},
-    {"id": "lo00a9", "answer": "CHAT", "clue": "Text communication"},
-    {"id": "lo00aa", "answer": "MUTE", "clue": "Silence a toxic player"},
-    {"id": "lo00ab", "answer": "GRAB", "clue": "Forceful champion relocation"},
-    {"id": "lo00ac", "answer": "FEAR", "clue": "Nocturne passive type"},
-    {"id": "lo00ad", "answer": "FLEE", "clue": "Escape from a fight"},
-    {"id": "lo00ae", "answer": "MARK", "clue": "Target an enemy"},
-    {"id": "lo00af", "answer": "TANK", "clue": "Damage absorption role"},
-    {"id": "lo00b0", "answer": "FIRE", "clue": "Ignite summoner spell"},
-    {"id": "lo00b1", "answer": "GORE", "clue": "Goredrinker, briefly"},
-    {"id": "lo00b2", "answer": "GRIT", "clue": "Kled's unique resource"},
-    {"id": "lo00b3", "answer": "HAIL", "clue": "___ of Blades (attack speed rune)"},
-    {"id": "lo00b4", "answer": "COUP", "clue": "___ de Grace (execute rune)"},
-    {"id": "lo00b5", "answer": "RAZE", "clue": "Destroy towers"},
-    {"id": "lo00b6", "answer": "LENS", "clue": "Oracle ___ (ward sweeper trinket)"},
-    {"id": "lo00b7", "answer": "VAMP", "clue": "Lifesteal, slang"},
-    {"id": "lo00b8", "answer": "AURA", "clue": "Team-wide passive effect"},
-    {"id": "lo00b9", "answer": "DARK", "clue": "___ Seal (cheap AP item)"},
-    {"id": "lo00ba", "answer": "EDGE", "clue": "___ of Night (lethality item)"},
-    {"id": "lo00bb", "answer": "ARAM", "clue": "All Random All Mid, abbr."},
-    {"id": "lo00bc", "answer": "SLAY", "clue": "Kill a dragon objective"},
-    {"id": "lo00bd", "answer": "LOSS", "clue": "Defeat result"},
-    {"id": "lo00be", "answer": "PEAK", "clue": "Champion power timing"},
-    {"id": "lo00bf", "answer": "WIND", "clue": "Yasuo's ___ Wall ability"},
-    {"id": "lo00c0", "answer": "DUSK", "clue": "___ blade (lethality item)"},
-    {"id": "lo00c1", "answer": "AKALI", "clue": "Rogue Assassin champion"},
-    {"id": "lo00c2", "answer": "AMUMU", "clue": "The Sad Mummy champion"},
-    {"id": "lo00c3", "answer": "ANNIE", "clue": "Dark Child pyromancer"},
-    {"id": "lo00c4", "answer": "BRAND", "clue": "Burning Vengeance mage"},
-    {"id": "lo00c5", "answer": "CORKI", "clue": "Daring Bombardier champion"},
-    {"id": "lo00c6", "answer": "DIANA", "clue": "Scorn of the Moon champion"},
-    {"id": "lo00c7", "answer": "ELISE", "clue": "Spider Queen champion"},
-    {"id": "lo00c8", "answer": "FIORA", "clue": "Grand Duelist champion"},
-    {"id": "lo00c9", "answer": "GALIO", "clue": "The Colossus champion"},
-    {"id": "lo00ca", "answer": "GAREN", "clue": "Might of Demacia champion"},
-    {"id": "lo00cb", "answer": "IVERN", "clue": "The Green Father champion"},
-    {"id": "lo00cc", "answer": "JAYCE", "clue": "Defender of Tomorrow champion"},
-    {"id": "lo00cd", "answer": "KARMA", "clue": "The Enlightened One champion"},
-    {"id": "lo00ce", "answer": "KAYLE", "clue": "The Righteous champion"},
-    {"id": "lo00cf", "answer": "LEONA", "clue": "Radiant Dawn champion"},
-    {"id": "lo00d0", "answer": "NASUS", "clue": "Curator of the Sands"},
-    {"id": "lo00d1", "answer": "POPPY", "clue": "Keeper of the Hammer"},
-    {"id": "lo00d2", "answer": "QUINN", "clue": "Demacia's Wings champion"},
-    {"id": "lo00d3", "answer": "RIVEN", "clue": "The Exile champion"},
-    {"id": "lo00d4", "answer": "SHACO", "clue": "Demon Jester champion"},
-    {"id": "lo00d5", "answer": "SIVIR", "clue": "Battle Mistress champion"},
-    {"id": "lo00d6", "answer": "TALON", "clue": "Blade's Shadow champion"},
-    {"id": "lo00d7", "answer": "TARIC", "clue": "Shield of Valoran champion"},
-    {"id": "lo00d8", "answer": "TEEMO", "clue": "Swift Scout champion"},
-    {"id": "lo00d9", "answer": "URGOT", "clue": "The Dreadnought champion"},
-    {"id": "lo00da", "answer": "VARUS", "clue": "Arrow of Retribution champion"},
-    {"id": "lo00db", "answer": "VAYNE", "clue": "Night Huntress champion"},
-    {"id": "lo00dc", "answer": "XAYAH", "clue": "The Rebel champion"},
-    {"id": "lo00dd", "answer": "YASUO", "clue": "The Unforgiven champion"},
-    {"id": "lo00de", "answer": "YUUMI", "clue": "The Magical Cat champion"},
-    {"id": "lo00df", "answer": "SWAIN", "clue": "Master Tactician champion"},
-    {"id": "lo00e0", "answer": "JANNA", "clue": "The Storm's Fury champion"},
-    {"id": "lo00e1", "answer": "ZIGGS", "clue": "Hexplosives Expert champion"},
-    {"id": "lo00e2", "answer": "VIEGO", "clue": "The Ruined King champion"},
-    {"id": "lo00e3", "answer": "NILAH", "clue": "Joy Unbound champion"},
-    {"id": "lo00e4", "answer": "SYLAS", "clue": "The Unshackled champion"},
-    {"id": "lo00e5", "answer": "RAKAN", "clue": "The Charmer champion"},
-    {"id": "lo00e6", "answer": "BARON", "clue": "Purple worm objective"},
-    {"id": "lo00e7", "answer": "DRAKE", "clue": "Dragon, informally"},
-    {"id": "lo00e8", "answer": "ELDER", "clue": "Final dragon power"},
-    {"id": "lo00e9", "answer": "NEXUS", "clue": "Win condition building"},
-    {"id": "lo00ea", "answer": "TOWER", "clue": "Lane defensive turret"},
-    {"id": "lo00eb", "answer": "FLASH", "clue": "Most-used summoner spell"},
-    {"id": "lo00ec", "answer": "SMITE", "clue": "Jungle summoner spell"},
-    {"id": "lo00ed", "answer": "GHOST", "clue": "Speed summoner spell"},
-    {"id": "lo00ee", "answer": "SNARE", "clue": "Root CC ability type"},
-    {"id": "lo00ef", "answer": "CARRY", "clue": "Main damage dealer role"},
-    {"id": "lo00f0", "answer": "SPLIT", "clue": "Solo side push strategy"},
-    {"id": "lo00f1", "answer": "PROXY", "clue": "Farm between enemy towers"},
-    {"id": "lo00f2", "answer": "RESET", "clue": "Return to base"},
-    {"id": "lo00f3", "answer": "MACRO", "clue": "Big-picture strategy"},
-    {"id": "lo00f4", "answer": "MICRO", "clue": "Mechanical skill"},
-    {"id": "lo00f5", "answer": "RIVER", "clue": "Map waterway"},
-    {"id": "lo00f6", "answer": "BRUSH", "clue": "Fog of war grass"},
-    {"id": "lo00f7", "answer": "PATCH", "clue": "Game update"},
-    {"id": "lo00f8", "answer": "QUEUE", "clue": "Game lobby"},
-    {"id": "lo00f9", "answer": "STEAL", "clue": "Secure enemy objective"},
-    {"id": "lo00fa", "answer": "ARENA", "clue": "2v2v2v2 game mode"},
-    {"id": "lo00fb", "answer": "CLASH", "clue": "Tournament game mode"},
-    {"id": "lo00fc", "answer": "RAPID", "clue": "URF: Ultra ___ Fire"},
-    {"id": "lo00fd", "answer": "ULTRA", "clue": "URF: ___ Rapid Fire"},
-    {"id": "lo00fe", "answer": "CHARM", "clue": "Ahri's heart ability"},
-    {"id": "lo00ff", "answer": "SHEEN", "clue": "Trinity Force component"},
-    {"id": "lo0100", "answer": "SIGHT", "clue": "Vision ward radius"},
-    {"id": "lo0101", "answer": "GRASP", "clue": "Grasp of the Undying rune"},
-    {"id": "lo0102", "answer": "FLEET", "clue": "Fleet Footwork rune"},
-    {"id": "lo0103", "answer": "PHASE", "clue": "Phase Rush rune"},
-    {"id": "lo0104", "answer": "PRESS", "clue": "Press the Attack rune"},
-    {"id": "lo0105", "answer": "SCOUT", "clue": "Ward the objective"},
-    {"id": "lo0106", "answer": "TAUNT", "clue": "Force-attack CC type"},
-    {"id": "lo0107", "answer": "BLIND", "clue": "Attack miss debuff"},
-    {"id": "lo0108", "answer": "BURST", "clue": "Assassin damage style"},
-    {"id": "lo0109", "answer": "ARMOR", "clue": "Physical defense stat"},
-    {"id": "lo010a", "answer": "MAGIC", "clue": "AP damage type"},
-    {"id": "lo010b", "answer": "RANGE", "clue": "Attack distance"},
-    {"id": "lo010c", "answer": "MELEE", "clue": "Short-range fighter type"},
-    {"id": "lo010d", "answer": "SPAWN", "clue": "Minion origin point"},
-    {"id": "lo010e", "answer": "NOXUS", "clue": "Empire of strength region"},
-    {"id": "lo010f", "answer": "IONIA", "clue": "Eastern spiritual region"},
-    {"id": "lo0110", "answer": "COMBO", "clue": "Ability chain sequence"},
-    {"id": "lo0111", "answer": "CHAIN", "clue": "CC combination"},
-    {"id": "lo0112", "answer": "WAVES", "clue": "Minion formations"},
-    {"id": "lo0113", "answer": "KILLS", "clue": "Elimination count"},
-    {"id": "lo0114", "answer": "HEALS", "clue": "Soraka's specialty"},
-    {"id": "lo0115", "answer": "FEEDS", "clue": "Dies repeatedly"},
-    {"id": "lo0116", "answer": "WARDS", "clue": "Vision items placed"},
-    {"id": "lo0117", "answer": "LANES", "clue": "Three map pathways"},
-    {"id": "lo0118", "answer": "RANKS", "clue": "Competitive tiers"},
-    {"id": "lo0119", "answer": "GANKS", "clue": "Jungle ambushes"},
-    {"id": "lo011a", "answer": "COMPS", "clue": "Team compositions"},
-    {"id": "lo011b", "answer": "ITEMS", "clue": "Shop purchases"},
-    {"id": "lo011c", "answer": "BLOOD", "clue": "___ thirster (lifesteal item)"},
-    {"id": "lo011d", "answer": "PIVOT", "clue": "Switch strategy mid-game"},
-    {"id": "lo011e", "answer": "SIEGE", "clue": "Tower push strategy"},
-    {"id": "lo011f", "answer": "GUARD", "clue": "Protect a teammate"},
-    {"id": "lo0120", "answer": "STALL", "clue": "Delay enemy advance"},
-    {"id": "lo0121", "answer": "SWAPS", "clue": "Lane exchanges"},
-    {"id": "lo0122", "answer": "TRASH", "clue": "Talk smack after winning"},
-    {"id": "lo0123", "answer": "ZONED", "clue": "Denied farm access"},
-    {"id": "lo0124", "answer": "DODGE", "clue": "Sidestep a skillshot"}
+    {
+      "id": "lo0125",
+      "answer": "TAM",
+      "clue": "Tam ___ (catfish rider)"
+    },
+    {
+      "id": "lo0126",
+      "answer": "SAI",
+      "clue": "Rek'___ (void burrower suffix)"
+    },
+    {
+      "id": "lo0127",
+      "answer": "ZIX",
+      "clue": "Kha'___ (void hunter suffix)"
+    },
+    {
+      "id": "lo0128",
+      "answer": "MAW",
+      "clue": "Maw of Malmortius item"
+    },
+    {
+      "id": "lo0129",
+      "answer": "JAR",
+      "clue": "Jarvan, briefly"
+    },
+    {
+      "id": "lo012a",
+      "answer": "SOL",
+      "clue": "Aurelion ___"
+    },
+    {
+      "id": "lo012b",
+      "answer": "KAI",
+      "clue": "Kai'___ (Void Daughter)"
+    },
+    {
+      "id": "lo012c",
+      "answer": "TAL",
+      "clue": "Taliyah, briefly"
+    },
+    {
+      "id": "lo012d",
+      "answer": "FED",
+      "clue": "Lots of kills status"
+    },
+    {
+      "id": "lo012e",
+      "answer": "LOW",
+      "clue": "One-shot HP state"
+    },
+    {
+      "id": "lo012f",
+      "answer": "RAW",
+      "clue": "True damage type, slang"
+    },
+    {
+      "id": "lo0130",
+      "answer": "ORB",
+      "clue": "Oblivion ___ (grievous wounds)"
+    },
+    {
+      "id": "lo0131",
+      "answer": "ROD",
+      "clue": "___ of Ages (scaling AP item)"
+    },
+    {
+      "id": "lo0132",
+      "answer": "BOW",
+      "clue": "Recurve ___ (attack speed item)"
+    },
+    {
+      "id": "lo0133",
+      "answer": "AXE",
+      "clue": "Darius's weapon type"
+    },
+    {
+      "id": "lo0134",
+      "answer": "CUT",
+      "clue": "___ Down (anti-tank rune)"
+    },
+    {
+      "id": "lo0135",
+      "answer": "PEN",
+      "clue": "Armor or magic ___ stat"
+    },
+    {
+      "id": "lo0136",
+      "answer": "BRK",
+      "clue": "Blade of the Ruined King, abbr."
+    },
+    {
+      "id": "lo0137",
+      "answer": "MVP",
+      "clue": "Best performer, abbr."
+    },
+    {
+      "id": "lo0138",
+      "answer": "NPC",
+      "clue": "Non-player character, abbr."
+    },
+    {
+      "id": "lo0139",
+      "answer": "ULT",
+      "clue": "R ability, slang"
+    },
+    {
+      "id": "lo013a",
+      "answer": "FOG",
+      "clue": "___ of war (hidden areas)"
+    },
+    {
+      "id": "lo013b",
+      "answer": "WAR",
+      "clue": "Warwick, informally"
+    },
+    {
+      "id": "lo013c",
+      "answer": "GEM",
+      "clue": "Taric's obsession"
+    },
+    {
+      "id": "lo013d",
+      "answer": "EGG",
+      "clue": "Anivia's passive form"
+    },
+    {
+      "id": "lo013e",
+      "answer": "FLY",
+      "clue": "FlyQuest org, briefly"
+    },
+    {
+      "id": "lo013f",
+      "answer": "DIG",
+      "clue": "Dignitas, abbr."
+    },
+    {
+      "id": "lo0140",
+      "answer": "CAP",
+      "clue": "Rabadon's, slang"
+    },
+    {
+      "id": "lo0141",
+      "answer": "TAG",
+      "clue": "Summoner ___ (account name)"
+    },
+    {
+      "id": "lo0142",
+      "answer": "DUO",
+      "clue": "Two-player queue"
+    },
+    {
+      "id": "lo0143",
+      "answer": "BOX",
+      "clue": "Shaco's W: Jack In The ___"
+    },
+    {
+      "id": "lo0144",
+      "answer": "WEB",
+      "clue": "Elise's cocoon ability"
+    },
+    {
+      "id": "lo0145",
+      "answer": "ARM",
+      "clue": "Seeker's ___guard (armor item)"
+    },
+    {
+      "id": "lo0146",
+      "answer": "OWN",
+      "clue": "Dominate your laner"
+    },
+    {
+      "id": "lo0147",
+      "answer": "END",
+      "clue": "Finish the game"
+    },
+    {
+      "id": "lo0148",
+      "answer": "AGE",
+      "clue": "Rod of ___ (scaling item)"
+    },
+    {
+      "id": "lo0149",
+      "answer": "BAT",
+      "clue": "Fiddlesticks companion type"
+    },
+    {
+      "id": "lo014a",
+      "answer": "CRY",
+      "clue": "The ___ Abyss (Lissandra)"
+    },
+    {
+      "id": "lo014b",
+      "answer": "HOP",
+      "clue": "Tristana's W movement"
+    },
+    {
+      "id": "lo014c",
+      "answer": "ORE",
+      "clue": "Ornn's crafting material"
+    },
+    {
+      "id": "lo014d",
+      "answer": "RIP",
+      "clue": "After a death, slang"
+    },
+    {
+      "id": "lo014e",
+      "answer": "SPY",
+      "clue": "Stealth champion playstyle"
+    },
+    {
+      "id": "lo014f",
+      "answer": "TAP",
+      "clue": "Quick ability cast"
+    },
+    {
+      "id": "lo0150",
+      "answer": "ZAP",
+      "clue": "Jinx's W ability name"
+    },
+    {
+      "id": "lo0151",
+      "answer": "HUG",
+      "clue": "Stay close to tower"
+    },
+    {
+      "id": "lo0152",
+      "answer": "NAB",
+      "clue": "Catch an enemy"
+    },
+    {
+      "id": "lo0153",
+      "answer": "DIP",
+      "clue": "Leave a fight quickly"
+    },
+    {
+      "id": "lo0154",
+      "answer": "POP",
+      "clue": "Burst a squishy target"
+    },
+    {
+      "id": "lo0155",
+      "answer": "MOB",
+      "clue": "___ility boots (move speed)"
+    },
+    {
+      "id": "lo0156",
+      "answer": "LOL",
+      "clue": "League of Legends, abbr."
+    },
+    {
+      "id": "lo0157",
+      "answer": "QSS",
+      "clue": "Quicksilver Sash, abbr."
+    },
+    {
+      "id": "lo0158",
+      "answer": "BFS",
+      "clue": "B.F. Sword, abbr."
+    },
+    {
+      "id": "lo0159",
+      "answer": "LDR",
+      "clue": "Lord Dominik's Regards, abbr."
+    },
+    {
+      "id": "lo015a",
+      "answer": "RFC",
+      "clue": "Rapid Firecannon, abbr."
+    },
+    {
+      "id": "lo015b",
+      "answer": "PTA",
+      "clue": "Press the Attack, abbr."
+    },
+    {
+      "id": "lo015c",
+      "answer": "HOB",
+      "clue": "Hail of Blades, abbr."
+    },
+    {
+      "id": "lo015d",
+      "answer": "FPS",
+      "clue": "Frames per second, abbr."
+    },
+    {
+      "id": "lo015e",
+      "answer": "HUD",
+      "clue": "Heads-up display, abbr."
+    },
+    {
+      "id": "lo015f",
+      "answer": "CAN",
+      "clue": "Cannon minion, briefly"
+    },
+    {
+      "id": "lo0160",
+      "answer": "POT",
+      "clue": "Health potion, briefly"
+    },
+    {
+      "id": "lo0161",
+      "answer": "PIN",
+      "clue": "CC lock target, slang"
+    },
+    {
+      "id": "lo0162",
+      "answer": "TIP",
+      "clue": "Spear ___ (Kalista mechanic)"
+    },
+    {
+      "id": "lo0163",
+      "answer": "JAB",
+      "clue": "Quick auto attack"
+    },
+    {
+      "id": "lo0164",
+      "answer": "RAG",
+      "clue": "Tilt-induced frustration"
+    },
+    {
+      "id": "lo0165",
+      "answer": "SAP",
+      "clue": "Drain mana, slang"
+    },
+    {
+      "id": "lo0166",
+      "answer": "VIS",
+      "clue": "Vi's full name origin"
+    },
+    {
+      "id": "lo0167",
+      "answer": "GAS",
+      "clue": "Singed's Q trail"
+    },
+    {
+      "id": "lo0168",
+      "answer": "AIM",
+      "clue": "Skillshot accuracy"
+    },
+    {
+      "id": "lo0169",
+      "answer": "SET",
+      "clue": "Rune page configuration"
+    },
+    {
+      "id": "lo016a",
+      "answer": "BAD",
+      "clue": "Iron-tier performance"
+    },
+    {
+      "id": "lo016b",
+      "answer": "RAT",
+      "clue": "Twitch's nickname"
+    },
+    {
+      "id": "lo016c",
+      "answer": "PIE",
+      "clue": "Percentage health rune"
+    },
+    {
+      "id": "lo016d",
+      "answer": "SONA",
+      "clue": "Maven of the Strings champion"
+    },
+    {
+      "id": "lo016e",
+      "answer": "CASS",
+      "clue": "Cassiopeia, informally"
+    },
+    {
+      "id": "lo016f",
+      "answer": "NAUT",
+      "clue": "Nautilus, briefly"
+    },
+    {
+      "id": "lo0170",
+      "answer": "MORG",
+      "clue": "Morgana, briefly"
+    },
+    {
+      "id": "lo0171",
+      "answer": "SERA",
+      "clue": "Seraphine, briefly"
+    },
+    {
+      "id": "lo0172",
+      "answer": "LISS",
+      "clue": "Lissandra, briefly"
+    },
+    {
+      "id": "lo0173",
+      "answer": "RAKA",
+      "clue": "Soraka, informally"
+    },
+    {
+      "id": "lo0174",
+      "answer": "CAIT",
+      "clue": "Caitlyn, informally"
+    },
+    {
+      "id": "lo0175",
+      "answer": "NIDA",
+      "clue": "Nidalee, informally"
+    },
+    {
+      "id": "lo0176",
+      "answer": "VOLI",
+      "clue": "Volibear, briefly"
+    },
+    {
+      "id": "lo0177",
+      "answer": "TALI",
+      "clue": "Taliyah, briefly"
+    },
+    {
+      "id": "lo0178",
+      "answer": "PEEL",
+      "clue": "Protect the carry from divers"
+    },
+    {
+      "id": "lo0179",
+      "answer": "PROC",
+      "clue": "Trigger an item effect"
+    },
+    {
+      "id": "lo017a",
+      "answer": "PRIO",
+      "clue": "Lane priority, briefly"
+    },
+    {
+      "id": "lo017b",
+      "answer": "FLEX",
+      "clue": "Multi-role champion pick"
+    },
+    {
+      "id": "lo017c",
+      "answer": "COMP",
+      "clue": "Team composition"
+    },
+    {
+      "id": "lo017d",
+      "answer": "LOCK",
+      "clue": "Confirm champion select"
+    },
+    {
+      "id": "lo017e",
+      "answer": "SOUL",
+      "clue": "Four-dragon reward"
+    },
+    {
+      "id": "lo017f",
+      "answer": "BAIT",
+      "clue": "Lure enemies into a trap"
+    },
+    {
+      "id": "lo0180",
+      "answer": "WIPE",
+      "clue": "Eliminate the whole team"
+    },
+    {
+      "id": "lo0181",
+      "answer": "FURY",
+      "clue": "Renekton's resource bar"
+    },
+    {
+      "id": "lo0182",
+      "answer": "RAGE",
+      "clue": "Tryndamere's resource"
+    },
+    {
+      "id": "lo0183",
+      "answer": "LAMP",
+      "clue": "Thresh's lantern, slang"
+    },
+    {
+      "id": "lo0184",
+      "answer": "CRAB",
+      "clue": "Scuttle ___ (river monster)"
+    },
+    {
+      "id": "lo0185",
+      "answer": "WALL",
+      "clue": "Terrain blocker ability"
+    },
+    {
+      "id": "lo0186",
+      "answer": "BACK",
+      "clue": "Recall to base"
+    },
+    {
+      "id": "lo0187",
+      "answer": "SAFE",
+      "clue": "Low-risk playstyle"
+    },
+    {
+      "id": "lo0188",
+      "answer": "LATE",
+      "clue": "___ game (40+ minutes)"
+    },
+    {
+      "id": "lo0189",
+      "answer": "FULL",
+      "clue": "___ build (six items)"
+    },
+    {
+      "id": "lo018a",
+      "answer": "PAWN",
+      "clue": "Former SSW mid laner"
+    },
+    {
+      "id": "lo018b",
+      "answer": "RUSH",
+      "clue": "Buy an item first"
+    },
+    {
+      "id": "lo018c",
+      "answer": "DEFT",
+      "clue": "Korean ADC pro player"
+    },
+    {
+      "id": "lo018d",
+      "answer": "WORM",
+      "clue": "Baron's nickname"
+    },
+    {
+      "id": "lo018e",
+      "answer": "BLOB",
+      "clue": "Zac's passive chunks"
+    },
+    {
+      "id": "lo018f",
+      "answer": "BOMB",
+      "clue": "Ziggs or Zilean specialty"
+    },
+    {
+      "id": "lo0190",
+      "answer": "CAGE",
+      "clue": "Veigar's E: Event Horizon"
+    },
+    {
+      "id": "lo0191",
+      "answer": "DOME",
+      "clue": "Pantheon's E ability shape"
+    },
+    {
+      "id": "lo0192",
+      "answer": "ORBS",
+      "clue": "Syndra's Dark Spheres"
+    },
+    {
+      "id": "lo0193",
+      "answer": "FADE",
+      "clue": "Vision control expiring"
+    },
+    {
+      "id": "lo0194",
+      "answer": "LAMB",
+      "clue": "Kindred's gentle half"
+    },
+    {
+      "id": "lo0195",
+      "answer": "WOLF",
+      "clue": "Kindred's fierce half"
+    },
+    {
+      "id": "lo0196",
+      "answer": "GATE",
+      "clue": "Twisted Fate's R teleport"
+    },
+    {
+      "id": "lo0197",
+      "answer": "MOON",
+      "clue": "Diana's celestial body"
+    },
+    {
+      "id": "lo0198",
+      "answer": "STAR",
+      "clue": "Aurelion Sol's cosmic type"
+    },
+    {
+      "id": "lo0199",
+      "answer": "LEAD",
+      "clue": "Gold advantage"
+    },
+    {
+      "id": "lo019a",
+      "answer": "LOOT",
+      "clue": "Hextech chest reward"
+    },
+    {
+      "id": "lo019b",
+      "answer": "TIER",
+      "clue": "Rank subdivision"
+    },
+    {
+      "id": "lo019c",
+      "answer": "BORK",
+      "clue": "Blade of the Ruined King, slang"
+    },
+    {
+      "id": "lo019d",
+      "answer": "PICK",
+      "clue": "Catch an enemy alone"
+    },
+    {
+      "id": "lo019e",
+      "answer": "WARP",
+      "clue": "Ryze's ultimate portal"
+    },
+    {
+      "id": "lo019f",
+      "answer": "BRAUM",
+      "clue": "Heart of the Freljord champion"
+    },
+    {
+      "id": "lo01a0",
+      "answer": "MILIO",
+      "clue": "The Gentle Flame champion"
+    },
+    {
+      "id": "lo01a1",
+      "answer": "SENNA",
+      "clue": "Redeemer champion"
+    },
+    {
+      "id": "lo01a2",
+      "answer": "MALPH",
+      "clue": "Malphite, briefly"
+    },
+    {
+      "id": "lo01a3",
+      "answer": "BLITZ",
+      "clue": "Blitzcrank, briefly"
+    },
+    {
+      "id": "lo01a4",
+      "answer": "CHASE",
+      "clue": "Pursue a fleeing enemy"
+    },
+    {
+      "id": "lo01a5",
+      "answer": "SCALE",
+      "clue": "Get stronger over time"
+    },
+    {
+      "id": "lo01a6",
+      "answer": "ROAMS",
+      "clue": "Mid-laner's side trips"
+    },
+    {
+      "id": "lo01a7",
+      "answer": "BACKS",
+      "clue": "Recalls to base"
+    },
+    {
+      "id": "lo01a8",
+      "answer": "DUELS",
+      "clue": "1v1 encounters"
+    },
+    {
+      "id": "lo01a9",
+      "answer": "EARLY",
+      "clue": "___ game (first 15 minutes)"
+    },
+    {
+      "id": "lo01aa",
+      "answer": "LEASH",
+      "clue": "Help jungler start a camp"
+    },
+    {
+      "id": "lo01ab",
+      "answer": "PLATE",
+      "clue": "Tower gold bonus segment"
+    },
+    {
+      "id": "lo01ac",
+      "answer": "OUTER",
+      "clue": "First-tier tower type"
+    },
+    {
+      "id": "lo01ad",
+      "answer": "INNER",
+      "clue": "Second-tier tower type"
+    },
+    {
+      "id": "lo01ae",
+      "answer": "INHIB",
+      "clue": "Inhibitor, briefly"
+    },
+    {
+      "id": "lo01af",
+      "answer": "GRUBS",
+      "clue": "Void ___ (top-side objective)"
+    },
+    {
+      "id": "lo01b0",
+      "answer": "OCEAN",
+      "clue": "___ Drake (healing dragon)"
+    },
+    {
+      "id": "lo01b1",
+      "answer": "CLOUD",
+      "clue": "___ Drake (speed dragon)"
+    },
+    {
+      "id": "lo01b2",
+      "answer": "EMOTE",
+      "clue": "Champion expression"
+    },
+    {
+      "id": "lo01b3",
+      "answer": "CREST",
+      "clue": "Blue/red buff formal name"
+    },
+    {
+      "id": "lo01b4",
+      "answer": "CHUNK",
+      "clue": "Deal heavy damage quickly"
+    },
+    {
+      "id": "lo01b5",
+      "answer": "THROW",
+      "clue": "Lose a won game"
+    },
+    {
+      "id": "lo01b6",
+      "answer": "GRIEF",
+      "clue": "Intentionally sabotage allies"
+    },
+    {
+      "id": "lo01b7",
+      "answer": "FRONT",
+      "clue": "___ line (tank position)"
+    },
+    {
+      "id": "lo01b8",
+      "answer": "FLANK",
+      "clue": "Attack from the side"
+    },
+    {
+      "id": "lo01b9",
+      "answer": "SWEEP",
+      "clue": "Clear enemy wards"
+    },
+    {
+      "id": "lo01ba",
+      "answer": "AGGRO",
+      "clue": "Aggressive playstyle"
+    },
+    {
+      "id": "lo01bb",
+      "answer": "TURBO",
+      "clue": "___ Chemtank (engage item)"
+    },
+    {
+      "id": "lo01bc",
+      "answer": "VALOR",
+      "clue": "Quinn's bird companion"
+    },
+    {
+      "id": "lo01bd",
+      "answer": "BLADE",
+      "clue": "___ of the Ruined King"
+    },
+    {
+      "id": "lo01be",
+      "answer": "STAFF",
+      "clue": "Archangel's ___ (mana item)"
+    },
+    {
+      "id": "lo01bf",
+      "answer": "CROWN",
+      "clue": "Mythic protective mage item"
+    },
+    {
+      "id": "lo01c0",
+      "answer": "FORCE",
+      "clue": "Trinity ___ (sheen item)"
+    },
+    {
+      "id": "lo01c1",
+      "answer": "TORCH",
+      "clue": "Blackfire ___ (DoT item)"
+    },
+    {
+      "id": "lo01c2",
+      "answer": "DRAFT",
+      "clue": "Champion select mode"
+    },
+    {
+      "id": "lo01c3",
+      "answer": "STOMP",
+      "clue": "Dominate a game completely"
+    },
+    {
+      "id": "lo01c4",
+      "answer": "SMURF",
+      "clue": "High-elo on a low account"
+    },
+    {
+      "id": "lo01c5",
+      "answer": "PERMA",
+      "clue": "___ ban (always banned champ)"
+    },
+    {
+      "id": "lo01c6",
+      "answer": "TOXIC",
+      "clue": "Negative player behavior"
+    },
+    {
+      "id": "lo01c7",
+      "answer": "CLOWN",
+      "clue": "Shaco's aesthetic"
+    },
+    {
+      "id": "lo01c8",
+      "answer": "HASTE",
+      "clue": "Ability ___ (CDR stat)"
+    },
+    {
+      "id": "lo01c9",
+      "answer": "SCRIM",
+      "clue": "Practice match between teams"
+    },
+    {
+      "id": "lo01ca",
+      "answer": "FAKER",
+      "clue": "Greatest LoL player ever"
+    },
+    {
+      "id": "lo01cb",
+      "answer": "CHOVY",
+      "clue": "Korean mid lane star"
+    },
+    {
+      "id": "lo01cc",
+      "answer": "RULER",
+      "clue": "Korean ADC legend"
+    },
+    {
+      "id": "lo01cd",
+      "answer": "VIPER",
+      "clue": "Korean ADC pro player"
+    },
+    {
+      "id": "lo01ce",
+      "answer": "CRASH",
+      "clue": "___ a wave (push into tower)"
+    },
+    {
+      "id": "lo01cf",
+      "answer": "PENTA",
+      "clue": "___ kill (all five slain)"
+    },
+    {
+      "id": "lo01d0",
+      "answer": "SUPER",
+      "clue": "___ minion (post-inhib)"
+    }
   ]
 }
