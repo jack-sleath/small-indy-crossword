@@ -28,10 +28,11 @@ const PATTERNS = [
   { name: 'diamond', blackCells: [[0,0],[0,4],[4,0],[4,4]] },
   { name: 'checker', blackCells: [[1,0],[1,4],[3,0],[3,4]] },
   { name: 'donut',   blackCells: [[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[3,2],[3,3]] },
-  { name: 'steps',   blackCells: [[0,0],[2,2],[4,4]] },
   { name: 'h-shape', blackCells: [[0,1],[0,3],[4,1],[4,3]] },
-  { name: 'pillar',  blackCells: [[0,2],[1,2],[3,2],[4,2]] },
-  { name: 'stripe',  blackCells: [[2,0],[2,4]] },
+  { name: 'slash',   blackCells: [[0,4],[4,0]] },
+  { name: 'bridge',  blackCells: [[0,4],[1,1],[1,3],[3,1],[3,3],[4,0]] },
+  { name: 'backslash', blackCells: [[0,0],[4,4]] },
+  { name: 'arch',   blackCells: [[0,0],[1,1],[1,3],[3,1],[3,3],[4,4]] },
 ]
 
 // ── Seed encoding (Node equivalent of src/utils/seed.js) ─────────────────────
@@ -109,7 +110,7 @@ function solvePattern(pool, pattern, attempt = 0) {
   const slots = deriveSlots(pattern.blackCells)
   if (slots.length === 0) return null
 
-  const POOL_CAP = 500
+  const POOL_CAP = 2000
   const byLength = {}
   for (const slot of slots) {
     if (!byLength[slot.length]) {

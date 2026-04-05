@@ -65,19 +65,6 @@ export const PATTERNS = [
   },
   {
     /**
-     * Steps: diagonal black cells creating a staircase feel.
-     *
-     *   # W W W W
-     *   W W W W W
-     *   W W # W W
-     *   W W W W W
-     *   W W W W #
-     */
-    name: 'steps',
-    blackCells: [[0, 0], [2, 2], [4, 4]],
-  },
-  {
-    /**
      * H-Shape: black cells inset from corners, creating an H-like silhouette.
      *
      *   W # W # W
@@ -91,28 +78,56 @@ export const PATTERNS = [
   },
   {
     /**
-     * Pillar: vertical divider with a gap in the centre row.
+     * Slash: opposite corners blocked, producing 4-letter words on the top/bottom
+     * rows and left/right columns with 5-letter words elsewhere.
      *
-     *   W W # W W
-     *   W W # W W
+     *   W W W W #
      *   W W W W W
-     *   W W # W W
-     *   W W # W W
+     *   W W W W W
+     *   W W W W W
+     *   # W W W W
      */
-    name: 'pillar',
-    blackCells: [[0, 2], [1, 2], [3, 2], [4, 2]],
+    name: 'slash',
+    blackCells: [[0, 4], [4, 0]],
   },
   {
     /**
-     * Stripe: two black cells on the middle row edges, very open grid.
+     * Bridge: two platforms connected by a central row and column, with
+     * interior cells blocked either side of the spine.
      *
+     *   W W W W #
+     *   W # W # W
      *   W W W W W
-     *   W W W W W
-     *   # W W W #
-     *   W W W W W
-     *   W W W W W
+     *   W # W # W
+     *   # W W W W
      */
-    name: 'stripe',
-    blackCells: [[2, 0], [2, 4]],
+    name: 'bridge',
+    blackCells: [[0, 4], [1, 1], [1, 3], [3, 1], [3, 3], [4, 0]],
+  },
+  {
+    /**
+     * Backslash: opposite corners blocked (mirror of slash).
+     *
+     *   # W W W W
+     *   W W W W W
+     *   W W W W W
+     *   W W W W W
+     *   W W W W #
+     */
+    name: 'backslash',
+    blackCells: [[0, 0], [4, 4]],
+  },
+  {
+    /**
+     * Arch: mirror of bridge, with central spine and opposite corners blocked.
+     *
+     *   # W W W W
+     *   W # W # W
+     *   W W W W W
+     *   W # W # W
+     *   W W W W #
+     */
+    name: 'arch',
+    blackCells: [[0, 0], [1, 1], [1, 3], [3, 1], [3, 3], [4, 4]],
   },
 ]
