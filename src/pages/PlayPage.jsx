@@ -125,6 +125,23 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     const built = buildPuzzle(rawEntries)
     setPuzzle(built)
     setAnswerMap(buildAnswerMap(built))
+
+    if (typeof window.goatcounter?.count === 'function') {
+      const poolSlug = poolParam ?? 'guardian'
+      if (dailyNumber) {
+        window.goatcounter.count({
+          path: 'daily-puzzle',
+          title: `Daily Puzzle #${dailyNumber} | pool: ${poolSlug} | seed: ${seedParam}`,
+          event: true,
+        })
+      } else {
+        window.goatcounter.count({
+          path: `puzzle-${poolSlug}`,
+          title: `Puzzle | pool: ${poolSlug} | seed: ${seedParam}`,
+          event: true,
+        })
+      }
+    }
   }, [pool, seedParam])
 
   // Countdown to next daily puzzle (midnight UTC)
