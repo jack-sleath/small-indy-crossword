@@ -742,7 +742,11 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
       {isTouchDevice ? (
         /* ── MOBILE LAYOUT ───────────────────────────────────────────── */
-        <div className={`${styles.mobileAboveFold}${selected ? ` ${styles.mobileAboveFoldFocused}` : ''}`}>
+        <div className={[
+          styles.mobileAboveFold,
+          selected && styles.mobileAboveFoldFocused,
+          showSettings && styles.mobileSettingsOpen,
+        ].filter(Boolean).join(' ')}>
           {/* Title — hidden when puzzle has focus */}
           {!selected && (
             <div className={styles.header}>
