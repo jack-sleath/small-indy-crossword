@@ -6,6 +6,63 @@
   min-height: 100dvh;
 }
 
+/* On touch devices the page itself has no outer padding — mobile layout
+   handles its own internal spacing */
+@media (pointer: coarse) {
+  .page {
+    padding: 0;
+    align-items: stretch;
+  }
+}
+
+/* ── Mobile above-fold container ──────────────────────────────────────────── */
+.mobileAboveFold {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+/* When puzzle has focus (cell selected): fill exactly the viewport so the
+   keyboard sits at the very bottom and clue list is only visible by scrolling */
+.mobileAboveFoldFocused {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ── Mobile compact control bar ───────────────────────────────────────────── */
+.mobileControlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.25rem;
+  flex-shrink: 0;
+}
+
+.mobileTimerGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.mobileIconGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+/* ── Mobile grid area — expands to fill remaining space ───────────────────── */
+.mobileGridArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
 /* Hidden input for mobile virtual keyboard — positioned off-screen */
 .hiddenInput {
   position: fixed;
@@ -67,6 +124,10 @@
   opacity: 0.6;
   border-radius: 3px;
   margin-bottom: 0.25rem;
+}
+
+.mobileIconGroup .muteBtn {
+  margin-bottom: 0;
 }
 
 .muteBtn:hover {
@@ -156,6 +217,13 @@
   margin-top: 0.75rem;
   flex-wrap: wrap;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+  .controls {
+    margin-top: 0.4rem;
+  }
 }
 
 .btn,

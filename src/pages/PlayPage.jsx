@@ -14,6 +14,7 @@ import {
   getNextEmptyCellInEntry,
   getNextIncompleteEntry,
   getFirstEmptyCellInEntry,
+  getLastEmptyCellInEntry,
   isEntryComplete,
   getPrevCellInEntry,
   getNextEntry,
@@ -311,6 +312,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // ── Shared letter input logic (called from both keyboard handler and onChange) ──
   function processLetter(letter) {
     if (!selected || isWon) return
+    // On mobile: snap back to main content when a letter is typed
+    if (isTouchDevice) window.scrollTo({ top: 0, behavior: 'instant' })
     const { row, col } = selected
     const key = `${row},${col}`
     if (revealedCells.has(key) || correctCells.has(key)) return
@@ -393,13 +396,32 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     startTimerIfNeeded()
     const key = `${row},${col}`
     setIncorrectCells(new Set())
-    if (cellValues[key]) {
+    const isLocked = revealedCells.has(key) || correctCells.has(key)
+    if (cellValues[key] && !isLocked) {
+      // Clear current unlocked cell
       const n = { ...cellValues }; delete n[key]; setCellValues(n)
     } else if (activeEntry) {
-      const prev = getPrevCellInEntry(activeEntry, row, col)
-      if (prev) {
-        setSelected(prev)
-        const n = { ...cellValues }; delete n[`${prev.row},${prev.col}`]; setCellValues(n)
+      // Find previous unlocked cell in the entry
+      const cells = getCellsInEntry(activeEntry)
+      const idx = cells.findIndex(c => c.row === row && c.col === col)
+      let target = null
+      for (let i = idx - 1; i >= 0; i--) {
+        const c = cells[i]
+        const ck = `${c.row},${c.col}`
+        if (!revealedCells.has(ck) && !correctCells.has(ck)) { target = c; break }
+      }
+      if (target) {
+        setSelected(target)
+        const targetKey = `${target.row},${target.col}`
+        const n = { ...cellValues }; delete n[targetKey]; setCellValues(n)
+      } else {
+        // Can't go back in this clue — jump to next unsolved clue
+        const nextEntry = getNextIncompleteEntry(entries, activeEntry, cellValues)
+        if (nextEntry) {
+          const dest = getFirstEmptyCellInEntry(nextEntry, cellValues)
+          setSelected(dest ?? { row: nextEntry.row, col: nextEntry.col })
+          setDirection(nextEntry.direction)
+        }
       }
     }
   }
@@ -461,6 +483,14 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           const targetKey = `${target.row},${target.col}`
           const n = { ...cellValues }; delete n[targetKey]; setCellValues(n)
           if (autocheck) setCorrectCells(prev => { const s = new Set(prev); s.delete(targetKey); return s })
+        } else {
+          // Can't go back in this clue — jump to next unsolved clue
+          const nextEntry = getNextIncompleteEntry(entries, activeEntry, cellValues)
+          if (nextEntry) {
+            const dest = getFirstEmptyCellInEntry(nextEntry, cellValues)
+            setSelected(dest ?? { row: nextEntry.row, col: nextEntry.col })
+            setDirection(nextEntry.direction)
+          }
         }
       }
     } else if (e.key === 'ArrowRight') {
@@ -689,66 +719,6 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   return (
     <main className={styles.page}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          Small Indy{dailyNumber ? ` — Day ${dailyNumber}` : ''}
-        </h1>
-        <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
-          ⚙
-        </button>
-        <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-      </div>
-      {poolName && <p className={styles.poolSubtitle}>{poolName}</p>}
-
-      {showSettings && (
-        <div className={styles.settingsPanel} role="dialog" aria-label="Settings">
-          <h2 className={styles.settingsHeading}>Settings</h2>
-          <label className={styles.settingRow}>
-            <input type="checkbox" checked={skipFilled} onChange={() => toggleSetting('skipFilled', setSkipFilled)} />
-            Skip filled squares
-          </label>
-          <label className={styles.settingRow}>
-            <input type="checkbox" checked={jumpToNextClue} onChange={() => toggleSetting('jumpToNextClue', setJumpToNextClue)} />
-            Jump to next clue on word complete
-          </label>
-          <label className={styles.settingRow}>
-            <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
-            Spacebar clears cell &amp; advances (instead of toggle direction)
-          </label>
-          <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
-          <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
-        </div>
-      )}
-
-      <button className={styles.muteBtn} onClick={handleToggleMute} aria-label={muteJingle ? 'Unmute completion sound' : 'Mute completion sound'} title={muteJingle ? 'Completion sound off' : 'Completion sound on'}>
-        {muteJingle ? '🔇' : '🔔'}
-      </button>
-
-      <div className={styles.timerRow}>
-        {hideTimer ? (
-          <span className={styles.timer} aria-label="Timer hidden">⏱ —:——</span>
-        ) : (
-          <button
-            className={`${styles.timer} ${styles.timerBtn}${isPaused ? ` ${styles.timerPaused}` : ''}`}
-            onClick={handleTogglePause}
-            aria-label={isPaused ? 'Resume timer' : `Time elapsed: ${formatTime(elapsed)} — click to pause`}
-            title={isPaused ? 'Click to resume' : 'Click to pause'}
-          >
-            {isPaused ? '⏸ Paused' : formatTime(elapsed)}
-          </button>
-        )}
-        <button
-          className={styles.timerToggle}
-          onClick={handleToggleHideTimer}
-          aria-label={hideTimer ? 'Show timer' : 'Hide timer'}
-          title={hideTimer ? 'Show timer' : 'Hide timer'}
-        >
-          {hideTimer ? '👁' : '🙈'}
-        </button>
-      </div>
-
       {/*
         Hidden input: receives focus when a cell is selected.
         On touch devices: inputMode="none" suppresses the system keyboard so
@@ -770,20 +740,72 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
         onChange={handleHiddenInputChange}
       />
 
-      {/* Desktop 3-column layout: Across | Grid+Controls | Down */}
-      <div className={styles.playLayout}>
-        <div className={styles.clueAside}>
-          <ClueList
-            entries={entries}
-            activeEntryId={activeEntry?.id ?? null}
-            completedEntryIds={completedEntryIds}
-            onClueClick={handleClueClick}
-            filter="across"
-            blurred={selected === null}
-          />
-        </div>
+      {isTouchDevice ? (
+        /* ── MOBILE LAYOUT ───────────────────────────────────────────── */
+        <div className={`${styles.mobileAboveFold}${selected ? ` ${styles.mobileAboveFoldFocused}` : ''}`}>
+          {/* Title — hidden when puzzle has focus */}
+          {!selected && (
+            <div className={styles.header}>
+              <h1 className={styles.title}>Small Indy{dailyNumber ? ` — Day ${dailyNumber}` : ''}</h1>
+            </div>
+          )}
+          {!selected && poolName && <p className={styles.poolSubtitle}>{poolName}</p>}
 
-        <div className={styles.centerCol}>
+          {/* Compact control bar: timer on left, icon buttons on right */}
+          <div className={styles.mobileControlBar}>
+            <div className={styles.mobileTimerGroup}>
+              {hideTimer ? (
+                <span className={styles.timer} aria-label="Timer hidden">⏱ —:——</span>
+              ) : (
+                <button
+                  className={`${styles.timer} ${styles.timerBtn}${isPaused ? ` ${styles.timerPaused}` : ''}`}
+                  onClick={handleTogglePause}
+                  aria-label={isPaused ? 'Resume timer' : `Time elapsed: ${formatTime(elapsed)} — click to pause`}
+                  title={isPaused ? 'Click to resume' : 'Click to pause'}
+                >
+                  {isPaused ? '⏸ Paused' : formatTime(elapsed)}
+                </button>
+              )}
+              <button
+                className={styles.timerToggle}
+                onClick={handleToggleHideTimer}
+                aria-label={hideTimer ? 'Show timer' : 'Hide timer'}
+                title={hideTimer ? 'Show timer' : 'Hide timer'}
+              >
+                {hideTimer ? '👁' : '🙈'}
+              </button>
+            </div>
+            <div className={styles.mobileIconGroup}>
+              <button className={styles.muteBtn} onClick={handleToggleMute} aria-label={muteJingle ? 'Unmute completion sound' : 'Mute completion sound'} title={muteJingle ? 'Completion sound off' : 'Completion sound on'}>
+                {muteJingle ? '🔇' : '🔔'}
+              </button>
+              <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">⚙</button>
+              <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+                {theme === 'dark' ? '☀️' : '🌙'}
+              </button>
+            </div>
+          </div>
+
+          {showSettings && (
+            <div className={styles.settingsPanel} role="dialog" aria-label="Settings">
+              <h2 className={styles.settingsHeading}>Settings</h2>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={skipFilled} onChange={() => toggleSetting('skipFilled', setSkipFilled)} />
+                Skip filled squares
+              </label>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={jumpToNextClue} onChange={() => toggleSetting('jumpToNextClue', setJumpToNextClue)} />
+                Jump to next clue on word complete
+              </label>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
+                Spacebar clears cell &amp; advances (instead of toggle direction)
+              </label>
+              <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
+              <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
+            </div>
+          )}
+
           <ClueBar
             activeEntry={activeEntry}
             onPrevClue={handlePrevClue}
@@ -791,28 +813,29 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             blurred={selected === null}
           />
 
-          <div className={styles.gridWrapper}>
-            <CrosswordGrid
-              puzzle={puzzle}
-              cellValues={cellValues}
-              selected={selected}
-              activeWordKeys={activeWordKeys}
-              incorrectCells={incorrectCells}
-              revealedCells={revealedCells}
-              correctCells={correctCells}
-              rebusMode={rebusMode}
-    
-              isWon={isWon}
-              onCellClick={isPaused ? undefined : handleCellClick}
-              onKeyDown={isPaused ? undefined : handleKeyDown}
-              isActive={!isPaused && selected !== null}
-            />
-            {isPaused && (
-              <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
-                <span>⏸ Paused</span>
-                <span className={styles.pauseHint}>Tap to resume</span>
-              </div>
-            )}
+          <div className={styles.mobileGridArea}>
+            <div className={styles.gridWrapper}>
+              <CrosswordGrid
+                puzzle={puzzle}
+                cellValues={cellValues}
+                selected={selected}
+                activeWordKeys={activeWordKeys}
+                incorrectCells={incorrectCells}
+                revealedCells={revealedCells}
+                correctCells={correctCells}
+                rebusMode={rebusMode}
+                isWon={isWon}
+                onCellClick={isPaused ? undefined : handleCellClick}
+                onKeyDown={isPaused ? undefined : handleKeyDown}
+                isActive={!isPaused && selected !== null}
+              />
+              {isPaused && (
+                <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
+                  <span>⏸ Paused</span>
+                  <span className={styles.pauseHint}>Tap to resume</span>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className={styles.controls} role="group" aria-label="Puzzle controls">
@@ -865,30 +888,21 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             </div>
           </div>
 
-          {pendingConfirm && (
-            <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
-              <div className={styles.confirmBox}>
-                <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
-                <div className={styles.confirmButtons}>
-                  <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
-                  <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
-                </div>
+          {!selected && (
+            <>
+              <div className={styles.seedBar}>
+                <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+                <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
+                  {copyFeedback ? 'Copied!' : 'Share'}
+                </button>
               </div>
-            </div>
+              {dailyNumber && nextPuzzleIn && (
+                <p className={styles.nextPuzzle}>Next puzzle in <span className={styles.nextPuzzleCountdown}>{nextPuzzleIn}</span></p>
+              )}
+            </>
           )}
 
-          <div className={styles.seedBar}>
-            <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
-            <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
-              {copyFeedback ? 'Copied!' : 'Share'}
-            </button>
-          </div>
-
-          {dailyNumber && nextPuzzleIn && (
-            <p className={styles.nextPuzzle}>Next puzzle in <span className={styles.nextPuzzleCountdown}>{nextPuzzleIn}</span></p>
-          )}
-
-          {isTouchDevice && selected && (
+          {selected && (
             <MobileKeyboard
               onLetter={processLetter}
               onBackspace={handleMobileBackspace}
@@ -898,31 +912,214 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
               clueText={activeEntry?.clue ?? ''}
             />
           )}
-
-          {/* Mobile-only: stacked clue list */}
-          <div className={styles.cluesMobile}>
-            <ClueList
-              entries={entries}
-              activeEntryId={activeEntry?.id ?? null}
-              completedEntryIds={completedEntryIds}
-              onClueClick={handleClueClick}
-              blurred={selected === null}
-            />
-          </div>
         </div>
+      ) : (
+        /* ── DESKTOP LAYOUT ──────────────────────────────────────────── */
+        <>
+          <div className={styles.header}>
+            <h1 className={styles.title}>
+              Small Indy{dailyNumber ? ` — Day ${dailyNumber}` : ''}
+            </h1>
+            <button className={styles.themeToggle} onClick={() => setShowSettings(s => !s)} aria-label="Settings" title="Settings">
+              ⚙
+            </button>
+            <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </div>
+          {poolName && <p className={styles.poolSubtitle}>{poolName}</p>}
 
-        <div className={styles.clueAside}>
+          {showSettings && (
+            <div className={styles.settingsPanel} role="dialog" aria-label="Settings">
+              <h2 className={styles.settingsHeading}>Settings</h2>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={skipFilled} onChange={() => toggleSetting('skipFilled', setSkipFilled)} />
+                Skip filled squares
+              </label>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={jumpToNextClue} onChange={() => toggleSetting('jumpToNextClue', setJumpToNextClue)} />
+                Jump to next clue on word complete
+              </label>
+              <label className={styles.settingRow}>
+                <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
+                Spacebar clears cell &amp; advances (instead of toggle direction)
+              </label>
+              <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
+              <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
+            </div>
+          )}
+
+          <button className={styles.muteBtn} onClick={handleToggleMute} aria-label={muteJingle ? 'Unmute completion sound' : 'Mute completion sound'} title={muteJingle ? 'Completion sound off' : 'Completion sound on'}>
+            {muteJingle ? '🔇' : '🔔'}
+          </button>
+
+          <div className={styles.timerRow}>
+            {hideTimer ? (
+              <span className={styles.timer} aria-label="Timer hidden">⏱ —:——</span>
+            ) : (
+              <button
+                className={`${styles.timer} ${styles.timerBtn}${isPaused ? ` ${styles.timerPaused}` : ''}`}
+                onClick={handleTogglePause}
+                aria-label={isPaused ? 'Resume timer' : `Time elapsed: ${formatTime(elapsed)} — click to pause`}
+                title={isPaused ? 'Click to resume' : 'Click to pause'}
+              >
+                {isPaused ? '⏸ Paused' : formatTime(elapsed)}
+              </button>
+            )}
+            <button
+              className={styles.timerToggle}
+              onClick={handleToggleHideTimer}
+              aria-label={hideTimer ? 'Show timer' : 'Hide timer'}
+              title={hideTimer ? 'Show timer' : 'Hide timer'}
+            >
+              {hideTimer ? '👁' : '🙈'}
+            </button>
+          </div>
+
+          {/* Desktop 3-column layout: Across | Grid+Controls | Down */}
+          <div className={styles.playLayout}>
+            <div className={styles.clueAside}>
+              <ClueList
+                entries={entries}
+                activeEntryId={activeEntry?.id ?? null}
+                completedEntryIds={completedEntryIds}
+                onClueClick={handleClueClick}
+                filter="across"
+                blurred={selected === null}
+              />
+            </div>
+
+            <div className={styles.centerCol}>
+              <ClueBar
+                activeEntry={activeEntry}
+                onPrevClue={handlePrevClue}
+                onNextClue={handleNextClue}
+                blurred={selected === null}
+              />
+
+              <div className={styles.gridWrapper}>
+                <CrosswordGrid
+                  puzzle={puzzle}
+                  cellValues={cellValues}
+                  selected={selected}
+                  activeWordKeys={activeWordKeys}
+                  incorrectCells={incorrectCells}
+                  revealedCells={revealedCells}
+                  correctCells={correctCells}
+                  rebusMode={rebusMode}
+                  isWon={isWon}
+                  onCellClick={isPaused ? undefined : handleCellClick}
+                  onKeyDown={isPaused ? undefined : handleKeyDown}
+                  isActive={!isPaused && selected !== null}
+                />
+                {isPaused && (
+                  <div className={styles.pauseOverlay} onClick={handleTogglePause} role="button" aria-label="Resume">
+                    <span>⏸ Paused</span>
+                    <span className={styles.pauseHint}>Tap to resume</span>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.controls} role="group" aria-label="Puzzle controls">
+                <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
+                  <button
+                    className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
+                    onClick={() => setShowCheckMenu(m => !m)}
+                    disabled={isWon}
+                    aria-haspopup="true"
+                    aria-expanded={showCheckMenu}
+                  >
+                    Check ▾
+                  </button>
+                  {showCheckMenu && (
+                    <div className={styles.menuDropdown} role="menu">
+                      <button className={styles.menuItem} onClick={handleCheckSquare} disabled={!selected} role="menuitem">Check Square</button>
+                      <button className={styles.menuItem} onClick={handleCheckWord} disabled={!activeEntry} role="menuitem">Check Word</button>
+                      <button className={styles.menuItem} onClick={handleCheckPuzzle} role="menuitem">Check Puzzle</button>
+                      <hr className={styles.menuDivider} />
+                      <button
+                        className={`${styles.menuItem}${autocheck ? ` ${styles.menuItemActive}` : ''}`}
+                        onClick={handleToggleAutocheck}
+                        role="menuitemcheckbox"
+                        aria-checked={autocheck}
+                      >
+                        {autocheck ? '✓ ' : ''}Autocheck
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowRevealMenu(false) }}>
+                  <button
+                    className={styles.btnDanger}
+                    onClick={() => setShowRevealMenu(m => !m)}
+                    disabled={isWon}
+                    aria-haspopup="true"
+                    aria-expanded={showRevealMenu}
+                  >
+                    Reveal ▾
+                  </button>
+                  {showRevealMenu && (
+                    <div className={styles.menuDropdown} role="menu">
+                      <button className={styles.menuItem} onClick={handleRevealSquare} disabled={!selected} role="menuitem">Reveal Square</button>
+                      <button className={styles.menuItem} onClick={handleRevealWord} disabled={!activeEntry} role="menuitem">Reveal Word</button>
+                      <button className={styles.menuItem} onClick={handleRevealPuzzle} role="menuitem">Reveal Puzzle</button>
+                      <hr className={styles.menuDivider} />
+                      <button className={styles.menuItem} onClick={handleResetConfirm} role="menuitem">Reset Puzzle</button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.seedBar}>
+                <span className={styles.seedCode} title="Puzzle code">{seedParam}</span>
+                <button className={styles.shareBtn} onClick={handleShare} aria-label="Copy share link">
+                  {copyFeedback ? 'Copied!' : 'Share'}
+                </button>
+              </div>
+
+              {dailyNumber && nextPuzzleIn && (
+                <p className={styles.nextPuzzle}>Next puzzle in <span className={styles.nextPuzzleCountdown}>{nextPuzzleIn}</span></p>
+              )}
+            </div>
+
+            <div className={styles.clueAside}>
+              <ClueList
+                entries={entries}
+                activeEntryId={activeEntry?.id ?? null}
+                completedEntryIds={completedEntryIds}
+                onClueClick={handleClueClick}
+                filter="down"
+                blurred={selected === null}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Mobile clue list — scrollable below the fold */}
+      {isTouchDevice && (
+        <div className={styles.cluesMobile}>
           <ClueList
             entries={entries}
             activeEntryId={activeEntry?.id ?? null}
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
-            filter="down"
-            blurred={selected === null}
+            blurred={false}
           />
         </div>
-      </div>
+      )}
 
+      {pendingConfirm && (
+        <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
+          <div className={styles.confirmBox}>
+            <p className={styles.confirmMessage}>{pendingConfirm.message}</p>
+            <div className={styles.confirmButtons}>
+              <button className={styles.btn} onClick={() => setPendingConfirm(null)}>Cancel</button>
+              <button className={styles.btnDanger} onClick={() => { pendingConfirm.onConfirm(); setPendingConfirm(null) }}>Confirm</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <CompletionModal

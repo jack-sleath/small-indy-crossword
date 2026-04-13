@@ -9,6 +9,14 @@
   outline: none;
 }
 
+/* On touch devices the grid fills more of the viewport */
+@media (pointer: coarse) {
+  .grid {
+    width: min(97vw, calc(100dvh - 320px));
+    height: min(97vw, calc(100dvh - 320px));
+  }
+}
+
 .gridActive {
   outline: 2px solid var(--color-border-active);
   outline-offset: 2px;
