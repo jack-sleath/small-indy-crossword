@@ -292,6 +292,16 @@
   padding: 0.3rem 0;
 }
 
+/* On touch devices the controls sit near the keyboard at the bottom of the
+   viewport, inside an overflow:hidden container. Open dropdowns upward so
+   they aren't clipped. */
+@media (pointer: coarse) {
+  .menuDropdown {
+    top: auto;
+    bottom: calc(100% + 4px);
+  }
+}
+
 .menuItem {
   display: block;
   width: 100%;
