@@ -6,6 +6,69 @@
   min-height: 100dvh;
 }
 
+/* On touch devices the page itself has no outer padding — mobile layout
+   handles its own internal spacing */
+@media (pointer: coarse) {
+  .page {
+    padding: 0;
+    align-items: stretch;
+  }
+}
+
+/* ── Mobile above-fold container ──────────────────────────────────────────── */
+.mobileAboveFold {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+/* When puzzle has focus (cell selected): fill exactly the viewport so the
+   keyboard sits at the very bottom and clue list is only visible by scrolling */
+.mobileAboveFoldFocused {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* When settings panel is open, release the viewport-lock so it isn't clipped */
+.mobileAboveFoldFocused.mobileSettingsOpen {
+  height: auto;
+  overflow: visible;
+}
+
+/* ── Mobile compact control bar ───────────────────────────────────────────── */
+.mobileControlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.25rem;
+  flex-shrink: 0;
+}
+
+.mobileTimerGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.mobileIconGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+/* ── Mobile grid area — expands to fill remaining space ───────────────────── */
+.mobileGridArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
 /* Hidden input for mobile virtual keyboard — positioned off-screen */
 .hiddenInput {
   position: fixed;
@@ -67,6 +130,10 @@
   opacity: 0.6;
   border-radius: 3px;
   margin-bottom: 0.25rem;
+}
+
+.mobileIconGroup .muteBtn {
+  margin-bottom: 0;
 }
 
 .muteBtn:hover {
@@ -156,6 +223,13 @@
   margin-top: 0.75rem;
   flex-wrap: wrap;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+  .controls {
+    margin-top: 0.4rem;
+  }
 }
 
 .btn,
@@ -216,6 +290,16 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 10;
   padding: 0.3rem 0;
+}
+
+/* On touch devices the controls sit near the keyboard at the bottom of the
+   viewport, inside an overflow:hidden container. Open dropdowns upward so
+   they aren't clipped. */
+@media (pointer: coarse) {
+  .menuDropdown {
+    top: auto;
+    bottom: calc(100% + 4px);
+  }
 }
 
 .menuItem {
@@ -299,51 +383,6 @@
   font-family: monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.05em;
-}
-
-/* ── Check/Reveal dropdown menus ─────────────────────────────────────── */
-.menuWrapper {
-  position: relative;
-}
-
-.menuDropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  min-width: 140px;
-  background: var(--color-bg-modal);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 10;
-  padding: 0.3rem 0;
-}
-
-.menuItem {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text);
-}
-
-.menuItem:hover:not(:disabled) {
-  background: var(--color-bg-item-hover);
-}
-
-.menuItem:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.menuDivider {
-  margin: 0.3rem 0;
-  border: none;
-  border-top: 1px solid var(--color-border-subtle);
 }
 
 /* ── Confirmation dialog ──────────────────────────────────────────────── */

@@ -1,8 +1,7 @@
 .wrapper {
   width: 100%;
-  max-width: 500px;
-  margin-top: 0.5rem;
   user-select: none;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Clue bar shown above the keyboard on mobile */
@@ -35,22 +34,23 @@
 .keyboard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0 2px;
+  gap: 5px;
+  padding: 0 3px;
 }
 
 .row {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .key {
-  /* Grow to fill available row space */
+  /* Fill available row space; height derived from aspect ratio */
   flex: 1;
-  max-width: 40px;
-  min-width: 28px;
-  height: 42px;
+  min-width: 0;
+  /* Maintain original 40×42 key ratio */
+  aspect-ratio: 20 / 21;
+  min-height: 34px;
   font-size: 0.85rem;
   font-weight: 600;
   background: var(--color-bg-btn);
@@ -74,7 +74,6 @@
 
 .keySpecial {
   flex: 1.5;
-  max-width: 56px;
   font-size: 0.75rem;
 }
 

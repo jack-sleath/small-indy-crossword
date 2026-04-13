@@ -9,6 +9,16 @@
   outline: none;
 }
 
+/* On touch devices the grid fills more of the viewport.
+   max(260px, ...) prevents the formula from shrinking below a usable size
+   on very short phones (e.g. iPhone SE at 568px tall). */
+@media (pointer: coarse) {
+  .grid {
+    width: min(97vw, max(260px, calc(100dvh - 320px)));
+    height: min(97vw, max(260px, calc(100dvh - 320px)));
+  }
+}
+
 .gridActive {
   outline: 2px solid var(--color-border-active);
   outline-offset: 2px;
