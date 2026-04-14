@@ -1106,7 +1106,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             activeEntryId={activeEntry?.id ?? null}
             completedEntryIds={completedEntryIds}
             onClueClick={handleClueClick}
-            blurred={false}
+            blurred={selected === null}
           />
         </div>
       )}

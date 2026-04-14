@@ -57,7 +57,7 @@ export default function MobileKeyboard({
       )}
       <div className={styles.keyboard}>
         {rows.map((row, rowIdx) => (
-          <div key={rowIdx} className={styles.row}>
+          <div key={rowIdx} className={`${styles.row}${rowIdx === 1 ? ` ${styles.rowMiddle}` : ''}`}>
             {row.map((key) => {
               const isSpecial = key === '⌫' || key === 'REBUS' || key === 'ABC'
               const isActive = (key === 'REBUS' && rebusActive) || (key === 'ABC' && secondary)
