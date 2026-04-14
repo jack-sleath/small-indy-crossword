@@ -229,6 +229,20 @@
 @media (pointer: coarse) {
   .controls {
     margin-top: 0.4rem;
+    flex-wrap: nowrap;
+  }
+
+  /* On mobile, stretch both buttons to share the full width equally so they
+     look like a cohesive action bar rather than two floating pill buttons. */
+  .controls .menuWrapper {
+    flex: 1;
+  }
+
+  .controls .menuWrapper .btn,
+  .controls .menuWrapper .btnDanger {
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 

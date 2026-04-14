@@ -44,6 +44,12 @@
   gap: 4px;
 }
 
+/* Stagger the middle row (ASDFGHJKL) to match real keyboard feel —
+   A lands between Q and W, not directly below Q. */
+.rowMiddle {
+  padding: 0 5%;
+}
+
 .key {
   /* Fill available row space; height derived from aspect ratio */
   flex: 1;
