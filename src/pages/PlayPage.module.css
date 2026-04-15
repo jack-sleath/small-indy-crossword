@@ -244,6 +244,19 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
+
+  /* When puzzle is active (cell selected), give the control bar a little more
+     vertical breathing room so it doesn't feel jammed between the grid and clue bar. */
+  .controlsFocused {
+    margin-top: 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .controlsFocused .menuWrapper .btn,
+  .controlsFocused .menuWrapper .btnDanger {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+  }
 }
 
 .btn,
