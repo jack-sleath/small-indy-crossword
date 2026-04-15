@@ -813,13 +813,6 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             </div>
           )}
 
-          <ClueBar
-            activeEntry={activeEntry}
-            onPrevClue={handlePrevClue}
-            onNextClue={handleNextClue}
-            blurred={selected === null}
-          />
-
           <div className={styles.mobileGridArea}>
             <div className={styles.gridWrapper}>
               <CrosswordGrid
@@ -845,7 +838,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
             </div>
           </div>
 
-          <div className={styles.controls} role="group" aria-label="Puzzle controls">
+          <div className={[styles.controls, selected && styles.controlsFocused].filter(Boolean).join(' ')} role="group" aria-label="Puzzle controls">
             <div className={styles.menuWrapper} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setShowCheckMenu(false) }}>
               <button
                 className={`${styles.btn}${autocheck ? ` ${styles.btnActive}` : ''}`}
@@ -910,14 +903,19 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           )}
 
           {selected && (
-            <MobileKeyboard
-              onLetter={processLetter}
-              onBackspace={handleMobileBackspace}
-              onRebus={() => setRebusMode(r => !r)}
-              rebusActive={rebusMode}
-              clueLabel={activeEntry ? `${activeEntry.clueNumber}-${activeEntry.direction === 'across' ? 'A' : 'D'}` : ''}
-              clueText={activeEntry?.clue ?? ''}
-            />
+            <>
+              <ClueBar
+                activeEntry={activeEntry}
+                onPrevClue={handlePrevClue}
+                onNextClue={handleNextClue}
+              />
+              <MobileKeyboard
+                onLetter={processLetter}
+                onBackspace={handleMobileBackspace}
+                onRebus={() => setRebusMode(r => !r)}
+                rebusActive={rebusMode}
+              />
+            </>
           )}
         </div>
       ) : (
