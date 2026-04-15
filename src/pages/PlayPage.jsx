@@ -310,8 +310,6 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // ── Shared letter input logic (called from both keyboard handler and onChange) ──
   function processLetter(letter) {
     if (!selected || isWon) return
-    // On mobile: snap back to main content when a letter is typed
-    if (isTouchDevice) window.scrollTo({ top: 0, behavior: 'instant' })
     const { row, col } = selected
     const key = `${row},${col}`
     if (revealedCells.has(key) || correctCells.has(key)) return
@@ -591,6 +589,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
       localStorage.setItem('autocheck', String(next))
       return next
     })
+    setShowCheckMenu(false)
   }
 
   // ── Reveal helpers ────────────────────────────────────────────────────────
@@ -613,6 +612,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   function handleRevealSquare() {
     if (!selected || isWon) return
+    setShowRevealMenu(false)
     const key = `${selected.row},${selected.col}`
     setPendingConfirm({
       message: 'Reveal this square? This will mark it as assisted.',
@@ -622,6 +622,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   function handleRevealWord() {
     if (!activeEntry || isWon) return
+    setShowRevealMenu(false)
     const keys = getCellsInEntry(activeEntry).map(c => `${c.row},${c.col}`)
     setPendingConfirm({
       message: 'Reveal this word? This will mark it as assisted.',
@@ -631,6 +632,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   function handleRevealPuzzle() {
     if (isWon) return
+    setShowRevealMenu(false)
     setPendingConfirm({
       message: 'Reveal the entire puzzle? This will mark it as assisted.',
       onConfirm: () => {
@@ -690,6 +692,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   // ── Reset (play again) ────────────────────────────────────────────────────
   function handleResetConfirm() {
+    setShowRevealMenu(false)
     setPendingConfirm({
       message: 'Reset puzzle? All entries will be cleared and the timer will restart.',
       onConfirm: handleReset,
@@ -704,6 +707,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     setIsWon(false)
     setIsPaused(false)
     setShowModal(false)
+    setShowCheckMenu(false)
+    setShowRevealMenu(false)
     setIncorrectCells(new Set())
     setRevealedCells(new Set())
     setCorrectCells(new Set())
