@@ -59,6 +59,39 @@
   gap: 0.15rem;
 }
 
+/* ── Expanded control bar when puzzle is active ───────────────────────────── */
+.mobileAboveFoldFocused .mobileControlBar {
+  padding: 0.75rem 0.75rem;
+}
+
+.mobileAboveFoldFocused .mobileTimerGroup {
+  gap: 0.6rem;
+}
+
+.mobileAboveFoldFocused .mobileIconGroup {
+  gap: 0.4rem;
+}
+
+.mobileAboveFoldFocused .timer {
+  font-size: 2rem;
+}
+
+.mobileAboveFoldFocused .timerToggle {
+  font-size: 1.3rem;
+  padding: 0.25rem 0.45rem;
+}
+
+.mobileAboveFoldFocused .themeToggle {
+  font-size: 1.4rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.mobileAboveFoldFocused .muteBtn {
+  font-size: 1.4rem;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0;
+}
+
 /* ── Mobile grid area — expands to fill remaining space ───────────────────── */
 .mobileGridArea {
   flex: 1;
