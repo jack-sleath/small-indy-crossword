@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './MobileKeyboard.module.css'
 
 const PRIMARY_ROWS = [
@@ -31,12 +31,22 @@ export default function MobileKeyboard({
   clueText = '',
 }) {
   const [secondary, setSecondary] = useState(false)
+  const [showRebusHint, setShowRebusHint] = useState(false)
+  const rebusHintTimer = useRef(null)
   const rows = secondary ? SECONDARY_ROWS : PRIMARY_ROWS
+
+  useEffect(() => () => clearTimeout(rebusHintTimer.current), [])
 
   function handleKey(key) {
     if (key === '⌫') {
       onBackspace?.()
     } else if (key === 'REBUS') {
+      if (!localStorage.getItem('rebusHintSeen')) {
+        localStorage.setItem('rebusHintSeen', 'true')
+        setShowRebusHint(true)
+        clearTimeout(rebusHintTimer.current)
+        rebusHintTimer.current = setTimeout(() => setShowRebusHint(false), 2500)
+      }
       onRebus?.()
     } else if (key === 'ABC') {
       setSecondary(false)
@@ -48,11 +58,16 @@ export default function MobileKeyboard({
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={{ position: 'relative' }}>
       {clueText && (
         <div className={styles.clueBar}>
           {clueLabel && <span className={styles.clueLabel}>{clueLabel}</span>}
           <span className={styles.clueText}>{clueText}</span>
+        </div>
+      )}
+      {showRebusHint && (
+        <div className={styles.rebusHint} role="status">
+          Rebus: type multiple letters in one cell
         </div>
       )}
       <div className={styles.keyboard}>
