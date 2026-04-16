@@ -96,6 +96,12 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const hiddenInputRef = useRef(null)
   const startTimeRef = useRef(null)
   const intervalRef = useRef(null)
+  // Progress persistence: tracks whether saved progress has been restored so
+  // the save effect doesn't overwrite localStorage before restoration completes.
+  const hasRestoredRef = useRef(false)
+  // Stores the elapsed time loaded from localStorage so startTimerIfNeeded can
+  // resume the timer from where the user left off rather than restarting at 0.
+  const restoredElapsedRef = useRef(0)
 
   // Load the correct pool via manifest, then decode seed
   useEffect(() => {
@@ -143,6 +149,46 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     }
   }, [pool, seedParam])
 
+  // ── Progress persistence ──────────────────────────────────────────────────
+  // Restore saved progress once the puzzle is ready.
+  useEffect(() => {
+    if (!puzzle || !seedParam) return
+    hasRestoredRef.current = false
+    const raw = localStorage.getItem(`progress-${seedParam}`)
+    if (raw) {
+      try {
+        const data = JSON.parse(raw)
+        if (data.cellValues) setCellValues(data.cellValues)
+        if (data.revealedCells) setRevealedCells(new Set(data.revealedCells))
+        if (data.correctCells) setCorrectCells(new Set(data.correctCells))
+        if (data.isAssisted) setIsAssisted(data.isAssisted)
+        const savedElapsed = data.elapsed ?? 0
+        restoredElapsedRef.current = savedElapsed
+        setElapsed(savedElapsed)
+        if (data.isWon) {
+          setIsWon(true)
+          setShowModal(true)
+        }
+      } catch { /* ignore corrupt data */ }
+    }
+    hasRestoredRef.current = true
+  }, [puzzle, seedParam]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist progress on every relevant state change.
+  // puzzle and seedParam are intentionally omitted from deps: they don't change
+  // after load, and including them would trigger a save before restoration runs.
+  useEffect(() => {
+    if (!seedParam || !puzzle || !hasRestoredRef.current) return // eslint-disable-line react-hooks/exhaustive-deps
+    localStorage.setItem(`progress-${seedParam}`, JSON.stringify({
+      cellValues,
+      revealedCells: [...revealedCells],
+      correctCells: [...correctCells],
+      isAssisted,
+      elapsed,
+      isWon,
+    }))
+  }, [cellValues, revealedCells, correctCells, isAssisted, elapsed, isWon]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Countdown to next daily puzzle (midnight UTC)
   useEffect(() => {
     if (!dailyNumber) return
@@ -185,7 +231,10 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   function startTimerIfNeeded() {
     if (startTimeRef.current !== null || isWon) return
-    startTimeRef.current = Date.now()
+    // Re-enable saves after a reset (hasRestoredRef is cleared by handleReset)
+    hasRestoredRef.current = true
+    // Account for any previously elapsed time (restored from localStorage or 0)
+    startTimeRef.current = Date.now() - restoredElapsedRef.current * 1000
     intervalRef.current = setInterval(() => {
       setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
     }, 500)
@@ -700,6 +749,10 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   }
 
   function handleReset() {
+    // Clear saved progress and disable saving until the user starts playing again
+    if (seedParam) localStorage.removeItem(`progress-${seedParam}`)
+    hasRestoredRef.current = false
+    restoredElapsedRef.current = 0
     setCellValues({})
     setSelected(null)
     setDirection('across')
