@@ -1,7 +1,7 @@
 .wrapper {
   width: 100%;
   user-select: none;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
 }
 
 /* Clue bar shown above the keyboard on mobile */
