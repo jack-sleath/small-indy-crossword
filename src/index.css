@@ -7,7 +7,7 @@
 :root,
 [data-theme="light"] {
   --color-bg: #fff;
-  --color-bg-cell: #fff;
+  --color-bg-cell: #f5f5f5;
   --color-bg-black-cell: #000;
   --color-bg-active-word: #c0d8f7;
   --color-bg-selected: #f7dc6f;
