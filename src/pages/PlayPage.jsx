@@ -743,20 +743,17 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   function handleResetConfirm() {
     setShowRevealMenu(false)
     setPendingConfirm({
-      message: 'Reset puzzle? All entries will be cleared and the timer will restart.',
+      message: 'Reset puzzle? Your entries will be cleared, but the timer keeps running and any prior reveals stay recorded.',
       onConfirm: handleReset,
     })
   }
 
   function handleReset() {
-    // Clear saved progress and disable saving until the user starts playing again
-    if (seedParam) localStorage.removeItem(`progress-${seedParam}`)
-    hasRestoredRef.current = false
-    restoredElapsedRef.current = 0
+    // Preserve `elapsed` and `isAssisted` across a reset so a player can't
+    // reveal answers, hit restart, and re-enter them for a fake fast time.
     setCellValues({})
     setSelected(null)
     setDirection('across')
-    setElapsed(0)
     setIsWon(false)
     setIsPaused(false)
     setShowModal(false)
@@ -767,10 +764,14 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     setCorrectCells(new Set())
     setRebusMode(false)
     setPendingConfirm(null)
-    setIsAssisted(false)
-    startTimeRef.current = null
+    // Re-anchor and restart the interval so the timer keeps ticking from the
+    // current elapsed value (covers both mid-puzzle resets and post-win replay).
     clearInterval(intervalRef.current)
-    intervalRef.current = null
+    startTimeRef.current = Date.now() - elapsed * 1000
+    restoredElapsedRef.current = elapsed
+    intervalRef.current = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTimeRef.current) / 1000))
+    }, 500)
   }
 
   return (
