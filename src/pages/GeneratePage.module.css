@@ -57,6 +57,36 @@
   padding-left: 1.2rem;
 }
 
+/* ── Pool selector ──────────────────────────────────────────────────────── */
+.poolSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.poolLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.poolSelect {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 5px;
+  background: var(--color-bg-btn);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.poolSelect:hover {
+  background: var(--color-bg-btn-hover);
+}
+
 /* ── Seed / Share bar ───────────────────────────────────────────────────── */
 .seedBar {
   display: flex;

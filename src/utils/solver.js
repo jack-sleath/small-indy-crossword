@@ -74,6 +74,7 @@ export function solve(pool, attempt = 0) {
 
   const assignment = {}
   const usedIds = new Set()
+  const usedAnswers = new Set()
 
   function canPlace(slotKey, word) {
     const a = assignment
@@ -111,12 +112,15 @@ export function solve(pool, attempt = 0) {
     const slotKey = slotOrder[idx]
     for (const word of shuffled) {
       if (usedIds.has(word.id)) continue
+      if (usedAnswers.has(word.answer)) continue
       if (!canPlace(slotKey, word)) continue
       assignment[slotKey] = word
       usedIds.add(word.id)
+      usedAnswers.add(word.answer)
       if (backtrack(idx + 1)) return true
       delete assignment[slotKey]
       usedIds.delete(word.id)
+      usedAnswers.delete(word.answer)
     }
     return false
   }
@@ -308,6 +312,7 @@ export function solvePattern(pool, pattern, attempt = 0) {
 
   const assignment = new Array(slots.length).fill(null)
   const usedIds = new Set()
+  const usedAnswers = new Set()
 
   // Shared logic: gather active constraints for a slot from already-placed neighbours.
   function getConstraints(slotIdx) {
@@ -331,7 +336,7 @@ export function solvePattern(pool, pattern, attempt = 0) {
     const constraints = getConstraints(slotIdx)
 
     if (constraints.length === 0) {
-      return byLength[len].some(w => !usedIds.has(w.id))
+      return byLength[len].some(w => !usedIds.has(w.id) && !usedAnswers.has(w.answer))
     }
 
     let smallest = null
@@ -343,6 +348,7 @@ export function solvePattern(pool, pattern, attempt = 0) {
 
     for (const word of smallest) {
       if (usedIds.has(word.id)) continue
+      if (usedAnswers.has(word.answer)) continue
       let ok = true
       for (const { pos, letter } of constraints) {
         if (word.answer[pos] !== letter) { ok = false; break }
@@ -386,8 +392,10 @@ export function solvePattern(pool, pattern, attempt = 0) {
     const candidates = getCandidates(slotIdx)
     for (const word of candidates) {
       if (usedIds.has(word.id)) continue
+      if (usedAnswers.has(word.answer)) continue
       assignment[slotIdx] = word
       usedIds.add(word.id)
+      usedAnswers.add(word.answer)
 
       // Forward check: after placing this word, verify that all not-yet-placed
       // slots which intersect it still have at least one valid candidate.
@@ -406,6 +414,7 @@ export function solvePattern(pool, pattern, attempt = 0) {
       if (forwardOk && backtrack(step + 1)) return true
       assignment[slotIdx] = null
       usedIds.delete(word.id)
+      usedAnswers.delete(word.answer)
     }
     return false
   }

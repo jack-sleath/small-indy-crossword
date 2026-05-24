@@ -8,7 +8,7 @@ import styles from './ClueList.module.css'
  *   onClueClick        — (entry) => void
  *   filter             — 'across' | 'down' | undefined (default: show both)
  */
-export default function ClueList({ entries, activeEntryId, completedEntryIds = new Set(), onClueClick, filter }) {
+export default function ClueList({ entries, activeEntryId, completedEntryIds = new Set(), onClueClick, filter, blurred = false }) {
   const across = entries
     .filter((e) => e.direction === 'across')
     .sort((a, b) => a.clueNumber - b.clueNumber)
@@ -42,7 +42,7 @@ export default function ClueList({ entries, activeEntryId, completedEntryIds = n
   const showDown = !filter || filter === 'down'
 
   return (
-    <div className={styles.clueList}>
+    <div className={`${styles.clueList}${blurred ? ` ${styles.blurred}` : ''}`}>
       {showAcross && (
         <section>
           <h2 className={styles.heading}>Across</h2>

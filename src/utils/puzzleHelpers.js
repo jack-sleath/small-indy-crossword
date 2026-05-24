@@ -66,15 +66,43 @@ export function isEntryComplete(entry, cellValues) {
 }
 
 /**
- * Returns the next entry in reading order (clueNumber asc, across before down)
- * that has at least one empty cell, skipping complete entries.
+ * Sort order: all across entries (by clue number) then all down entries (by clue number).
+ * This means navigation goes through all horizontal clues first, then all vertical.
+ */
+function sortEntriesHorizontalFirst(entries) {
+  return [...entries].sort((a, b) => {
+    if (a.direction !== b.direction) return a.direction === 'across' ? -1 : 1
+    return a.clueNumber - b.clueNumber
+  })
+}
+
+/**
+ * Returns the next entry in reading order (all across first, then all down).
+ * Wraps around to the first entry.
+ */
+export function getNextEntry(entries, currentEntry) {
+  const sorted = sortEntriesHorizontalFirst(entries)
+  const idx = sorted.findIndex((e) => e.id === currentEntry.id)
+  return sorted[(idx + 1) % sorted.length]
+}
+
+/**
+ * Returns the previous entry in reading order (all across first, then all down).
+ * Wraps around to the last entry.
+ */
+export function getPrevEntry(entries, currentEntry) {
+  const sorted = sortEntriesHorizontalFirst(entries)
+  const idx = sorted.findIndex((e) => e.id === currentEntry.id)
+  return sorted[(idx - 1 + sorted.length) % sorted.length]
+}
+
+/**
+ * Returns the next entry (all across first, then all down) that has at least
+ * one empty cell, skipping complete entries.
  * Returns null if all entries are complete.
  */
 export function getNextIncompleteEntry(entries, currentEntry, cellValues) {
-  const sorted = [...entries].sort((a, b) => {
-    if (a.clueNumber !== b.clueNumber) return a.clueNumber - b.clueNumber
-    return a.direction === 'across' ? -1 : 1
-  })
+  const sorted = sortEntriesHorizontalFirst(entries)
   const idx = sorted.findIndex((e) => e.id === currentEntry.id)
   for (let i = 1; i <= sorted.length; i++) {
     const entry = sorted[(idx + i) % sorted.length]
@@ -88,30 +116,13 @@ export function getFirstEmptyCellInEntry(entry, cellValues) {
   return getCellsInEntry(entry).find((c) => !cellValues[`${c.row},${c.col}`]) ?? null
 }
 
-/**
- * Returns the next entry in reading order (clueNumber asc, across before down).
- * Wraps around to the first entry.
- */
-export function getNextEntry(entries, currentEntry) {
-  const sorted = [...entries].sort((a, b) => {
-    if (a.clueNumber !== b.clueNumber) return a.clueNumber - b.clueNumber
-    return a.direction === 'across' ? -1 : 1
-  })
-  const idx = sorted.findIndex((e) => e.id === currentEntry.id)
-  return sorted[(idx + 1) % sorted.length]
-}
-
-/**
- * Returns the previous entry in reading order (clueNumber asc, across before down).
- * Wraps around to the last entry.
- */
-export function getPrevEntry(entries, currentEntry) {
-  const sorted = [...entries].sort((a, b) => {
-    if (a.clueNumber !== b.clueNumber) return a.clueNumber - b.clueNumber
-    return a.direction === 'across' ? -1 : 1
-  })
-  const idx = sorted.findIndex((e) => e.id === currentEntry.id)
-  return sorted[(idx - 1 + sorted.length) % sorted.length]
+/** Returns the last empty cell in an entry, or the last cell if all are filled. */
+export function getLastEmptyCellInEntry(entry, cellValues) {
+  const cells = getCellsInEntry(entry)
+  for (let i = cells.length - 1; i >= 0; i--) {
+    if (!cellValues[`${cells[i].row},${cells[i].col}`]) return cells[i]
+  }
+  return cells[cells.length - 1]
 }
 
 /**

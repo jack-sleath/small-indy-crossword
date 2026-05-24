@@ -1,0 +1,29 @@
+{
+  "pools": [
+    {
+      "slug": "guardian",
+      "name": "Guardian Quick",
+      "file": "pool.json",
+      "description": "General knowledge clues, British English style",
+      "default": true
+    },
+    {
+      "slug": "lol",
+      "name": "League of Legends",
+      "file": "pool-lol.json",
+      "description": "Champions, items, abilities, lore"
+    },
+    {
+      "slug": "nyt-mini",
+      "name": "NYT Mini",
+      "file": "pool-nyt-mini.json",
+      "description": "Clues in the style of the New York Times Mini crossword"
+    },
+    {
+      "slug": "star-wars",
+      "name": "Star Wars",
+      "file": "pool-star-wars.json",
+      "description": "Characters, planets, ships, factions"
+    }
+  ]
+}

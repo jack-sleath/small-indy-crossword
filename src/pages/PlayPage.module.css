@@ -6,6 +6,103 @@
   min-height: 100dvh;
 }
 
+/* On touch devices the page itself has no outer padding — mobile layout
+   handles its own internal spacing */
+@media (pointer: coarse) {
+  .page {
+    padding: 0;
+    align-items: stretch;
+  }
+}
+
+/* ── Mobile above-fold container ──────────────────────────────────────────── */
+.mobileAboveFold {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+/* When puzzle has focus (cell selected): fill exactly the viewport so the
+   keyboard sits at the very bottom and clue list is only visible by scrolling */
+.mobileAboveFoldFocused {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* When settings panel is open, release the viewport-lock so it isn't clipped */
+.mobileAboveFoldFocused.mobileSettingsOpen {
+  height: auto;
+  overflow: visible;
+}
+
+/* ── Mobile compact control bar ───────────────────────────────────────────── */
+.mobileControlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.25rem;
+  flex-shrink: 0;
+}
+
+.mobileTimerGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.mobileIconGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+/* ── Expanded control bar when puzzle is active ───────────────────────────── */
+.mobileAboveFoldFocused .mobileControlBar {
+  padding: 0.75rem 0.75rem;
+}
+
+.mobileAboveFoldFocused .mobileTimerGroup {
+  gap: 0.6rem;
+}
+
+.mobileAboveFoldFocused .mobileIconGroup {
+  gap: 0.4rem;
+}
+
+.mobileAboveFoldFocused .timer {
+  font-size: 2rem;
+}
+
+.mobileAboveFoldFocused .timerToggle {
+  font-size: 1.3rem;
+  padding: 0.25rem 0.45rem;
+}
+
+.mobileAboveFoldFocused .themeToggle {
+  font-size: 1.4rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.mobileAboveFoldFocused .muteBtn {
+  font-size: 1.4rem;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0;
+}
+
+/* ── Mobile grid area — expands to fill remaining space ───────────────────── */
+.mobileGridArea {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  padding-bottom: 0.25rem;
+}
+
 /* Hidden input for mobile virtual keyboard — positioned off-screen */
 .hiddenInput {
   position: fixed;
@@ -48,6 +145,16 @@
   background: var(--color-bg-btn-hover);
 }
 
+.poolSubtitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  margin-top: -0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .muteBtn {
   font-size: 1rem;
   background: none;
@@ -57,6 +164,10 @@
   opacity: 0.6;
   border-radius: 3px;
   margin-bottom: 0.25rem;
+}
+
+.mobileIconGroup .muteBtn {
+  margin-bottom: 0;
 }
 
 .muteBtn:hover {
@@ -146,6 +257,39 @@
   margin-top: 0.75rem;
   flex-wrap: wrap;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+  .controls {
+    margin-top: 0.4rem;
+    flex-wrap: nowrap;
+  }
+
+  /* On mobile, stretch both buttons to share the full width equally so they
+     look like a cohesive action bar rather than two floating pill buttons. */
+  .controls .menuWrapper {
+    flex: 1;
+  }
+
+  .controls .menuWrapper .btn,
+  .controls .menuWrapper .btnDanger {
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* When puzzle is active (cell selected), keep controls snug below the grid. */
+  .controlsFocused {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .controlsFocused .menuWrapper .btn,
+  .controlsFocused .menuWrapper .btnDanger {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
 }
 
 .btn,
@@ -165,13 +309,15 @@
 }
 
 .btnActive {
-  background: var(--color-bg-item-active);
+  background: var(--color-primary);
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: #fff;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .btnActive:hover:not(:disabled) {
-  background: var(--color-bg-active-word);
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 
@@ -206,6 +352,16 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 10;
   padding: 0.3rem 0;
+}
+
+/* On touch devices the controls sit near the keyboard at the bottom of the
+   viewport, inside an overflow:hidden container. Open dropdowns upward so
+   they aren't clipped. */
+@media (pointer: coarse) {
+  .menuDropdown {
+    top: auto;
+    bottom: calc(100% + 4px);
+  }
 }
 
 .menuItem {
@@ -277,49 +433,18 @@
   background: var(--color-primary-hover);
 }
 
-/* ── Check/Reveal dropdown menus ─────────────────────────────────────── */
-.menuWrapper {
-  position: relative;
+/* ── Daily puzzle countdown ───────────────────────────────────────────── */
+.nextPuzzle {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: center;
 }
 
-.menuDropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  min-width: 140px;
-  background: var(--color-bg-modal);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 10;
-  padding: 0.3rem 0;
-}
-
-.menuItem {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text);
-}
-
-.menuItem:hover:not(:disabled) {
-  background: var(--color-bg-item-hover);
-}
-
-.menuItem:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.menuDivider {
-  margin: 0.3rem 0;
-  border: none;
-  border-top: 1px solid var(--color-border-subtle);
+.nextPuzzleCountdown {
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
 }
 
 /* ── Confirmation dialog ──────────────────────────────────────────────── */
@@ -421,6 +546,16 @@
   margin-top: 0.15em;
   flex-shrink: 0;
   cursor: pointer;
+}
+
+.settingsGenerateLink {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.settingsGenerateLink:hover {
+  text-decoration: underline;
 }
 
 .settingsClose {

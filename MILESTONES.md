@@ -497,3 +497,63 @@
 - [ ] Layout is functional and unbroken at 320px and 1280px viewport widths
 - [ ] No console errors in the production build
 - [ ] Manual QA passes on Chrome/Safari mobile and Chrome/Firefox desktop
+
+---
+
+## Milestone 26 — Rename to Small Indy & Generator Link
+**Goal:** Rebrand the app from "Mini Crossword" to "Small Indy" and surface a link to `/generate` from the settings panel.
+
+**Tasks:**
+- Update all UI text, page titles, and metadata to use "Small Indy" instead of "Mini Crossword"
+- Add a link to `/generate` inside the settings panel so the puzzle creator can easily navigate there
+
+**Done when:**
+- [x] All visible text in the app refers to "Small Indy" (no remaining "Mini Crossword" references)
+- [x] The settings panel includes a link to `/generate`
+
+---
+
+## Milestone 27 — Daily Puzzle Page
+**Goal:** Add a `/daily` route that automatically serves a different pre-generated puzzle each UTC day, with a countdown to the next puzzle.
+
+**Tasks:**
+- Pre-generate 365 puzzle seeds and store them in `daily-seeds.json`
+- Create a `/daily` route (`DailyPage`) that reads `daily-seeds.json` and selects today's seed based on the number of UTC days elapsed since a fixed start date
+- Pass the daily seed and a day number to `PlayPage` so it renders the correct puzzle
+- Display a "Next puzzle in HH:MM:SS" countdown that updates every second and counts down to the next UTC midnight
+- Lock the puzzle to the correct UTC day so all users see the same puzzle regardless of timezone
+
+**Done when:**
+- [x] `/daily` renders today's puzzle, derived consistently from the UTC date
+- [x] A different puzzle is shown each day, cycling through the 365 pre-generated seeds
+- [x] A live countdown to the next UTC midnight is displayed after the puzzle is solved (or at all times on the daily page)
+- [x] All users on the same UTC day see the same puzzle regardless of their local timezone
+
+---
+
+## Milestone 28 — Clue Blur & Timer Start on First Click
+**Goal:** Prevent the user from reading clues before they are ready to start, and tie the timer start to that same first interaction.
+
+**Tasks:**
+- Blur clue text until the user clicks (or taps) their first cell
+- Start the timer at the exact same moment the clues unblur (first cell click), rather than on first keystroke
+
+**Done when:**
+- [x] Clues are visually blurred on page load before any cell is selected
+- [x] Clicking the first cell simultaneously unblurs the clues and starts the timer
+- [x] Typing a letter does not start the timer if no cell has been clicked yet
+
+---
+
+## Milestone 29 — Daily Share Link
+**Goal:** When sharing from the daily puzzle page, the share URL points to `/daily` rather than the seed-based URL, so recipients land on the same daily puzzle.
+
+**Tasks:**
+- Detect whether the current game is a daily puzzle (via the `dailyNumber` prop)
+- Use `<baseUrl>/daily` as the share URL in both the toolbar share button and the completion modal share button when on the daily page
+- Continue to use `<baseUrl>/?seed=<code>` for non-daily puzzles
+
+**Done when:**
+- [x] Sharing from the daily page produces a `/daily` URL
+- [x] Sharing from a seed-based game still produces a `/?seed=` URL
+- [x] Both the toolbar share button and the completion modal share button use the correct URL
