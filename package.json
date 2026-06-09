@@ -1,9 +1,8 @@
 {
   "name": "small-indy-crossword",
   "version": "1.0.0",
-  "description": "",
+  "description": "A lightweight, shareable 5x5 mini crossword app for small private groups.",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,13 +16,20 @@
     "type": "git",
     "url": "git+https://github.com/jack-sleath/small-indy-crossword.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "crossword",
+    "mini-crossword",
+    "puzzle",
+    "word-game",
+    "react",
+    "vite"
+  ],
+  "author": "Jack Sleath",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jack-sleath/small-indy-crossword/issues"
   },
-  "homepage": "https://github.com/jack-sleath/small-indy-crossword#readme",
+  "homepage": "https://small-indy.jack-sleath.dev",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.1",
     "vite": "^8.0.0"
