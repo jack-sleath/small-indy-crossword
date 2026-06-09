@@ -5,7 +5,7 @@ import DailyPage from './pages/DailyPage'
 
 export default function App() {
   return (
-    <BrowserRouter basename="/small-indy-crossword">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<PlayPage />} />
         <Route path="/daily" element={<DailyPage />} />

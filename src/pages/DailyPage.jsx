@@ -4,7 +4,7 @@ import PlayPage from './PlayPage'
 import { useTheme } from '../utils/useTheme'
 import styles from './PlayPage.module.css'
 
-const DAILY_SEEDS_URL = '/small-indy-crossword/daily-seeds.json'
+const DAILY_SEEDS_URL = '/daily-seeds.json'
 
 export default function DailyPage() {
   const { theme, toggleTheme } = useTheme()

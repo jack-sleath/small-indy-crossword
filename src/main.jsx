@@ -7,7 +7,7 @@ import './index.css'
 const redirect = sessionStorage.getItem('spa-redirect')
 if (redirect) {
   sessionStorage.removeItem('spa-redirect')
-  window.history.replaceState(null, '', '/small-indy-crossword' + redirect)
+  window.history.replaceState(null, '', redirect)
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
