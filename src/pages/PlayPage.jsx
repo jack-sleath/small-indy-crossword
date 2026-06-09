@@ -23,7 +23,7 @@ import {
 import { useTheme } from '../utils/useTheme'
 import styles from './PlayPage.module.css'
 
-const BASE_URL = `${window.location.origin}/small-indy-crossword`
+const BASE_URL = window.location.origin
 
 function buildAnswerMap(puzzle) {
   const map = {}
@@ -105,7 +105,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   // Load the correct pool via manifest, then decode seed
   useEffect(() => {
-    const BASE = '/small-indy-crossword'
+    const BASE = ''
     fetch(`${BASE}/pools.json`)
       .then((r) => r.json())
       .then(({ pools }) => {

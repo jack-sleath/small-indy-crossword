@@ -11,7 +11,7 @@ Built with React + Vite and deployed to GitHub Pages.
 Visit the play URL with a `?seed=` query parameter:
 
 ```
-https://jack-sleath.github.io/small-indy-crossword/?seed=<code>
+https://small-indy.jack-sleath.dev/?seed=<code>
 ```
 
 - **Click or tap a cell** to select it
@@ -33,7 +33,7 @@ The timer starts on your first keystroke and stops when you complete the puzzle.
 
 ## Generating a Puzzle
 
-Visit [`/generate`](https://jack-sleath.github.io/small-indy-crossword/generate):
+Visit [`/generate`](https://small-indy.jack-sleath.dev/generate):
 
 1. The solver picks words from `pool.json` and arranges them into a valid 5×5 grid
 2. A read-only preview renders with the solution filled in

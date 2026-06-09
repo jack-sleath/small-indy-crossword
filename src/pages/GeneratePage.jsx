@@ -9,7 +9,7 @@ import { encodeSeed } from '../utils/seed'
 import { useTheme } from '../utils/useTheme'
 import styles from './GeneratePage.module.css'
 
-const BASE = '/small-indy-crossword'
+const BASE = ''
 const BASE_URL = `${window.location.origin}${BASE}`
 
 export default function GeneratePage() {
