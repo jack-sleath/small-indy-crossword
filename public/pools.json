@@ -24,6 +24,12 @@
       "name": "Star Wars",
       "file": "pool-star-wars.json",
       "description": "Characters, planets, ships, factions"
+    },
+    {
+      "slug": "greek-mythology",
+      "name": "Greek Mythology",
+      "file": "pool-greek-mythology.json",
+      "description": "Gods, heroes, monsters, and myths of ancient Greece"
     }
   ]
 }
