@@ -5239,6 +5239,91 @@
       "id": "sw1047",
       "answer": "TWINS",
       "clue": "Luke and Leia, secretly"
+    },
+    {
+      "id": "sw1048",
+      "answer": "RAT",
+      "clue": "Womp ___ Luke bullseyed in Beggar's Canyon"
+    },
+    {
+      "id": "sw1049",
+      "answer": "EAR",
+      "clue": "Yoda has a large, pointed one"
+    },
+    {
+      "id": "sw1050",
+      "answer": "MAW",
+      "clue": "The Sarlacc's gaping mouth"
+    },
+    {
+      "id": "sw1051",
+      "answer": "AIR",
+      "clue": "What Vader's mask helps him breathe"
+    },
+    {
+      "id": "sw1052",
+      "answer": "OIL",
+      "clue": "Lubricant for a droid's joints"
+    },
+    {
+      "id": "sw1053",
+      "answer": "EYE",
+      "clue": "A probe droid's photoreceptor, basically"
+    },
+    {
+      "id": "sw1054",
+      "answer": "GEM",
+      "clue": "A kyber crystal, essentially"
+    },
+    {
+      "id": "sw1055",
+      "answer": "FIX",
+      "clue": "Repair, as Han constantly does to the Falcon"
+    },
+    {
+      "id": "sw1056",
+      "answer": "LAB",
+      "clue": "Cloning facility on Kamino"
+    },
+    {
+      "id": "sw1057",
+      "answer": "TOW",
+      "clue": "What a tractor beam does to a captured ship"
+    },
+    {
+      "id": "sw1058",
+      "answer": "JET",
+      "clue": "___ pack that lets Boba Fett fly"
+    },
+    {
+      "id": "sw1059",
+      "answer": "DEW",
+      "clue": "Moisture vaporators pull it from the desert air"
+    },
+    {
+      "id": "sw1060",
+      "answer": "EAT",
+      "clue": "What the Sarlacc slowly does to its prey"
+    },
+    {
+      "id": "sw1061",
+      "answer": "ARMS",
+      "clue": "Blasters and sabers, collectively"
+    },
+    {
+      "id": "sw1062",
+      "answer": "EARS",
+      "clue": "Yoda's distinctive pointed pair"
+    },
+    {
+      "id": "sw1063",
+      "answer": "AURA",
+      "clue": "Force energy sensed around a strong Jedi"
+    },
+    {
+      "id": "sw1064",
+      "answer": "AIDE",
+      "clue": "Lobot, to Lando Calrissian"
     }
   ]
 }
