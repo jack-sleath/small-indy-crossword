@@ -1,9 +1,14 @@
 /**
- * Counts all unique valid crossword puzzles that can be generated
- * from the current pool.json, for each grid pattern.
+ * Counts all unique valid crossword puzzles that can be generated from a pool,
+ * for each grid pattern.
  *
  * Runs an exhaustive backtracking search (no shuffle, no attempt cap)
  * to enumerate every valid assignment.
+ *
+ * Usage:
+ *   node scripts/count-puzzles.mjs                  # default: Guardian pool
+ *   node scripts/count-puzzles.mjs --slug star-wars # any pool in pools.json
+ *   node scripts/count-puzzles.mjs --pool pool-lol.json   # explicit file in public/
  */
 
 import { readFileSync } from 'fs'
@@ -11,7 +16,39 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const poolPath = join(__dirname, '..', 'public', 'pool.json')
+const PUBLIC_DIR = join(__dirname, '..', 'public')
+
+// ── Resolve which pool to count (default: the manifest's default pool) ──────────
+function parseArgs(argv) {
+  const out = {}
+  for (let i = 0; i < argv.length; i++) {
+    if (!argv[i].startsWith('--')) continue
+    const key = argv[i].slice(2)
+    const next = argv[i + 1]
+    if (next === undefined || next.startsWith('--')) out[key] = true
+    else { out[key] = next; i++ }
+  }
+  return out
+}
+
+const args = parseArgs(process.argv.slice(2))
+const manifest = JSON.parse(readFileSync(join(PUBLIC_DIR, 'pools.json'), 'utf8'))
+
+let file
+if (typeof args.pool === 'string') {
+  file = args.pool
+} else if (typeof args.slug === 'string') {
+  const entry = manifest.pools.find((p) => p.slug === args.slug)
+  if (!entry) {
+    console.error(`Unknown pool slug "${args.slug}". Available: ${manifest.pools.map((p) => p.slug).join(', ')}`)
+    process.exit(1)
+  }
+  file = entry.file
+} else {
+  file = (manifest.pools.find((p) => p.default) ?? manifest.pools[0]).file
+}
+
+const poolPath = join(PUBLIC_DIR, file)
 const { pool } = JSON.parse(readFileSync(poolPath, 'utf8'))
 
 // ── Patterns ─────────────────────────────────────────────────────────────────
@@ -199,7 +236,7 @@ function countSolutions(pattern) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-console.log(`Pool: ${pool.length} total entries\n`)
+console.log(`Pool: ${file} — ${pool.length} total entries\n`)
 
 let grandTotal = 0
 for (const pattern of PATTERNS) {

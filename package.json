@@ -11,6 +11,7 @@
     "build-pool": "node scripts/fetch-guardian-pool.js",
     "generate-seeds": "node scripts/generate-daily-seeds.mjs",
     "validate-pools": "node scripts/validate-pools.js",
+    "count-puzzles": "node scripts/count-puzzles.mjs",
     "pool:status": "node scripts/pool-builder/pool-status.mjs",
     "pool:precheck": "node scripts/pool-builder/style-precheck.mjs",
     "pool:ingest": "node scripts/pool-builder/ingest-candidates.mjs"
