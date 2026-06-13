@@ -18,6 +18,22 @@ only solvable clues survive. The build is **batched, incremental, and resumable*
 committed pool file is the only state, so you can stop after any batch and a later run
 tops the same pool up toward the target.
 
+## Two things that matter: distinct words vs rows
+
+A pool's `target` counts **rows** (entries). But the solver fills a grid from **distinct
+answers**, deduping repeats — so what makes a pool *playable* is the number of **distinct
+words per length** (it needs roughly 100+ distinct per length to fill the grids reliably,
+and `GeneratePage` only tries 5 times). Rows beyond that just add **clue variety**.
+
+Dedup is by **answer + clue pair**, so the same word may appear with several different
+clues. Two ways to add rows, in priority order:
+1. **New distinct words** (raises solvability) — do this first, until the theme runs dry.
+2. **Extra clues for existing words** (adds variety only) — use this to reach a large row
+   target once new distinct words are exhausted.
+
+`pool-status.mjs` reports both `distinct` (per length) and row `count`/`distribution`; let
+the gap between them tell you which phase you're in.
+
 ## Inputs
 
 Parse `$ARGUMENTS`:
@@ -37,8 +53,11 @@ All commands run from the repo root. Helper scripts live in `scripts/pool-builde
    node scripts/pool-builder/pool-status.mjs --theme "<theme>" --target <target>
    ```
    This prints JSON with `slug`, `name`, `prefix`, `fileExists`, `inManifest`, `count`,
-   `distribution` (3/4/5), `perLengthTarget`, `deficit`, and `prefixCollision`.
-   - If `prefixCollision` is true, ask the user to confirm or supply a different 2-char `--prefix`.
+   `distribution` (rows by 3/4/5), `distinct` (distinct words by 3/4/5), `perLengthTarget`,
+   `deficit`, `reusedPrefix`, and `prefixCollision`.
+   - On a top-up of an existing pool, `reusedPrefix` is true and `prefix` is the pool's own
+     established prefix — always pass that same `--prefix` to ingest so ids stay consistent.
+   - If `prefixCollision` is true (new pool only), confirm or supply a different 2-char `--prefix`.
    - Note `slug`, `name`, `prefix` — reuse them for the whole run.
 2. Read **`docs/clue-style.md`** and hold the rules in mind. House style for themed pools
    is the NYT-Mini register: conversational, occasionally punny, pop-culture friendly.
@@ -54,8 +73,14 @@ Write ~50 candidates as JSONL to `.pool-build/<slug>/candidates.jsonl`, one obje
 {"answer": "HERA", "clue": "Queen of the Greek gods"}
 ```
 - Answers **3–5 letters**, real, on-theme, well-known enough to be guessable.
-- **Bias toward the deficient length(s)** from the latest `deficit` so the pool stays
-  balanced across 3/4/5 (the solver needs a spread — all-5-letter pools can't fill many grids).
+- **Phase 1 (new distinct words):** while the theme still has unused guessable words,
+  generate *new* answers, biased toward the deficient length(s) from `deficit` so the pool
+  stays balanced across 3/4/5 (the solver needs a spread — all-5-letter pools can't fill
+  many grids). This is the only phase that improves solvability.
+- **Phase 2 (clue variety):** once new distinct words dry up (heavy `duplicate-existing`
+  drops) but you're still below a large row `target`, write *additional, genuinely different*
+  clues for words already in the pool. Each new clue is gated independently, so every clue
+  stays fair. Don't pad with trivially-similar rewordings.
 - Follow `docs/clue-style.md`: never put the answer or its root in the clue; match part of
   speech / tense / number; flag anagrams with the word "anagram"; flag foreign words/abbreviations.
 - Vary the angle each batch so you don't keep regenerating the same well-known answers.

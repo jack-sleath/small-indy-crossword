@@ -12,13 +12,14 @@
  *   - the answer (or a shared 4+ char leading root) appears in the clue
  *   - the clue contains an unflagged anagram of the answer (a clue token is a
  *     letter-for-letter permutation of the answer but the clue never says "anagram")
- *   - the answer already exists in the pool (--slug) or earlier in this batch
+ *   - the exact answer+clue pair already exists in the pool (--slug) or earlier in
+ *     this batch (the same answer with a *different* clue is allowed — clue variety)
  *
  * Usage:
  *   node scripts/pool-builder/style-precheck.mjs --slug <slug> --in candidates.jsonl --out cleaned.jsonl
  */
 
-import { parseArgs, normalizeAnswer, cleanClue, loadPool, readJsonl, writeJsonl } from './lib.mjs'
+import { parseArgs, normalizeAnswer, cleanClue, pairKey, loadPool, readJsonl, writeJsonl } from './lib.mjs'
 
 const args = parseArgs(process.argv.slice(2))
 if (!args.in || !args.out) {
@@ -28,10 +29,11 @@ if (!args.in || !args.out) {
 
 const candidates = readJsonl(args.in)
 
-// Seed the dedupe set from the existing pool (resumable top-up).
-const existingAnswers = new Set()
+// Seed the dedupe set from the existing pool (resumable top-up). The unit of
+// uniqueness is the answer+clue pair, so the same word may recur with new clues.
+const existingPairs = new Set()
 if (args.slug) {
-  for (const e of loadPool(args.slug).pool) existingAnswers.add(normalizeAnswer(e.answer))
+  for (const e of loadPool(args.slug).pool) existingPairs.add(pairKey(e.answer, e.clue))
 }
 
 const sorted = (s) => s.split('').sort().join('')
@@ -67,10 +69,11 @@ for (const raw of candidates) {
   const answer = normalizeAnswer(raw.answer)
   const clue = cleanClue(raw.clue)
 
+  const key = pairKey(answer, clue)
   let reason = dropReason(answer, clue)
   if (!reason) {
-    if (existingAnswers.has(answer)) reason = 'duplicate-existing'
-    else if (seenThisBatch.has(answer)) reason = 'duplicate-batch'
+    if (existingPairs.has(key)) reason = 'duplicate-existing'
+    else if (seenThisBatch.has(key)) reason = 'duplicate-batch'
   }
 
   if (reason) {
@@ -79,7 +82,7 @@ for (const raw of candidates) {
     continue
   }
 
-  seenThisBatch.add(answer)
+  seenThisBatch.add(key)
   survivors.push({ answer, clue })
 }
 

@@ -56,6 +56,21 @@ export function cleanClue(clue) {
   return String(clue ?? '').replace(/\s*\(\d[\d,]*\)\s*$/, '').trim()
 }
 
+/** Lowercased, whitespace-collapsed clue — for dedupe comparison only. */
+export function normalizeClue(clue) {
+  return cleanClue(clue).toLowerCase().replace(/\s+/g, ' ').trim()
+}
+
+/**
+ * Dedupe key for an entry. Themed pools allow the SAME answer with DIFFERENT
+ * clues (clue variety), so the unit of uniqueness is the answer+clue pair, not
+ * the answer alone. The tab separator can't appear in a normalized answer ([A–Z]
+ * only), so the join is unambiguous.
+ */
+export function pairKey(answer, clue) {
+  return `${normalizeAnswer(answer)}	${normalizeClue(clue)}`
+}
+
 export function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
 }
@@ -113,6 +128,28 @@ export function usedPrefixes() {
   return set
 }
 
+/**
+ * The 2-char id prefix already established by an existing pool (the most common
+ * one among its ids), or null if the pool is empty / unprefixed. Used so a
+ * top-up reuses the pool's own prefix instead of deriving a fresh one.
+ */
+export function existingPrefix(slug) {
+  const counts = {}
+  for (const e of loadPool(slug).pool) {
+    const m = /^([a-z]{2})\d/i.exec(e.id || '')
+    if (m) {
+      const p = m[1].toLowerCase()
+      counts[p] = (counts[p] || 0) + 1
+    }
+  }
+  let best = null
+  let bestCount = 0
+  for (const [p, c] of Object.entries(counts)) {
+    if (c > bestCount) { bestCount = c; best = p }
+  }
+  return best
+}
+
 /** Pick a collision-free 2-char prefix derived from the slug. */
 export function derivePrefix(slug, taken = usedPrefixes()) {
   const letters = String(slug).replace(/[^a-z]/g, '')
@@ -145,7 +182,7 @@ export function writeJsonl(path, rows) {
   writeFileSync(path, rows.map((r) => JSON.stringify(r)).join('\n') + (rows.length ? '\n' : ''))
 }
 
-/** Count answers by length, bucketing anything outside 3–5 into `other`. */
+/** Count rows (entries) by length, bucketing anything outside 3–5 into `other`. */
 export function lengthDistribution(pool) {
   const dist = { 3: 0, 4: 0, 5: 0, other: 0 }
   for (const e of pool) {
@@ -154,4 +191,18 @@ export function lengthDistribution(pool) {
     else dist.other++
   }
   return dist
+}
+
+/**
+ * Count DISTINCT answers by length. This is what drives solvability — the
+ * solver fills a grid from distinct words, so distinct-per-length matters more
+ * than total rows (which also count multiple clues for the same word).
+ */
+export function distinctDistribution(pool) {
+  const sets = { 3: new Set(), 4: new Set(), 5: new Set() }
+  for (const e of pool) {
+    const len = (e.answer || '').length
+    if (sets[len]) sets[len].add(e.answer)
+  }
+  return { 3: sets[3].size, 4: sets[4].size, 5: sets[5].size }
 }

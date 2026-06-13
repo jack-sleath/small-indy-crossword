@@ -17,7 +17,8 @@
 
 import { writeFileSync } from 'fs'
 import {
-  parseArgs, slugify, titleCase, normalizeAnswer, cleanClue, derivePrefix, usedPrefixes,
+  parseArgs, slugify, titleCase, normalizeAnswer, cleanClue, pairKey,
+  derivePrefix, usedPrefixes, existingPrefix,
   loadManifest, loadPool, poolPath, allIds, readJsonl, lengthDistribution, MANIFEST_PATH,
 } from './lib.mjs'
 
@@ -28,17 +29,21 @@ if (!args.slug || !args.in) {
 }
 
 const slug = slugify(args.slug)
-const prefix = (args.prefix && String(args.prefix).toLowerCase()) || derivePrefix(slug, usedPrefixes())
+// Reuse the pool's established prefix on a top-up; only derive one for a new pool.
+const prefix = (args.prefix && String(args.prefix).toLowerCase())
+  || existingPrefix(slug)
+  || derivePrefix(slug, usedPrefixes())
 const name = args.name ?? titleCase(slug.replace(/-/g, ' '))
 const description = args.description ?? ''
 const dryRun = Boolean(args['dry-run'])
 
 const survivors = readJsonl(args.in)
 
-// Existing pool state (resumable top-up).
+// Existing pool state (resumable top-up). Dedupe by answer+clue pair so the
+// same word can carry multiple distinct clues.
 const data = loadPool(slug)
 const pool = data.pool
-const byAnswer = new Set(pool.map((e) => normalizeAnswer(e.answer)))
+const byPair = new Set(pool.map((e) => pairKey(e.answer, e.clue)))
 
 // Global id set + next sequential suffix for this prefix.
 const globalIds = allIds()
@@ -71,11 +76,12 @@ for (const raw of survivors) {
     skippedInvalid++
     continue
   }
-  if (byAnswer.has(answer)) {
+  const key = pairKey(answer, clue)
+  if (byPair.has(key)) {
     skippedDuplicate++
     continue
   }
-  byAnswer.add(answer)
+  byPair.add(key)
   pool.push({ id: mintId(), answer, clue })
   added++
 }

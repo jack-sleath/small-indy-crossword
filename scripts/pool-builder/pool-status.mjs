@@ -16,8 +16,8 @@
 
 import { existsSync } from 'fs'
 import {
-  parseArgs, slugify, titleCase, derivePrefix, usedPrefixes,
-  loadManifest, loadPool, poolPath, lengthDistribution,
+  parseArgs, slugify, titleCase, derivePrefix, usedPrefixes, existingPrefix,
+  loadManifest, loadPool, poolPath, lengthDistribution, distinctDistribution,
 } from './lib.mjs'
 
 const args = parseArgs(process.argv.slice(2))
@@ -31,16 +31,19 @@ const slug = args.slug ? slugify(args.slug) : slugify(args.theme)
 const name = args.name ?? (args.theme ? titleCase(args.theme) : titleCase(slug.replace(/-/g, ' ')))
 const target = Number(args.target ?? 1000)
 
+const { pool } = loadPool(slug)
+const count = pool.length
+const distribution = lengthDistribution(pool)
+const distinct = distinctDistribution(pool)
+
+// Reuse the pool's own prefix on a top-up; only derive a fresh one for a new pool.
 const taken = usedPrefixes()
-const prefix = args.prefix ?? derivePrefix(slug, taken)
+const reusedPrefix = existingPrefix(slug)
+const prefix = args.prefix ?? reusedPrefix ?? derivePrefix(slug, taken)
 
 const { pools } = loadManifest()
 const manifestEntry = pools.find((p) => p.slug === slug) ?? null
 const fileExists = existsSync(poolPath(slug))
-
-const { pool } = loadPool(slug)
-const count = pool.length
-const distribution = lengthDistribution(pool)
 
 // Balanced target: aim for an even split across lengths 3/4/5.
 const perLength = Math.round(target / 3)
@@ -63,9 +66,11 @@ const report = {
   count,
   remaining,
   distribution,
+  distinct,
   perLengthTarget: perLength,
   deficit,
-  prefixCollision: taken.has(prefix) && !(manifestEntry || fileExists),
+  reusedPrefix: Boolean(reusedPrefix),
+  prefixCollision: !reusedPrefix && taken.has(prefix) && !(manifestEntry || fileExists),
 }
 
 console.log(JSON.stringify(report, null, 2))
