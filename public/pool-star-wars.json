@@ -5324,6 +5324,136 @@
       "id": "sw1064",
       "answer": "AIDE",
       "clue": "Lobot, to Lando Calrissian"
+    },
+    {
+      "id": "sw1065",
+      "answer": "HELLO",
+      "clue": "'___ there!' — Obi-Wan's signature greeting"
+    },
+    {
+      "id": "sw1066",
+      "answer": "THERE",
+      "clue": "'Hello ___!' — Obi-Wan, ambushing Grievous"
+    },
+    {
+      "id": "sw1067",
+      "answer": "HEIST",
+      "clue": "The Aldhani payroll ___ in 'Andor'"
+    },
+    {
+      "id": "sw1068",
+      "answer": "SPICE",
+      "clue": "Illicit cargo Han smuggled from Kessel"
+    },
+    {
+      "id": "sw1069",
+      "answer": "CRAWL",
+      "clue": "The yellow opening ___ that scrolls into space"
+    },
+    {
+      "id": "sw1070",
+      "answer": "FORGE",
+      "clue": "The Star ___, an ancient Rakatan shipyard-superweapon"
+    },
+    {
+      "id": "sw1071",
+      "answer": "PURGE",
+      "clue": "The Jedi ___ unleashed by Order 66"
+    },
+    {
+      "id": "sw1072",
+      "answer": "DECOY",
+      "clue": "Role Sabé played for Queen Amidala"
+    },
+    {
+      "id": "sw1073",
+      "answer": "GREEN",
+      "clue": "Color of Luke's lightsaber in 'Return of the Jedi'"
+    },
+    {
+      "id": "sw1074",
+      "answer": "WHITE",
+      "clue": "Stormtrooper armor color"
+    },
+    {
+      "id": "sw1075",
+      "answer": "BLACK",
+      "clue": "Color of Darth Vader's armor"
+    },
+    {
+      "id": "sw1076",
+      "answer": "GUILD",
+      "clue": "The Bounty Hunters' ___ that employs Din Djarin"
+    },
+    {
+      "id": "sw1077",
+      "answer": "ORBIT",
+      "clue": "What the Death Star takes around a doomed planet"
+    },
+    {
+      "id": "sw1078",
+      "answer": "HOVER",
+      "clue": "What a landspeeder seems to do above the sand"
+    },
+    {
+      "id": "sw1079",
+      "answer": "METAL",
+      "clue": "What a battle droid is made of"
+    },
+    {
+      "id": "sw1080",
+      "answer": "BEAST",
+      "clue": "The rancor beneath Jabba's palace, e.g."
+    },
+    {
+      "id": "sw1081",
+      "answer": "EVADE",
+      "clue": "What the Falcon does to pursuing TIE fighters"
+    },
+    {
+      "id": "sw1082",
+      "answer": "STEAL",
+      "clue": "What the Rogue One crew does with the Death Star plans"
+    },
+    {
+      "id": "sw1083",
+      "answer": "SWORD",
+      "clue": "A lightsaber is essentially a laser ___"
+    },
+    {
+      "id": "sw1084",
+      "answer": "RELIC",
+      "clue": "An ancient Jedi holocron, e.g."
+    },
+    {
+      "id": "sw1085",
+      "answer": "TUNIC",
+      "clue": "A Jedi's belted robe"
+    },
+    {
+      "id": "sw1086",
+      "answer": "BOLTS",
+      "clue": "Blaster ___ a Jedi deflects with a saber"
+    },
+    {
+      "id": "sw1087",
+      "answer": "MOONS",
+      "clue": "Endor and Yavin 4 are forested ones"
+    },
+    {
+      "id": "sw1088",
+      "answer": "STARS",
+      "clue": "What hyperspace stretches into streaks"
+    },
+    {
+      "id": "sw1089",
+      "answer": "SANDS",
+      "clue": "Tatooine's endless dunes that Anakin loathes"
+    },
+    {
+      "id": "sw1090",
+      "answer": "MARCH",
+      "clue": "The Imperial ___, Vader's ominous theme"
     }
   ]
 }
