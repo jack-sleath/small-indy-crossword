@@ -5124,6 +5124,121 @@
       "id": "sw1024",
       "answer": "LEHON",
       "clue": "Legends planet hiding the Rakatan Star Forge"
+    },
+    {
+      "id": "sw1025",
+      "answer": "MOON",
+      "clue": "'That's no ___' — Obi-Wan, spotting the Death Star"
+    },
+    {
+      "id": "sw1026",
+      "answer": "SUNS",
+      "clue": "Tatooine's binary pair overhead"
+    },
+    {
+      "id": "sw1027",
+      "answer": "ARMY",
+      "clue": "Clone ___ grown on Kamino"
+    },
+    {
+      "id": "sw1028",
+      "answer": "SIDE",
+      "clue": "The dark ___ of the Force"
+    },
+    {
+      "id": "sw1029",
+      "answer": "WARS",
+      "clue": "Star ___, in the saga's title"
+    },
+    {
+      "id": "sw1030",
+      "answer": "GOLD",
+      "clue": "___ Squadron, the Rebel Y-wing group at Yavin"
+    },
+    {
+      "id": "sw1031",
+      "answer": "BLUE",
+      "clue": "Color of Luke's first lightsaber"
+    },
+    {
+      "id": "sw1032",
+      "answer": "MILK",
+      "clue": "Blue ___ Luke drinks at the Lars homestead"
+    },
+    {
+      "id": "sw1033",
+      "answer": "NERF",
+      "clue": "Scruffy-looking ___ herder, in Leia's insult"
+    },
+    {
+      "id": "sw1034",
+      "answer": "SCUM",
+      "clue": "A wretched hive of ___ and villainy"
+    },
+    {
+      "id": "sw1035",
+      "answer": "HIVE",
+      "clue": "Mos Eisley, a wretched ___ of scum and villainy"
+    },
+    {
+      "id": "sw1036",
+      "answer": "DEBT",
+      "clue": "What Han owes Jabba the Hutt"
+    },
+    {
+      "id": "sw1037",
+      "answer": "RACE",
+      "clue": "Anakin's high-speed event on Tatooine"
+    },
+    {
+      "id": "sw1038",
+      "answer": "BLAST",
+      "clue": "Explosion, as when the Death Star is destroyed"
+    },
+    {
+      "id": "sw1039",
+      "answer": "SCOUT",
+      "clue": "___ trooper riding a speeder bike on Endor"
+    },
+    {
+      "id": "sw1040",
+      "answer": "CREST",
+      "clue": "Razor ___, Din Djarin's gunship"
+    },
+    {
+      "id": "sw1041",
+      "answer": "BLADE",
+      "clue": "A lightsaber's glowing length"
+    },
+    {
+      "id": "sw1042",
+      "answer": "VISOR",
+      "clue": "Slit a stormtrooper peers through"
+    },
+    {
+      "id": "sw1043",
+      "answer": "RAZOR",
+      "clue": "___ Crest, the Mandalorian's ship"
+    },
+    {
+      "id": "sw1044",
+      "answer": "ROBOT",
+      "clue": "Mechanical being, like a protocol droid"
+    },
+    {
+      "id": "sw1045",
+      "answer": "LASER",
+      "clue": "Quad ___ cannon on the Millennium Falcon"
+    },
+    {
+      "id": "sw1046",
+      "answer": "SPEED",
+      "clue": "What a podracer is built for"
+    },
+    {
+      "id": "sw1047",
+      "answer": "TWINS",
+      "clue": "Luke and Leia, secretly"
     }
   ]
 }
