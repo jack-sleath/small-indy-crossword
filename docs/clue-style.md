@@ -36,6 +36,7 @@ every other rule:
 | **Read as natural English (surface reading)** | The clue should make sense on its own, even when it misleads. |
 | **One clear, defensible answer** | Especially important here: in a 5×5 with crossing constraints, an ambiguous clue plus a crossing letter can make the puzzle unsolvable or unfair. |
 | **Mark unusual forms** | `Var.` for a variant spelling, `Abbr.` / "for short" for shortenings — so the solver trusts an odd-looking answer. |
+| **Anagrams are allowed, but must be flagged** | A standard (non-cryptic) clue may use an anagram, provided it's stated outright — `OCEAN` → "Anagram of CANOE". Unlike cryptic clues, do **not** hide it behind an oblique indicator like "mixed" or "broken"; the solver must be told plainly that it's an anagram. |
 
 ---
 
