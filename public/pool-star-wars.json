@@ -4709,6 +4709,346 @@
       "id": "sw0941",
       "answer": "YWING",
       "clue": "Clunky Rebel bomber starfighter, informally"
+    },
+    {
+      "id": "sw0942",
+      "answer": "DUG",
+      "clue": "Sebulba's stubby-legged alien species"
+    },
+    {
+      "id": "sw0943",
+      "answer": "MON",
+      "clue": "Rebellion leader ___ Mothma"
+    },
+    {
+      "id": "sw0944",
+      "answer": "WAN",
+      "clue": "Obi-___ Kenobi"
+    },
+    {
+      "id": "sw0945",
+      "answer": "ZAM",
+      "clue": "Shape-shifting bounty hunter ___ Wesell"
+    },
+    {
+      "id": "sw0946",
+      "answer": "BAIL",
+      "clue": "___ Organa, Leia's adoptive father"
+    },
+    {
+      "id": "sw0947",
+      "answer": "BERU",
+      "clue": "Luke's Aunt ___ on Tatooine"
+    },
+    {
+      "id": "sw0948",
+      "answer": "EETH",
+      "clue": "Zabrak Jedi Master ___ Koth"
+    },
+    {
+      "id": "sw0949",
+      "answer": "HUTT",
+      "clue": "Sluglike species of the gangster Jabba"
+    },
+    {
+      "id": "sw0950",
+      "answer": "JINN",
+      "clue": "Qui-Gon ___, Obi-Wan's master"
+    },
+    {
+      "id": "sw0951",
+      "answer": "KOON",
+      "clue": "Jedi Master Plo ___"
+    },
+    {
+      "id": "sw0952",
+      "answer": "KOTH",
+      "clue": "Zabrak Jedi Master Eeth ___"
+    },
+    {
+      "id": "sw0953",
+      "answer": "LARS",
+      "clue": "Owen ___, Luke's uncle"
+    },
+    {
+      "id": "sw0954",
+      "answer": "MUUN",
+      "clue": "Tall, gaunt species of the Banking Clan"
+    },
+    {
+      "id": "sw0955",
+      "answer": "NASS",
+      "clue": "Gungan leader Boss ___"
+    },
+    {
+      "id": "sw0956",
+      "answer": "NIEN",
+      "clue": "Sullustan Rebel pilot ___ Nunb"
+    },
+    {
+      "id": "sw0957",
+      "answer": "NUNB",
+      "clue": "Rebel co-pilot Nien ___"
+    },
+    {
+      "id": "sw0958",
+      "answer": "NUTE",
+      "clue": "Trade Federation viceroy ___ Gunray"
+    },
+    {
+      "id": "sw0959",
+      "answer": "OWEN",
+      "clue": "Luke's Uncle ___ Lars"
+    },
+    {
+      "id": "sw0960",
+      "answer": "SHMI",
+      "clue": "Anakin's mother ___ Skywalker"
+    },
+    {
+      "id": "sw0961",
+      "answer": "TAUN",
+      "clue": "Kaminoan administrator ___ We"
+    },
+    {
+      "id": "sw0962",
+      "answer": "AWING",
+      "clue": "Nimble Rebel interceptor, informally"
+    },
+    {
+      "id": "sw0963",
+      "answer": "BARGE",
+      "clue": "Jabba's desert sail ___"
+    },
+    {
+      "id": "sw0964",
+      "answer": "BINKS",
+      "clue": "Bumbling Gungan Jar Jar ___"
+    },
+    {
+      "id": "sw0965",
+      "answer": "BONGO",
+      "clue": "Gungan submarine in 'The Phantom Menace'"
+    },
+    {
+      "id": "sw0966",
+      "answer": "BWING",
+      "clue": "Cruciform Rebel bomber, informally"
+    },
+    {
+      "id": "sw0967",
+      "answer": "CLOUD",
+      "clue": "Bespin's floating ___ City"
+    },
+    {
+      "id": "sw0968",
+      "answer": "DARTH",
+      "clue": "Sith title borne by Vader and Maul"
+    },
+    {
+      "id": "sw0969",
+      "answer": "FISTO",
+      "clue": "Nautolan Jedi Kit ___"
+    },
+    {
+      "id": "sw0970",
+      "answer": "LOBOT",
+      "clue": "Cyborg aide to Lando on Cloud City"
+    },
+    {
+      "id": "sw0971",
+      "answer": "MUNDI",
+      "clue": "Jedi Council member Ki-Adi-___"
+    },
+    {
+      "id": "sw0972",
+      "answer": "SHAAK",
+      "clue": "Togruta Jedi ___ Ti"
+    },
+    {
+      "id": "sw0973",
+      "answer": "SKIFF",
+      "clue": "Open repulsor barge over the Sarlacc pit"
+    },
+    {
+      "id": "sw0974",
+      "answer": "STORM",
+      "clue": "___ trooper, the Empire's white-armored soldier"
+    },
+    {
+      "id": "sw0975",
+      "answer": "SWOOP",
+      "clue": "Fast racing ___ bike"
+    },
+    {
+      "id": "sw0976",
+      "answer": "JEK",
+      "clue": "Rebel pilot ___ Porkins, Red Six at Yavin"
+    },
+    {
+      "id": "sw0977",
+      "answer": "KAL",
+      "clue": "Mandalorian sergeant ___ Skirata in Legends"
+    },
+    {
+      "id": "sw0978",
+      "answer": "MAS",
+      "clue": "Chagrian vice chair ___ Amedda"
+    },
+    {
+      "id": "sw0979",
+      "answer": "ORD",
+      "clue": "___ Mantell, planet in the Bright Jewel system"
+    },
+    {
+      "id": "sw0980",
+      "answer": "RIC",
+      "clue": "Naboo royal pilot ___ Olié"
+    },
+    {
+      "id": "sw0981",
+      "answer": "SLY",
+      "clue": "Palpatine's silent aide ___ Moore"
+    },
+    {
+      "id": "sw0982",
+      "answer": "ATRT",
+      "clue": "Clone-era single-pilot scout walker, for short"
+    },
+    {
+      "id": "sw0983",
+      "answer": "ATTE",
+      "clue": "Six-legged clone troop-carrier walker, for short"
+    },
+    {
+      "id": "sw0984",
+      "answer": "CATO",
+      "clue": "___ Neimoidia, a Separatist banking world"
+    },
+    {
+      "id": "sw0985",
+      "answer": "GLEE",
+      "clue": "___ Anselm, Kit Fisto's watery homeworld"
+    },
+    {
+      "id": "sw0986",
+      "answer": "HILL",
+      "clue": "Banking Clan chairman San ___"
+    },
+    {
+      "id": "sw0987",
+      "answer": "LAAT",
+      "clue": "Republic clone-trooper gunship, for short"
+    },
+    {
+      "id": "sw0988",
+      "answer": "LAMA",
+      "clue": "Kaminoan prime minister ___ Su"
+    },
+    {
+      "id": "sw0989",
+      "answer": "POOF",
+      "clue": "Quermian Jedi Master Yarael ___"
+    },
+    {
+      "id": "sw0990",
+      "answer": "TIIN",
+      "clue": "Iktotchi Jedi Master Saesee ___"
+    },
+    {
+      "id": "sw0991",
+      "answer": "ARVEL",
+      "clue": "A-wing pilot ___ Crynyd, who downed the Executor"
+    },
+    {
+      "id": "sw0992",
+      "answer": "CEREA",
+      "clue": "Ki-Adi-Mundi's homeworld"
+    },
+    {
+      "id": "sw0993",
+      "answer": "DORIN",
+      "clue": "Plo Koon's homeworld, world of the Kel Dor"
+    },
+    {
+      "id": "sw0994",
+      "answer": "FINIS",
+      "clue": "Chancellor ___ Valorum, Palpatine's predecessor"
+    },
+    {
+      "id": "sw0995",
+      "answer": "HUMAN",
+      "clue": "Most common species in the galaxy"
+    },
+    {
+      "id": "sw0996",
+      "answer": "KALEE",
+      "clue": "General Grievous's homeworld"
+    },
+    {
+      "id": "sw0997",
+      "answer": "MASSA",
+      "clue": "Polis ___, asteroid base where Padmé gave birth"
+    },
+    {
+      "id": "sw0998",
+      "answer": "MOORE",
+      "clue": "Palpatine's aide Sly ___"
+    },
+    {
+      "id": "sw0999",
+      "answer": "OFFEE",
+      "clue": "Mirialan Jedi Padawan Barriss ___"
+    },
+    {
+      "id": "sw1000",
+      "answer": "PAUAN",
+      "clue": "Tall, gaunt species native to Utapau"
+    },
+    {
+      "id": "sw1001",
+      "answer": "POLIS",
+      "clue": "___ Massa, asteroid field and medical base"
+    },
+    {
+      "id": "sw1002",
+      "answer": "RODIA",
+      "clue": "Greedo's swampy green homeworld"
+    },
+    {
+      "id": "sw1003",
+      "answer": "RUGOR",
+      "clue": "Gungan Boss ___ Nass"
+    },
+    {
+      "id": "sw1004",
+      "answer": "SHILI",
+      "clue": "Homeworld of Ahsoka and the Togruta"
+    },
+    {
+      "id": "sw1005",
+      "answer": "TIURE",
+      "clue": "Jabba's surname: Desilijic ___"
+    },
+    {
+      "id": "sw1006",
+      "answer": "TOONG",
+      "clue": "Ben Quadinaros's species"
+    },
+    {
+      "id": "sw1007",
+      "answer": "TYPHO",
+      "clue": "Captain ___, Padmé's security chief"
+    },
+    {
+      "id": "sw1008",
+      "answer": "XEXTO",
+      "clue": "Four-armed species of the podracer Gasgano"
+    },
+    {
+      "id": "sw1009",
+      "answer": "ZOLAN",
+      "clue": "Homeworld of the shape-shifting Clawdites"
     }
   ]
 }
