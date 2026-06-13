@@ -22,3 +22,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Themed-pool builder scratch (disposable batch working dir)
+.pool-build/
