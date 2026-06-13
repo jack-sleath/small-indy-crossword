@@ -5049,6 +5049,81 @@
       "id": "sw1009",
       "answer": "ZOLAN",
       "clue": "Homeworld of the shape-shifting Clawdites"
+    },
+    {
+      "id": "sw1010",
+      "answer": "BITH",
+      "clue": "Cantina-band species from the Mos Eisley cantina"
+    },
+    {
+      "id": "sw1011",
+      "answer": "EADU",
+      "clue": "Stormy planet with an Imperial kyber facility in 'Rogue One'"
+    },
+    {
+      "id": "sw1012",
+      "answer": "ILUM",
+      "clue": "Icy planet where Jedi harvest kyber crystals"
+    },
+    {
+      "id": "sw1013",
+      "answer": "KUAT",
+      "clue": "Core world famed for its Imperial shipyards"
+    },
+    {
+      "id": "sw1014",
+      "answer": "PABU",
+      "clue": "Island sanctuary planet in 'The Bad Batch' and 'Ahsoka'"
+    },
+    {
+      "id": "sw1015",
+      "answer": "IEGO",
+      "clue": "Clone Wars planet fabled as home to a thousand angels"
+    },
+    {
+      "id": "sw1016",
+      "answer": "TETH",
+      "clue": "Jungle planet with a B'omarr monastery in 'The Clone Wars'"
+    },
+    {
+      "id": "sw1017",
+      "answer": "CHISS",
+      "clue": "Blue-skinned, red-eyed species of Grand Admiral Thrawn"
+    },
+    {
+      "id": "sw1018",
+      "answer": "BATUU",
+      "clue": "Outer Rim planet, home to Galaxy's Edge"
+    },
+    {
+      "id": "sw1019",
+      "answer": "AKIVA",
+      "clue": "Outer Rim world central to the 'Aftermath' novels"
+    },
+    {
+      "id": "sw1020",
+      "answer": "ZEFFO",
+      "clue": "Ancient-civilization planet in 'Jedi: Fallen Order'"
+    },
+    {
+      "id": "sw1021",
+      "answer": "OSSUS",
+      "clue": "Planet housing a great Jedi library"
+    },
+    {
+      "id": "sw1022",
+      "answer": "DAIYU",
+      "clue": "Neon trading-port planet in the 'Obi-Wan Kenobi' series"
+    },
+    {
+      "id": "sw1023",
+      "answer": "MYRKR",
+      "clue": "Legends planet whose ysalamiri repel the Force"
+    },
+    {
+      "id": "sw1024",
+      "answer": "LEHON",
+      "clue": "Legends planet hiding the Rakatan Star Forge"
     }
   ]
 }
