@@ -2,6 +2,8 @@
 
 A lightweight, shareable 5×5 mini crossword app for small private groups. Generate a puzzle, share a link, and race to solve it.
 
+**🔗 Live at [small-indy.jack-sleath.dev](https://small-indy.jack-sleath.dev)**
+
 Built with React + Vite and deployed to GitHub Pages.
 
 ---
