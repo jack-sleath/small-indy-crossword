@@ -30,6 +30,12 @@
       "name": "Greek Mythology",
       "file": "pool-greek-mythology.json",
       "description": "Gods, heroes, monsters, and myths of ancient Greece"
+    },
+    {
+      "slug": "english-spanish",
+      "name": "English–Spanish",
+      "file": "pool-english-spanish.json",
+      "description": "Translation clues between English and Spanish — beginner-friendly vocab in both directions"
     }
   ]
 }

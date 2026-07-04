@@ -1,0 +1,1534 @@
+{
+  "pool": [
+    {
+      "id": "en0000",
+      "answer": "SOL",
+      "clue": "Sun, in Spanish"
+    },
+    {
+      "id": "en0001",
+      "answer": "MAR",
+      "clue": "Sea, to a Spaniard"
+    },
+    {
+      "id": "en0002",
+      "answer": "PAN",
+      "clue": "Bread, in Barcelona"
+    },
+    {
+      "id": "en0003",
+      "answer": "LUZ",
+      "clue": "Light, in Spanish"
+    },
+    {
+      "id": "en0004",
+      "answer": "REY",
+      "clue": "King, in Spanish"
+    },
+    {
+      "id": "en0005",
+      "answer": "PAZ",
+      "clue": "Peace, in Spanish"
+    },
+    {
+      "id": "en0006",
+      "answer": "OJO",
+      "clue": "Eye, in Spanish"
+    },
+    {
+      "id": "en0007",
+      "answer": "ORO",
+      "clue": "Gold, in Spanish"
+    },
+    {
+      "id": "en0008",
+      "answer": "DOS",
+      "clue": "Two, in Spanish"
+    },
+    {
+      "id": "en0009",
+      "answer": "CAT",
+      "clue": "\"Gato,\" in English"
+    },
+    {
+      "id": "en0010",
+      "answer": "DOG",
+      "clue": "\"Perro,\" in English"
+    },
+    {
+      "id": "en0011",
+      "answer": "SEA",
+      "clue": "What \"mar\" means in English"
+    },
+    {
+      "id": "en0012",
+      "answer": "RED",
+      "clue": "\"Rojo,\" in English"
+    },
+    {
+      "id": "en0013",
+      "answer": "EGG",
+      "clue": "\"Huevo,\" in English"
+    },
+    {
+      "id": "en0014",
+      "answer": "COW",
+      "clue": "\"Vaca,\" in English"
+    },
+    {
+      "id": "en0015",
+      "answer": "KEY",
+      "clue": "\"Llave,\" in English"
+    },
+    {
+      "id": "en0016",
+      "answer": "SIX",
+      "clue": "\"Seis,\" in English"
+    },
+    {
+      "id": "en0017",
+      "answer": "TEN",
+      "clue": "\"Diez,\" in English"
+    },
+    {
+      "id": "en0018",
+      "answer": "ONE",
+      "clue": "\"Uno,\" in English"
+    },
+    {
+      "id": "en0019",
+      "answer": "CASA",
+      "clue": "House, in Spanish"
+    },
+    {
+      "id": "en0020",
+      "answer": "GATO",
+      "clue": "Cat, in Cancún"
+    },
+    {
+      "id": "en0021",
+      "answer": "AGUA",
+      "clue": "Water, in Spanish"
+    },
+    {
+      "id": "en0022",
+      "answer": "LUNA",
+      "clue": "Moon, in Spanish"
+    },
+    {
+      "id": "en0023",
+      "answer": "MANO",
+      "clue": "Hand, in Spanish"
+    },
+    {
+      "id": "en0024",
+      "answer": "VINO",
+      "clue": "Wine, in Spanish"
+    },
+    {
+      "id": "en0025",
+      "answer": "AZUL",
+      "clue": "Blue, in Spanish"
+    },
+    {
+      "id": "en0026",
+      "answer": "ROJO",
+      "clue": "Red, on Duolingo's Spanish course"
+    },
+    {
+      "id": "en0027",
+      "answer": "MESA",
+      "clue": "Table, in Spanish class"
+    },
+    {
+      "id": "en0028",
+      "answer": "AMOR",
+      "clue": "Love, in Spanish"
+    },
+    {
+      "id": "en0029",
+      "answer": "MOON",
+      "clue": "\"Luna,\" in English"
+    },
+    {
+      "id": "en0030",
+      "answer": "BOOK",
+      "clue": "\"Libro,\" in English"
+    },
+    {
+      "id": "en0031",
+      "answer": "MILK",
+      "clue": "\"Leche,\" in English"
+    },
+    {
+      "id": "en0032",
+      "answer": "FIRE",
+      "clue": "\"Fuego,\" in English"
+    },
+    {
+      "id": "en0033",
+      "answer": "HAND",
+      "clue": "\"Mano,\" in English"
+    },
+    {
+      "id": "en0034",
+      "answer": "WINE",
+      "clue": "\"Vino,\" in English"
+    },
+    {
+      "id": "en0035",
+      "answer": "BLUE",
+      "clue": "\"Azul,\" in English"
+    },
+    {
+      "id": "en0036",
+      "answer": "GOLD",
+      "clue": "What \"oro\" means in English"
+    },
+    {
+      "id": "en0037",
+      "answer": "FISH",
+      "clue": "\"Pez,\" in English"
+    },
+    {
+      "id": "en0038",
+      "answer": "KING",
+      "clue": "\"Rey,\" in English"
+    },
+    {
+      "id": "en0039",
+      "answer": "PERRO",
+      "clue": "Dog, in Spanish"
+    },
+    {
+      "id": "en0040",
+      "answer": "LIBRO",
+      "clue": "Book, in Spanish"
+    },
+    {
+      "id": "en0041",
+      "answer": "VERDE",
+      "clue": "Green, in Spanish"
+    },
+    {
+      "id": "en0042",
+      "answer": "QUESO",
+      "clue": "Cheese, in Spanish"
+    },
+    {
+      "id": "en0043",
+      "answer": "PLAYA",
+      "clue": "Beach, in Spanish"
+    },
+    {
+      "id": "en0044",
+      "answer": "FUEGO",
+      "clue": "Fire, in Spanish"
+    },
+    {
+      "id": "en0045",
+      "answer": "NOCHE",
+      "clue": "Night, in Spanish"
+    },
+    {
+      "id": "en0046",
+      "answer": "LECHE",
+      "clue": "Milk, in Spanish class"
+    },
+    {
+      "id": "en0047",
+      "answer": "MUNDO",
+      "clue": "World, in Spanish"
+    },
+    {
+      "id": "en0048",
+      "answer": "CIELO",
+      "clue": "Sky, in Spanish"
+    },
+    {
+      "id": "en0049",
+      "answer": "HOUSE",
+      "clue": "\"Casa,\" in English"
+    },
+    {
+      "id": "en0050",
+      "answer": "WATER",
+      "clue": "\"Agua,\" in English"
+    },
+    {
+      "id": "en0051",
+      "answer": "GREEN",
+      "clue": "\"Verde,\" in English"
+    },
+    {
+      "id": "en0052",
+      "answer": "NIGHT",
+      "clue": "\"Noche,\" in English"
+    },
+    {
+      "id": "en0053",
+      "answer": "WORLD",
+      "clue": "\"Mundo,\" in English"
+    },
+    {
+      "id": "en0054",
+      "answer": "BEACH",
+      "clue": "\"Playa,\" in English"
+    },
+    {
+      "id": "en0055",
+      "answer": "TABLE",
+      "clue": "\"Mesa,\" in English"
+    },
+    {
+      "id": "en0056",
+      "answer": "HORSE",
+      "clue": "\"Caballo,\" in English"
+    },
+    {
+      "id": "en0057",
+      "answer": "BREAD",
+      "clue": "What \"pan\" means in English"
+    },
+    {
+      "id": "en0058",
+      "answer": "PEACE",
+      "clue": "\"Paz,\" in English"
+    },
+    {
+      "id": "en0059",
+      "answer": "SAL",
+      "clue": "Seasoning, in Sevilla"
+    },
+    {
+      "id": "en0060",
+      "answer": "SUR",
+      "clue": "South, in Spanish"
+    },
+    {
+      "id": "en0061",
+      "answer": "MES",
+      "clue": "Month, in Madrid"
+    },
+    {
+      "id": "en0062",
+      "answer": "DIA",
+      "clue": "Day, in Spanish"
+    },
+    {
+      "id": "en0063",
+      "answer": "RIO",
+      "clue": "River, in Spanish"
+    },
+    {
+      "id": "en0064",
+      "answer": "PEZ",
+      "clue": "Fish, in Spanish"
+    },
+    {
+      "id": "en0065",
+      "answer": "VOZ",
+      "clue": "Voice, in Spanish"
+    },
+    {
+      "id": "en0066",
+      "answer": "LEY",
+      "clue": "Law, in Spanish"
+    },
+    {
+      "id": "en0067",
+      "answer": "ALA",
+      "clue": "Wing, in Spanish"
+    },
+    {
+      "id": "en0068",
+      "answer": "UNO",
+      "clue": "One, in Spanish"
+    },
+    {
+      "id": "en0069",
+      "answer": "TIA",
+      "clue": "Aunt, in Spanish"
+    },
+    {
+      "id": "en0070",
+      "answer": "SUN",
+      "clue": "\"Sol,\" in English"
+    },
+    {
+      "id": "en0071",
+      "answer": "DAY",
+      "clue": "\"Día,\" in English"
+    },
+    {
+      "id": "en0072",
+      "answer": "TWO",
+      "clue": "\"Dos,\" in English"
+    },
+    {
+      "id": "en0073",
+      "answer": "ICE",
+      "clue": "\"Hielo,\" in English"
+    },
+    {
+      "id": "en0074",
+      "answer": "WAR",
+      "clue": "\"Guerra,\" in English"
+    },
+    {
+      "id": "en0075",
+      "answer": "FOX",
+      "clue": "\"Zorro,\" in English"
+    },
+    {
+      "id": "en0076",
+      "answer": "PIG",
+      "clue": "\"Cerdo,\" in English"
+    },
+    {
+      "id": "en0077",
+      "answer": "BEE",
+      "clue": "\"Abeja,\" in English"
+    },
+    {
+      "id": "en0078",
+      "answer": "HEN",
+      "clue": "\"Gallina,\" in English"
+    },
+    {
+      "id": "en0079",
+      "answer": "ARM",
+      "clue": "\"Brazo,\" in English"
+    },
+    {
+      "id": "en0080",
+      "answer": "LEG",
+      "clue": "\"Pierna,\" in English"
+    },
+    {
+      "id": "en0081",
+      "answer": "PATO",
+      "clue": "Duck, in Spanish"
+    },
+    {
+      "id": "en0082",
+      "answer": "TORO",
+      "clue": "Bull, in Spanish"
+    },
+    {
+      "id": "en0083",
+      "answer": "VACA",
+      "clue": "Cow, in Spanish"
+    },
+    {
+      "id": "en0084",
+      "answer": "LOBO",
+      "clue": "Wolf, in Spanish"
+    },
+    {
+      "id": "en0085",
+      "answer": "SOPA",
+      "clue": "Soup, in Spanish"
+    },
+    {
+      "id": "en0086",
+      "answer": "CAMA",
+      "clue": "Bed, in Spanish"
+    },
+    {
+      "id": "en0087",
+      "answer": "BOCA",
+      "clue": "Mouth, in Spanish"
+    },
+    {
+      "id": "en0088",
+      "answer": "CARA",
+      "clue": "Face, in Spanish"
+    },
+    {
+      "id": "en0089",
+      "answer": "FLOR",
+      "clue": "Flower, in Spanish"
+    },
+    {
+      "id": "en0090",
+      "answer": "TREN",
+      "clue": "Train, in Spanish"
+    },
+    {
+      "id": "en0091",
+      "answer": "STAR",
+      "clue": "\"Estrella,\" in English"
+    },
+    {
+      "id": "en0092",
+      "answer": "TREE",
+      "clue": "\"Árbol,\" in English"
+    },
+    {
+      "id": "en0093",
+      "answer": "SNOW",
+      "clue": "\"Nieve,\" in English"
+    },
+    {
+      "id": "en0094",
+      "answer": "RAIN",
+      "clue": "\"Lluvia,\" in English"
+    },
+    {
+      "id": "en0095",
+      "answer": "WOLF",
+      "clue": "\"Lobo,\" in English"
+    },
+    {
+      "id": "en0096",
+      "answer": "BEAR",
+      "clue": "\"Oso,\" in English"
+    },
+    {
+      "id": "en0097",
+      "answer": "DUCK",
+      "clue": "\"Pato,\" in English"
+    },
+    {
+      "id": "en0098",
+      "answer": "BULL",
+      "clue": "\"Toro,\" in English"
+    },
+    {
+      "id": "en0099",
+      "answer": "SOUP",
+      "clue": "\"Sopa,\" in English"
+    },
+    {
+      "id": "en0100",
+      "answer": "FOOT",
+      "clue": "\"Pie,\" in English"
+    },
+    {
+      "id": "en0101",
+      "answer": "SALT",
+      "clue": "\"Sal,\" in English"
+    },
+    {
+      "id": "en0102",
+      "answer": "SILLA",
+      "clue": "Chair, in Spanish"
+    },
+    {
+      "id": "en0103",
+      "answer": "REINA",
+      "clue": "Queen, in Spanish"
+    },
+    {
+      "id": "en0104",
+      "answer": "POLLO",
+      "clue": "Chicken, in Spanish"
+    },
+    {
+      "id": "en0105",
+      "answer": "HUEVO",
+      "clue": "Egg, in Spanish"
+    },
+    {
+      "id": "en0106",
+      "answer": "COCHE",
+      "clue": "Car, in Spain"
+    },
+    {
+      "id": "en0107",
+      "answer": "BARCO",
+      "clue": "Boat, in Spanish"
+    },
+    {
+      "id": "en0108",
+      "answer": "AVION",
+      "clue": "Airplane, in Spanish"
+    },
+    {
+      "id": "en0109",
+      "answer": "AMIGO",
+      "clue": "Friend, in Spanish"
+    },
+    {
+      "id": "en0110",
+      "answer": "FELIZ",
+      "clue": "Happy, in Spanish"
+    },
+    {
+      "id": "en0111",
+      "answer": "MADRE",
+      "clue": "Mother, in Spanish"
+    },
+    {
+      "id": "en0112",
+      "answer": "APPLE",
+      "clue": "\"Manzana,\" in English"
+    },
+    {
+      "id": "en0113",
+      "answer": "CHAIR",
+      "clue": "\"Silla,\" in English"
+    },
+    {
+      "id": "en0114",
+      "answer": "QUEEN",
+      "clue": "\"Reina,\" in English"
+    },
+    {
+      "id": "en0115",
+      "answer": "MONEY",
+      "clue": "\"Dinero,\" in English"
+    },
+    {
+      "id": "en0116",
+      "answer": "DANCE",
+      "clue": "\"Baile,\" in English"
+    },
+    {
+      "id": "en0117",
+      "answer": "SWEET",
+      "clue": "\"Dulce,\" in English"
+    },
+    {
+      "id": "en0118",
+      "answer": "HAPPY",
+      "clue": "\"Feliz,\" in English"
+    },
+    {
+      "id": "en0119",
+      "answer": "WOMAN",
+      "clue": "\"Mujer,\" in English"
+    },
+    {
+      "id": "en0120",
+      "answer": "CLOCK",
+      "clue": "\"Reloj,\" in English"
+    },
+    {
+      "id": "en0121",
+      "answer": "CLOUD",
+      "clue": "\"Nube,\" in English"
+    },
+    {
+      "id": "en0122",
+      "answer": "TIO",
+      "clue": "Uncle, in Spanish"
+    },
+    {
+      "id": "en0123",
+      "answer": "PIE",
+      "clue": "Foot, in Spanish"
+    },
+    {
+      "id": "en0124",
+      "answer": "SED",
+      "clue": "Thirst, in Spanish"
+    },
+    {
+      "id": "en0125",
+      "answer": "MIL",
+      "clue": "Thousand, in Spanish"
+    },
+    {
+      "id": "en0126",
+      "answer": "MAL",
+      "clue": "Bad, in Spanish"
+    },
+    {
+      "id": "en0127",
+      "answer": "HOY",
+      "clue": "Today, in Spanish"
+    },
+    {
+      "id": "en0128",
+      "answer": "OSO",
+      "clue": "Bear, in Spanish"
+    },
+    {
+      "id": "en0129",
+      "answer": "AVE",
+      "clue": "Bird, in Spanish"
+    },
+    {
+      "id": "en0130",
+      "answer": "AJO",
+      "clue": "Garlic, in Spanish"
+    },
+    {
+      "id": "en0131",
+      "answer": "FIN",
+      "clue": "The end, in Spanish"
+    },
+    {
+      "id": "en0132",
+      "answer": "BED",
+      "clue": "\"Cama,\" in English"
+    },
+    {
+      "id": "en0133",
+      "answer": "OLD",
+      "clue": "\"Viejo,\" in English"
+    },
+    {
+      "id": "en0134",
+      "answer": "NEW",
+      "clue": "\"Nuevo,\" in English"
+    },
+    {
+      "id": "en0135",
+      "answer": "BOY",
+      "clue": "\"Niño,\" in English"
+    },
+    {
+      "id": "en0136",
+      "answer": "EYE",
+      "clue": "\"Ojo,\" in English"
+    },
+    {
+      "id": "en0137",
+      "answer": "CAR",
+      "clue": "\"Coche,\" in English"
+    },
+    {
+      "id": "en0138",
+      "answer": "HAT",
+      "clue": "\"Sombrero,\" in English"
+    },
+    {
+      "id": "en0139",
+      "answer": "OWL",
+      "clue": "\"Búho,\" in English"
+    },
+    {
+      "id": "en0140",
+      "answer": "ANT",
+      "clue": "\"Hormiga,\" in English"
+    },
+    {
+      "id": "en0141",
+      "answer": "TEA",
+      "clue": "\"Té,\" in English"
+    },
+    {
+      "id": "en0142",
+      "answer": "SON",
+      "clue": "\"Hijo,\" in English"
+    },
+    {
+      "id": "en0143",
+      "answer": "SKY",
+      "clue": "\"Cielo,\" in English"
+    },
+    {
+      "id": "en0144",
+      "answer": "ISLA",
+      "clue": "Cuba, to Cubans"
+    },
+    {
+      "id": "en0145",
+      "answer": "SEIS",
+      "clue": "Six, in Spanish"
+    },
+    {
+      "id": "en0146",
+      "answer": "OCHO",
+      "clue": "Eight, in Spanish"
+    },
+    {
+      "id": "en0147",
+      "answer": "DIEZ",
+      "clue": "Ten, in Spanish"
+    },
+    {
+      "id": "en0148",
+      "answer": "TRES",
+      "clue": "Three, in Spanish"
+    },
+    {
+      "id": "en0149",
+      "answer": "ROSA",
+      "clue": "Pink, in Spanish"
+    },
+    {
+      "id": "en0150",
+      "answer": "LAGO",
+      "clue": "Lake, in Spanish"
+    },
+    {
+      "id": "en0151",
+      "answer": "RANA",
+      "clue": "Frog, in Spanish"
+    },
+    {
+      "id": "en0152",
+      "answer": "MIEL",
+      "clue": "Honey, in Spanish"
+    },
+    {
+      "id": "en0153",
+      "answer": "TAZA",
+      "clue": "Cup, in Spanish"
+    },
+    {
+      "id": "en0154",
+      "answer": "CENA",
+      "clue": "Dinner, in Spanish"
+    },
+    {
+      "id": "en0155",
+      "answer": "LOVE",
+      "clue": "\"Amor,\" in English"
+    },
+    {
+      "id": "en0156",
+      "answer": "LIFE",
+      "clue": "\"Vida,\" in English"
+    },
+    {
+      "id": "en0157",
+      "answer": "KISS",
+      "clue": "\"Beso,\" in English"
+    },
+    {
+      "id": "en0158",
+      "answer": "HAIR",
+      "clue": "\"Pelo,\" in English"
+    },
+    {
+      "id": "en0159",
+      "answer": "GIRL",
+      "clue": "\"Chica,\" in English"
+    },
+    {
+      "id": "en0160",
+      "answer": "CITY",
+      "clue": "\"Ciudad,\" in English"
+    },
+    {
+      "id": "en0161",
+      "answer": "DOOR",
+      "clue": "\"Puerta,\" in English"
+    },
+    {
+      "id": "en0162",
+      "answer": "BIRD",
+      "clue": "\"Pájaro,\" in English"
+    },
+    {
+      "id": "en0163",
+      "answer": "FROG",
+      "clue": "\"Rana,\" in English"
+    },
+    {
+      "id": "en0164",
+      "answer": "LAKE",
+      "clue": "\"Lago,\" in English"
+    },
+    {
+      "id": "en0165",
+      "answer": "WEEK",
+      "clue": "\"Semana,\" in English"
+    },
+    {
+      "id": "en0166",
+      "answer": "PLATO",
+      "clue": "Dish, in Spanish"
+    },
+    {
+      "id": "en0167",
+      "answer": "LLAVE",
+      "clue": "Key, in Spanish"
+    },
+    {
+      "id": "en0168",
+      "answer": "CALLE",
+      "clue": "Street, in Spanish"
+    },
+    {
+      "id": "en0169",
+      "answer": "MUJER",
+      "clue": "Woman, in Spanish"
+    },
+    {
+      "id": "en0170",
+      "answer": "CHICO",
+      "clue": "Boy, in Spanish"
+    },
+    {
+      "id": "en0171",
+      "answer": "GENTE",
+      "clue": "People, in Spanish"
+    },
+    {
+      "id": "en0172",
+      "answer": "PADRE",
+      "clue": "Father, in Spanish"
+    },
+    {
+      "id": "en0173",
+      "answer": "NIEVE",
+      "clue": "Snow, in Spanish"
+    },
+    {
+      "id": "en0174",
+      "answer": "ARBOL",
+      "clue": "Tree, in Spanish"
+    },
+    {
+      "id": "en0175",
+      "answer": "TARDE",
+      "clue": "Afternoon, in Spanish"
+    },
+    {
+      "id": "en0176",
+      "answer": "CINCO",
+      "clue": "Five, in Spanish"
+    },
+    {
+      "id": "en0177",
+      "answer": "SEVEN",
+      "clue": "\"Siete,\" in English"
+    },
+    {
+      "id": "en0178",
+      "answer": "EIGHT",
+      "clue": "\"Ocho,\" in English"
+    },
+    {
+      "id": "en0179",
+      "answer": "THREE",
+      "clue": "\"Tres,\" in English"
+    },
+    {
+      "id": "en0180",
+      "answer": "WHITE",
+      "clue": "\"Blanco,\" in English"
+    },
+    {
+      "id": "en0181",
+      "answer": "BLACK",
+      "clue": "\"Negro,\" in English"
+    },
+    {
+      "id": "en0182",
+      "answer": "MOUTH",
+      "clue": "\"Boca,\" in English"
+    },
+    {
+      "id": "en0183",
+      "answer": "SMILE",
+      "clue": "\"Sonrisa,\" in English"
+    },
+    {
+      "id": "en0184",
+      "answer": "DREAM",
+      "clue": "\"Sueño,\" in English"
+    },
+    {
+      "id": "en0185",
+      "answer": "EARTH",
+      "clue": "\"Tierra,\" in English"
+    },
+    {
+      "id": "en0186",
+      "answer": "HEART",
+      "clue": "\"Corazón,\" in English"
+    },
+    {
+      "id": "en0187",
+      "answer": "RIVER",
+      "clue": "\"Río,\" in English"
+    },
+    {
+      "id": "en0188",
+      "answer": "VER",
+      "clue": "To see, in Spanish"
+    },
+    {
+      "id": "en0189",
+      "answer": "SER",
+      "clue": "To be, in Spanish"
+    },
+    {
+      "id": "en0190",
+      "answer": "DAR",
+      "clue": "To give, in Spanish"
+    },
+    {
+      "id": "en0191",
+      "answer": "MAS",
+      "clue": "More, in Spanish"
+    },
+    {
+      "id": "en0192",
+      "answer": "MUY",
+      "clue": "Very, in Spanish"
+    },
+    {
+      "id": "en0193",
+      "answer": "UVA",
+      "clue": "Grape, in Spanish"
+    },
+    {
+      "id": "en0194",
+      "answer": "GOL",
+      "clue": "Score in a fútbol match"
+    },
+    {
+      "id": "en0195",
+      "answer": "ESE",
+      "clue": "That, in Spanish"
+    },
+    {
+      "id": "en0196",
+      "answer": "MAN",
+      "clue": "\"Hombre,\" in English"
+    },
+    {
+      "id": "en0197",
+      "answer": "AGE",
+      "clue": "\"Edad,\" in English"
+    },
+    {
+      "id": "en0198",
+      "answer": "OIL",
+      "clue": "\"Aceite,\" in English"
+    },
+    {
+      "id": "en0199",
+      "answer": "WET",
+      "clue": "\"Mojado,\" in English"
+    },
+    {
+      "id": "en0200",
+      "answer": "HOT",
+      "clue": "\"Caliente,\" in English"
+    },
+    {
+      "id": "en0201",
+      "answer": "BAD",
+      "clue": "\"Malo,\" in English"
+    },
+    {
+      "id": "en0202",
+      "answer": "BIG",
+      "clue": "\"Grande,\" in English"
+    },
+    {
+      "id": "en0203",
+      "answer": "DRY",
+      "clue": "\"Seco,\" in English"
+    },
+    {
+      "id": "en0204",
+      "answer": "FLY",
+      "clue": "\"Mosca,\" in English"
+    },
+    {
+      "id": "en0205",
+      "answer": "EAR",
+      "clue": "\"Oreja,\" in English"
+    },
+    {
+      "id": "en0206",
+      "answer": "SAD",
+      "clue": "\"Triste,\" in English"
+    },
+    {
+      "id": "en0207",
+      "answer": "EAT",
+      "clue": "\"Comer,\" in English"
+    },
+    {
+      "id": "en0208",
+      "answer": "RUN",
+      "clue": "\"Correr,\" in English"
+    },
+    {
+      "id": "en0209",
+      "answer": "NOW",
+      "clue": "\"Ahora,\" in English"
+    },
+    {
+      "id": "en0210",
+      "answer": "ALTO",
+      "clue": "Tall, in Spanish"
+    },
+    {
+      "id": "en0211",
+      "answer": "BAJO",
+      "clue": "Low, in Spanish"
+    },
+    {
+      "id": "en0212",
+      "answer": "RICO",
+      "clue": "Rich, in Spanish"
+    },
+    {
+      "id": "en0213",
+      "answer": "ROPA",
+      "clue": "Clothing, in Spanish"
+    },
+    {
+      "id": "en0214",
+      "answer": "HIJO",
+      "clue": "Son, in Spanish"
+    },
+    {
+      "id": "en0215",
+      "answer": "HIJA",
+      "clue": "Daughter, in Spanish"
+    },
+    {
+      "id": "en0216",
+      "answer": "NUBE",
+      "clue": "Cloud, in Spanish"
+    },
+    {
+      "id": "en0217",
+      "answer": "VIDA",
+      "clue": "Life, in Spanish"
+    },
+    {
+      "id": "en0218",
+      "answer": "BESO",
+      "clue": "Kiss, in Spanish"
+    },
+    {
+      "id": "en0219",
+      "answer": "PELO",
+      "clue": "Hair, in Spanish"
+    },
+    {
+      "id": "en0220",
+      "answer": "NIDO",
+      "clue": "Nest, in Spanish"
+    },
+    {
+      "id": "en0221",
+      "answer": "YEAR",
+      "clue": "\"Año,\" in English"
+    },
+    {
+      "id": "en0222",
+      "answer": "FIVE",
+      "clue": "\"Cinco,\" in English"
+    },
+    {
+      "id": "en0223",
+      "answer": "NINE",
+      "clue": "\"Nueve,\" in English"
+    },
+    {
+      "id": "en0224",
+      "answer": "FOUR",
+      "clue": "\"Cuatro,\" in English"
+    },
+    {
+      "id": "en0225",
+      "answer": "NOSE",
+      "clue": "\"Nariz,\" in English"
+    },
+    {
+      "id": "en0226",
+      "answer": "HEAD",
+      "clue": "\"Cabeza,\" in English"
+    },
+    {
+      "id": "en0227",
+      "answer": "SHOE",
+      "clue": "\"Zapato,\" in English"
+    },
+    {
+      "id": "en0228",
+      "answer": "RICE",
+      "clue": "\"Arroz,\" in English"
+    },
+    {
+      "id": "en0229",
+      "answer": "MEAT",
+      "clue": "\"Carne,\" in English"
+    },
+    {
+      "id": "en0230",
+      "answer": "CORN",
+      "clue": "\"Maíz,\" in English"
+    },
+    {
+      "id": "en0231",
+      "answer": "WIND",
+      "clue": "\"Viento,\" in English"
+    },
+    {
+      "id": "en0232",
+      "answer": "SIETE",
+      "clue": "Seven, in Spanish"
+    },
+    {
+      "id": "en0233",
+      "answer": "NUEVE",
+      "clue": "Nine, in Spanish"
+    },
+    {
+      "id": "en0234",
+      "answer": "LUNES",
+      "clue": "Monday, in Spanish"
+    },
+    {
+      "id": "en0235",
+      "answer": "CARNE",
+      "clue": "Meat, in Spanish"
+    },
+    {
+      "id": "en0236",
+      "answer": "BRAZO",
+      "clue": "Arm, in Spanish"
+    },
+    {
+      "id": "en0237",
+      "answer": "JOVEN",
+      "clue": "Young, in Spanish"
+    },
+    {
+      "id": "en0238",
+      "answer": "VIEJO",
+      "clue": "Old, in Spanish"
+    },
+    {
+      "id": "en0239",
+      "answer": "NUEVO",
+      "clue": "New, in Spanish"
+    },
+    {
+      "id": "en0240",
+      "answer": "DULCE",
+      "clue": "Sweet, in Spanish"
+    },
+    {
+      "id": "en0241",
+      "answer": "CHICA",
+      "clue": "Girl, in Spanish"
+    },
+    {
+      "id": "en0242",
+      "answer": "LIGHT",
+      "clue": "\"Luz,\" in English"
+    },
+    {
+      "id": "en0243",
+      "answer": "VOICE",
+      "clue": "\"Voz,\" in English"
+    },
+    {
+      "id": "en0244",
+      "answer": "TRUTH",
+      "clue": "\"Verdad,\" in English"
+    },
+    {
+      "id": "en0245",
+      "answer": "DEATH",
+      "clue": "\"Muerte,\" in English"
+    },
+    {
+      "id": "en0246",
+      "answer": "STONE",
+      "clue": "\"Piedra,\" in English"
+    },
+    {
+      "id": "en0247",
+      "answer": "SUGAR",
+      "clue": "\"Azúcar,\" in English"
+    },
+    {
+      "id": "en0248",
+      "answer": "SHEEP",
+      "clue": "\"Oveja,\" in English"
+    },
+    {
+      "id": "en0249",
+      "answer": "MOUSE",
+      "clue": "\"Ratón,\" in English"
+    },
+    {
+      "id": "en0250",
+      "answer": "ONION",
+      "clue": "\"Cebolla,\" in English"
+    },
+    {
+      "id": "en0251",
+      "answer": "PARTY",
+      "clue": "\"Fiesta,\" in English"
+    },
+    {
+      "id": "en0252",
+      "answer": "HELLO",
+      "clue": "\"Hola,\" in English"
+    },
+    {
+      "id": "en0253",
+      "answer": "TOS",
+      "clue": "Cough, in Spanish"
+    },
+    {
+      "id": "en0254",
+      "answer": "SOY",
+      "clue": "\"I am,\" in Spanish"
+    },
+    {
+      "id": "en0255",
+      "answer": "HAY",
+      "clue": "\"There is,\" in Spanish"
+    },
+    {
+      "id": "en0256",
+      "answer": "VOY",
+      "clue": "\"I go,\" in Spanish"
+    },
+    {
+      "id": "en0257",
+      "answer": "DON",
+      "clue": "Honorific title, in Spanish"
+    },
+    {
+      "id": "en0258",
+      "answer": "SIN",
+      "clue": "Without, in Spanish"
+    },
+    {
+      "id": "en0259",
+      "answer": "CON",
+      "clue": "With, in Spanish"
+    },
+    {
+      "id": "en0260",
+      "answer": "YES",
+      "clue": "\"Sí,\" in English"
+    },
+    {
+      "id": "en0261",
+      "answer": "LOW",
+      "clue": "\"Bajo,\" in English"
+    },
+    {
+      "id": "en0262",
+      "answer": "SEE",
+      "clue": "\"Ver,\" in English"
+    },
+    {
+      "id": "en0263",
+      "answer": "BUY",
+      "clue": "\"Comprar,\" in English"
+    },
+    {
+      "id": "en0264",
+      "answer": "ASK",
+      "clue": "\"Preguntar,\" in English"
+    },
+    {
+      "id": "en0265",
+      "answer": "HAM",
+      "clue": "\"Jamón,\" in English"
+    },
+    {
+      "id": "en0266",
+      "answer": "BAG",
+      "clue": "\"Bolsa,\" in English"
+    },
+    {
+      "id": "en0267",
+      "answer": "CUP",
+      "clue": "\"Taza,\" in English"
+    },
+    {
+      "id": "en0268",
+      "answer": "HOW",
+      "clue": "\"Cómo,\" in English"
+    },
+    {
+      "id": "en0269",
+      "answer": "WHO",
+      "clue": "\"Quién,\" in English"
+    },
+    {
+      "id": "en0270",
+      "answer": "WHY",
+      "clue": "\"Por qué,\" in English"
+    },
+    {
+      "id": "en0271",
+      "answer": "MAYO",
+      "clue": "May, in Spanish"
+    },
+    {
+      "id": "en0272",
+      "answer": "CAFE",
+      "clue": "Coffee, in Madrid"
+    },
+    {
+      "id": "en0273",
+      "answer": "VASO",
+      "clue": "Drinking glass, in Spanish"
+    },
+    {
+      "id": "en0274",
+      "answer": "NADA",
+      "clue": "Nothing, in Spanish"
+    },
+    {
+      "id": "en0275",
+      "answer": "TODO",
+      "clue": "Everything, in Spanish"
+    },
+    {
+      "id": "en0276",
+      "answer": "AYER",
+      "clue": "Yesterday, in Spanish"
+    },
+    {
+      "id": "en0277",
+      "answer": "JUGO",
+      "clue": "Juice, in Latin American Spanish"
+    },
+    {
+      "id": "en0278",
+      "answer": "PIEL",
+      "clue": "Skin, in Spanish"
+    },
+    {
+      "id": "en0279",
+      "answer": "FRIO",
+      "clue": "Cold, in Spanish"
+    },
+    {
+      "id": "en0280",
+      "answer": "LOCO",
+      "clue": "Crazy, in Spanish"
+    },
+    {
+      "id": "en0281",
+      "answer": "WEST",
+      "clue": "\"Oeste,\" in English"
+    },
+    {
+      "id": "en0282",
+      "answer": "EAST",
+      "clue": "\"Este,\" in English"
+    },
+    {
+      "id": "en0283",
+      "answer": "GAME",
+      "clue": "\"Juego,\" in English"
+    },
+    {
+      "id": "en0284",
+      "answer": "TIME",
+      "clue": "\"Tiempo,\" in English"
+    },
+    {
+      "id": "en0285",
+      "answer": "WORK",
+      "clue": "\"Trabajo,\" in English"
+    },
+    {
+      "id": "en0286",
+      "answer": "COLD",
+      "clue": "\"Frío,\" in English"
+    },
+    {
+      "id": "en0287",
+      "answer": "SLOW",
+      "clue": "\"Lento,\" in English"
+    },
+    {
+      "id": "en0288",
+      "answer": "ENERO",
+      "clue": "January, in Spanish"
+    },
+    {
+      "id": "en0289",
+      "answer": "MARZO",
+      "clue": "March, in Spanish"
+    },
+    {
+      "id": "en0290",
+      "answer": "JUNIO",
+      "clue": "June, in Spanish"
+    },
+    {
+      "id": "en0291",
+      "answer": "JULIO",
+      "clue": "July, in Spanish"
+    },
+    {
+      "id": "en0292",
+      "answer": "CERDO",
+      "clue": "Pig, in Spanish"
+    },
+    {
+      "id": "en0293",
+      "answer": "MOSCA",
+      "clue": "Housefly, in Spanish"
+    },
+    {
+      "id": "en0294",
+      "answer": "OVEJA",
+      "clue": "Sheep, in Spanish"
+    },
+    {
+      "id": "en0295",
+      "answer": "CABRA",
+      "clue": "Goat, in Spanish"
+    },
+    {
+      "id": "en0296",
+      "answer": "PLUMA",
+      "clue": "Feather, in Spanish"
+    },
+    {
+      "id": "en0297",
+      "answer": "LARGO",
+      "clue": "Long, in Spanish"
+    },
+    {
+      "id": "en0298",
+      "answer": "BAILE",
+      "clue": "Dance, in Spanish"
+    },
+    {
+      "id": "en0299",
+      "answer": "GLASS",
+      "clue": "\"Vaso,\" in English"
+    },
+    {
+      "id": "en0300",
+      "answer": "JUICE",
+      "clue": "\"Jugo,\" in English"
+    },
+    {
+      "id": "en0301",
+      "answer": "SNAKE",
+      "clue": "\"Serpiente,\" in English"
+    },
+    {
+      "id": "en0302",
+      "answer": "STORE",
+      "clue": "\"Tienda,\" in English"
+    },
+    {
+      "id": "en0303",
+      "answer": "YOUNG",
+      "clue": "\"Joven,\" in English"
+    },
+    {
+      "id": "en0304",
+      "answer": "CLEAN",
+      "clue": "\"Limpio,\" in English"
+    },
+    {
+      "id": "en0305",
+      "answer": "DIRTY",
+      "clue": "\"Sucio,\" in English"
+    }
+  ]
+}
