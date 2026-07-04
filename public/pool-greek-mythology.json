@@ -1,0 +1,244 @@
+{
+  "pool": [
+    {
+      "id": "gr0000",
+      "answer": "PAN",
+      "clue": "Goat-legged god of shepherds and the wild"
+    },
+    {
+      "id": "gr0001",
+      "answer": "NYX",
+      "clue": "Primordial goddess of the night"
+    },
+    {
+      "id": "gr0002",
+      "answer": "EOS",
+      "clue": "Rosy-fingered goddess of the dawn"
+    },
+    {
+      "id": "gr0003",
+      "answer": "ATE",
+      "clue": "Goddess of ruin and reckless folly"
+    },
+    {
+      "id": "gr0004",
+      "answer": "OWL",
+      "clue": "Athena's wise companion bird"
+    },
+    {
+      "id": "gr0005",
+      "answer": "RAM",
+      "clue": "Animal that bore the Golden Fleece"
+    },
+    {
+      "id": "gr0006",
+      "answer": "SEA",
+      "clue": "Poseidon's watery domain"
+    },
+    {
+      "id": "gr0007",
+      "answer": "SKY",
+      "clue": "Realm Zeus rules from on high"
+    },
+    {
+      "id": "gr0008",
+      "answer": "BOW",
+      "clue": "Weapon wielded by Apollo and Artemis"
+    },
+    {
+      "id": "gr0009",
+      "answer": "HERA",
+      "clue": "Queen of Olympus, wife of Zeus"
+    },
+    {
+      "id": "gr0010",
+      "answer": "ZEUS",
+      "clue": "Thunderbolt-hurling king of the gods"
+    },
+    {
+      "id": "gr0011",
+      "answer": "ARES",
+      "clue": "God of war and bloodlust"
+    },
+    {
+      "id": "gr0012",
+      "answer": "EROS",
+      "clue": "Mischievous winged god of desire"
+    },
+    {
+      "id": "gr0013",
+      "answer": "LETO",
+      "clue": "Mother of the twins Apollo and Artemis"
+    },
+    {
+      "id": "gr0014",
+      "answer": "IRIS",
+      "clue": "Goddess of the rainbow, messenger of the gods"
+    },
+    {
+      "id": "gr0015",
+      "answer": "NIKE",
+      "clue": "Winged goddess of victory"
+    },
+    {
+      "id": "gr0016",
+      "answer": "ERIS",
+      "clue": "Goddess of strife and discord"
+    },
+    {
+      "id": "gr0017",
+      "answer": "GAIA",
+      "clue": "Primordial goddess of the earth"
+    },
+    {
+      "id": "gr0018",
+      "answer": "RHEA",
+      "clue": "Titaness mother of the Olympians"
+    },
+    {
+      "id": "gr0019",
+      "answer": "STYX",
+      "clue": "River the dead cross into the underworld"
+    },
+    {
+      "id": "gr0020",
+      "answer": "MUSE",
+      "clue": "One of nine patron goddesses of the arts"
+    },
+    {
+      "id": "gr0021",
+      "answer": "CLIO",
+      "clue": "Goddess who presides over history"
+    },
+    {
+      "id": "gr0022",
+      "answer": "LEDA",
+      "clue": "Mortal queen seduced by Zeus as a swan"
+    },
+    {
+      "id": "gr0023",
+      "answer": "MAIA",
+      "clue": "Eldest Pleiad, mother of Hermes"
+    },
+    {
+      "id": "gr0024",
+      "answer": "ECHO",
+      "clue": "Nymph doomed to repeat the last words she hears"
+    },
+    {
+      "id": "gr0025",
+      "answer": "ARGO",
+      "clue": "Vessel that carried Jason and his crew"
+    },
+    {
+      "id": "gr0026",
+      "answer": "AJAX",
+      "clue": "Mighty Greek warrior at Troy"
+    },
+    {
+      "id": "gr0027",
+      "answer": "HADES",
+      "clue": "Stern god who rules the dead"
+    },
+    {
+      "id": "gr0028",
+      "answer": "TITAN",
+      "clue": "Member of the elder race of gods"
+    },
+    {
+      "id": "gr0029",
+      "answer": "CHAOS",
+      "clue": "The formless void at the start of creation"
+    },
+    {
+      "id": "gr0030",
+      "answer": "ICHOR",
+      "clue": "Golden fluid flowing in immortal veins"
+    },
+    {
+      "id": "gr0031",
+      "answer": "AEGIS",
+      "clue": "Zeus's storm shield, later lent to Athena"
+    },
+    {
+      "id": "gr0032",
+      "answer": "MEDEA",
+      "clue": "Vengeful sorceress who aided Jason"
+    },
+    {
+      "id": "gr0033",
+      "answer": "CIRCE",
+      "clue": "Sorceress who turned Odysseus's crew into swine"
+    },
+    {
+      "id": "gr0034",
+      "answer": "HELEN",
+      "clue": "Queen whose abduction sparked the Trojan War"
+    },
+    {
+      "id": "gr0035",
+      "answer": "PARIS",
+      "clue": "Trojan prince who judged three goddesses"
+    },
+    {
+      "id": "gr0036",
+      "answer": "MIDAS",
+      "clue": "Phrygian king with a golden touch"
+    },
+    {
+      "id": "gr0037",
+      "answer": "ORION",
+      "clue": "Mighty hunter turned constellation"
+    },
+    {
+      "id": "gr0038",
+      "answer": "ATLAS",
+      "clue": "Titan forced to bear the heavens on his shoulders"
+    },
+    {
+      "id": "gr0039",
+      "answer": "SATYR",
+      "clue": "Goat-legged forest reveler"
+    },
+    {
+      "id": "gr0040",
+      "answer": "NYMPH",
+      "clue": "Minor nature goddess of rivers and woods"
+    },
+    {
+      "id": "gr0041",
+      "answer": "HARPY",
+      "clue": "Winged monster that snatches food and souls"
+    },
+    {
+      "id": "gr0042",
+      "answer": "LOTUS",
+      "clue": "Fruit that lulled sailors into forgetfulness"
+    },
+    {
+      "id": "gr0043",
+      "answer": "DELOS",
+      "clue": "Sacred island where Apollo was born"
+    },
+    {
+      "id": "gr0044",
+      "answer": "ARGUS",
+      "clue": "Giant with a hundred ever-watchful eyes"
+    },
+    {
+      "id": "gr0045",
+      "answer": "MINOS",
+      "clue": "Cretan king who became a judge of the dead"
+    },
+    {
+      "id": "gr0046",
+      "answer": "PRIAM",
+      "clue": "Aged king of Troy during its fall"
+    },
+    {
+      "id": "gr0047",
+      "answer": "HYDRA",
+      "clue": "Multi-headed serpent that regrew its heads"
+    }
+  ]
+}
