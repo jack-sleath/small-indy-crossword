@@ -166,13 +166,13 @@ Jack (end user / puzzle creator)
 
 ### Functional Requirements
 1. The app must have a `/daily` route that is distinct from the seed-based `/` route.
-2. Each UTC day must map deterministically to a single pre-generated puzzle seed.
+2. Each UTC day must map deterministically to a single puzzle seed, generated on the fly from the date.
 3. All users accessing `/daily` on the same UTC day must receive the same puzzle, regardless of their local timezone.
 4. The daily page must display a live countdown (HH:MM:SS) to the next UTC midnight.
 5. The day number must be shown so users can identify and discuss which puzzle they are on.
 
 ### Non-Functional Requirements
-- The seed selection logic must be purely client-side and require no network calls beyond loading `daily-seeds.json` at startup.
+- The seed generation logic must be purely client-side and require no network calls beyond loading the puzzle pool at startup.
 - The countdown timer must update every second.
 
 ### Out of Scope

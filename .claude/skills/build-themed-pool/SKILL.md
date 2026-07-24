@@ -152,7 +152,7 @@ healthy, go to step 1 with the new deficit.
 
 ## Final report
 
-Report: total entries, 3/4/5 distribution vs target, overall gate pass-rate, the file and
-manifest entry written, and a reminder: **run `npm run generate-seeds` only if this pool
-should also feed daily puzzles** (daily generation currently uses the Guardian pool).
+Report: total entries, 3/4/5 distribution vs target, overall gate pass-rate, and the file and
+manifest entry written. No seed pre-generation step is needed — daily puzzles are resolved
+on the fly from the UTC date (and currently use the Guardian pool regardless).
 Leave `.pool-build/<slug>/` in place for resumes; it is gitignored.

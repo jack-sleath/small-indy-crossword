@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PlayPage from './PlayPage'
 import { useTheme } from '../utils/useTheme'
+import { resolveDailySeed } from '../utils/dailySeed'
 import styles from './PlayPage.module.css'
-
-const DAILY_SEEDS_URL = '/daily-seeds.json'
 
 export default function DailyPage() {
   const { theme, toggleTheme } = useTheme()
@@ -13,15 +12,24 @@ export default function DailyPage() {
   const [dayNumber, setDayNumber] = useState(null)
 
   useEffect(() => {
-    fetch(DAILY_SEEDS_URL)
-      .then(r => r.json())
-      .then(({ startDate, seeds }) => {
-        // Parse startDate as UTC midnight (ISO date-only strings are always UTC).
-        // Date.now() is UTC epoch ms, so this division gives the UTC day number.
-        const startUTC = new Date(startDate).getTime()
-        const dayIndex = Math.max(0, Math.floor((Date.now() - startUTC) / 86_400_000)) % seeds.length
-        setDayNumber(dayIndex + 1)
-        setSeed(seeds[dayIndex])
+    const BASE = ''
+    // Daily always uses the default (Guardian) pool. Resolve today's seed
+    // on the fly from the UTC date — no pre-generated seed list needed.
+    fetch(`${BASE}/pools.json`)
+      .then((r) => r.json())
+      .then(({ pools }) => {
+        const entry = pools.find((p) => p.default) ?? pools[0]
+        return fetch(`${BASE}/${entry.file}`)
+      })
+      .then((r) => r.json())
+      .then(({ pool }) => {
+        const result = resolveDailySeed(pool)
+        if (!result) {
+          setError(true)
+          return
+        }
+        setDayNumber(result.dayNumber)
+        setSeed(result.seed)
       })
       .catch(() => setError(true))
   }, [])
