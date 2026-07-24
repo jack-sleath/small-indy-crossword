@@ -75,12 +75,13 @@ The solver requires **at least 6 five-letter words** that can form valid interse
 
 ## Deploying
 
-```bash
-npm run build   # build to dist/
-npm run deploy  # publish dist/ to the gh-pages branch
-```
+Deploys happen automatically: pushing to `main` triggers the
+[`Deploy to GitHub Pages`](.github/workflows/deploy.yml) workflow, which builds
+the site and publishes `dist/` via GitHub's official Pages actions. Pages must
+be set to build from **GitHub Actions** (Settings → Pages → Source).
 
-GitHub Pages is configured to serve from the `gh-pages` branch. The `404.html` redirect handles client-side routing so deep links work correctly.
+To build locally: `npm run build` (output in `dist/`). The `404.html` redirect
+handles client-side routing so deep links work correctly.
 
 ---
 
@@ -91,4 +92,4 @@ npm install
 npm run dev    # start local dev server at http://localhost:5173
 ```
 
-Tech stack: React 19, Vite 8, React Router 7, deployed via gh-pages.
+Tech stack: React 19, Vite 8, React Router 7, deployed to GitHub Pages via GitHub Actions.
