@@ -33,6 +33,22 @@ The timer starts on your first keystroke and stops when you complete the puzzle.
 
 ---
 
+## Random Puzzle
+
+Visit [`/random`](https://small-indy.jack-sleath.dev/random) to skip the generate
+page entirely: it seeds the solver from the exact current time, builds a puzzle,
+and redirects straight to its `/?seed=…` play URL. Every visit (and every
+refresh) gives a different puzzle, and the resulting URL is shareable and
+resumable like any other.
+
+Add `?pool=<slug>` for a themed pool, e.g. `/random?pool=star-wars`. Slugs come
+from [`public/pools.json`](./public/pools.json).
+
+`/random` is linked from the home screen, the in-game settings panel, and the
+completion modal.
+
+---
+
 ## Generating a Puzzle
 
 Visit [`/generate`](https://small-indy.jack-sleath.dev/generate):
@@ -70,6 +86,24 @@ The word pool lives in [`public/pool.json`](./public/pool.json):
 > **Important:** Never change a word's `id` after it has been used in a shared seed — the seed encodes pool IDs and changing them will break existing links. To update a clue text you can edit the `clue` field safely.
 
 The solver requires **at least 6 five-letter words** that can form valid intersecting triples. More variety = more distinct generated puzzles. Aim for 20+ entries for comfortable variation.
+
+---
+
+## Offline Support
+
+The app is a PWA: the shell (JS/CSS/HTML/icons) plus `pools.json` are precached
+on install, and shortly after the first load
+[`src/utils/poolCache.js`](./src/utils/poolCache.js) downloads **every** pool in
+the manifest in the background and writes it into the service worker's
+`crossword-pools` cache. Once that has run, all themes are playable offline —
+not just the one that happened to be opened first — and switching pools on the
+generate page is instant.
+
+The warm-up runs at idle, fetches sequentially so it never competes with the
+visible page, skips pools already in the cache (so a returning visitor doesn't
+re-download ~600 kB), and is skipped entirely when Data Saver is enabled. Pools
+themselves are network-first, so an online visit always gets the latest file and
+falls back to the cached copy only when offline.
 
 ---
 

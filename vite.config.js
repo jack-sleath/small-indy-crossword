@@ -44,10 +44,14 @@ export default defineConfig({
         // up on activation. This is the "deployed date" bucket you described.
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}', 'pools.json'],
 
-        // The large per-theme clue pools are cached on demand instead of all
-        // up front. This is the network-first-with-fallback behaviour:
+        // The large per-theme clue pools are kept out of the precache (which
+        // would re-download ~600 kB on every deploy) and cached here instead:
         //   - online  -> fetch the latest file, serve it, and cache it
         //   - offline -> fall back to the last cached copy (never breaks)
+        //
+        // src/utils/poolCache.js also writes into this cache directly, so that
+        // every pool — not just the one being played — is available offline.
+        // Its POOL_CACHE_NAME must match the `cacheName` below.
         runtimeCaching: [
           {
             // Matches /pool.json and /pool-<theme>.json, but NOT the

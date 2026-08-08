@@ -6,6 +6,7 @@ import ClueList from '../components/ClueList'
 import CompletionModal from '../components/CompletionModal'
 import MobileKeyboard from '../components/MobileKeyboard'
 import { decodeSeed } from '../utils/seed'
+import { loadPoolBySlug } from '../utils/poolCache'
 import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
 import {
   getCellsInEntry,
@@ -105,19 +106,13 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   // Load the correct pool via manifest, then decode seed
   useEffect(() => {
-    const BASE = ''
-    fetch(`${BASE}/pools.json`)
-      .then((r) => r.json())
-      .then(({ pools }) => {
-        const entry =
-          pools.find((p) => p.slug === poolParam) ??
-          pools.find((p) => p.default) ??
-          pools[0]
-        setPoolName(entry.default ? null : entry.name)
-        return fetch(`${BASE}/${entry.file}`)
-      })
-      .then((r) => r.json())
-      .then(({ pool: p }) => setPool(p))
+    let cancelled = false
+    loadPoolBySlug(poolParam).then(({ entry, pool: p }) => {
+      if (cancelled) return
+      setPoolName(entry.default ? null : entry.name)
+      setPool(p)
+    }).catch(() => { /* stays on the loading state; a reload retries */ })
+    return () => { cancelled = true }
   }, [poolParam])
 
   useEffect(() => {
@@ -307,7 +302,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           </div>
           <div className={styles.noSeed}>
             <p>No puzzle loaded.</p>
-            <Link to="/generate" className={styles.generateLink}>Generate a puzzle →</Link>
+            <Link to="/random" className={styles.generateLink}>Random puzzle →</Link>
+            <Link to="/generate" className={styles.randomLink}>Generate a puzzle →</Link>
           </div>
         </main>
       )
@@ -323,7 +319,8 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           </div>
           <div className={styles.noSeed}>
             <p>Invalid or unrecognised seed.</p>
-            <Link to="/generate" className={styles.generateLink}>Generate a new puzzle →</Link>
+            <Link to="/random" className={styles.generateLink}>Random puzzle →</Link>
+            <Link to="/generate" className={styles.randomLink}>Generate a new puzzle →</Link>
           </div>
         </main>
       )
@@ -862,6 +859,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
                 <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
                 Spacebar clears cell &amp; advances (instead of toggle direction)
               </label>
+              <Link to="/random" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
               <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
               <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
             </div>
@@ -1003,6 +1001,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
                 <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
                 Spacebar clears cell &amp; advances (instead of toggle direction)
               </label>
+              <Link to="/random" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
               <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
               <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
             </div>
