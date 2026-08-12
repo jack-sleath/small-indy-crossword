@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CrosswordGrid from '../components/CrosswordGrid'
 import ClueList from '../components/ClueList'
-import { solvePattern, validatePool } from '../utils/solver'
-import { PATTERNS } from '../utils/patterns'
-import { buildPuzzle, hasIntersectionConflict } from '../utils/buildPuzzle'
+import { validatePool } from '../utils/solver'
+import { buildPuzzle } from '../utils/buildPuzzle'
+import { loadManifest, loadPool, resolvePoolEntry } from '../utils/poolCache'
+import { DEFAULT_MAX_TRIES, solveRandomPuzzle } from '../utils/randomPuzzle'
 import { encodeSeed } from '../utils/seed'
 import { useTheme } from '../utils/useTheme'
 import styles from './GeneratePage.module.css'
@@ -27,33 +28,31 @@ export default function GeneratePage() {
 
   // Load manifest on mount, select the default pool
   useEffect(() => {
-    fetch(`${BASE}/pools.json`)
-      .then((r) => r.json())
-      .then(({ pools: p }) => {
-        setPools(p)
-        const defaultEntry = p.find((e) => e.default) ?? p[0]
-        setSelectedSlug(defaultEntry.slug)
-      })
+    loadManifest().then((p) => {
+      setPools(p)
+      setSelectedSlug(resolvePoolEntry(p, null).slug)
+    })
   }, [])
 
   // When selected pool changes, fetch and validate the pool file
   useEffect(() => {
     if (!selectedSlug || pools.length === 0) return
-    const entry = pools.find((p) => p.slug === selectedSlug) ?? pools.find((p) => p.default) ?? pools[0]
+    const entry = resolvePoolEntry(pools, selectedSlug)
+    let cancelled = false
     setPool(null)
     setPoolErrors([])
     setPuzzle(null)
     setSeed(null)
-    fetch(`${BASE}/${entry.file}`)
-      .then((r) => r.json())
-      .then(({ pool: p }) => {
-        const { valid, errors } = validatePool(p)
-        if (!valid) {
-          setPoolErrors(errors)
-          return
-        }
-        setPool(p)
-      })
+    loadPool(entry).then((p) => {
+      if (cancelled) return
+      const { valid, errors } = validatePool(p)
+      if (!valid) {
+        setPoolErrors(errors)
+        return
+      }
+      setPool(p)
+    })
+    return () => { cancelled = true }
   }, [selectedSlug, pools])
 
   // Auto-generate when pool loads
@@ -65,20 +64,9 @@ export default function GeneratePage() {
   function generate() {
     if (!pool) return
     setNoSolution(false)
-    const MAX_TRIES = 5
-    let rawEntries = null
-    for (let i = 0; i < MAX_TRIES; i++) {
-      const attempt = attemptRef.current
-      attemptRef.current += 1
-      const pattern = PATTERNS[attempt % PATTERNS.length]
-      console.time(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
-      const result = solvePattern(pool, pattern, attempt)
-      console.timeEnd(`solvePattern (attempt ${attempt}, pattern ${pattern.name})`)
-      if (result && !hasIntersectionConflict(result)) {
-        rawEntries = result
-        break
-      }
-    }
+    const rawEntries = solveRandomPuzzle(pool, attemptRef.current, DEFAULT_MAX_TRIES)
+    // Advance past the whole tried range so Regenerate never repeats a seed.
+    attemptRef.current += DEFAULT_MAX_TRIES
     if (!rawEntries) {
       setNoSolution(true)
       setPuzzle(null)

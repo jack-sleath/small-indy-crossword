@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PlayPage from './PlayPage'
 import { useTheme } from '../utils/useTheme'
 import { resolveDailySeed } from '../utils/dailySeed'
+import { loadPoolBySlug } from '../utils/poolCache'
 import styles from './PlayPage.module.css'
 
 export default function DailyPage() {
@@ -12,16 +13,9 @@ export default function DailyPage() {
   const [dayNumber, setDayNumber] = useState(null)
 
   useEffect(() => {
-    const BASE = ''
     // Daily always uses the default (Guardian) pool. Resolve today's seed
     // on the fly from the UTC date — no pre-generated seed list needed.
-    fetch(`${BASE}/pools.json`)
-      .then((r) => r.json())
-      .then(({ pools }) => {
-        const entry = pools.find((p) => p.default) ?? pools[0]
-        return fetch(`${BASE}/${entry.file}`)
-      })
-      .then((r) => r.json())
+    loadPoolBySlug(null)
       .then(({ pool }) => {
         const result = resolveDailySeed(pool)
         if (!result) {

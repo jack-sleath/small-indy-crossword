@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './CompletionModal.module.css'
 
 /**
@@ -28,6 +29,9 @@ export default function CompletionModal({ elapsed, assisted, onDismiss, onClose,
               {shareFeedback ? 'Copied!' : '📤 Share result'}
             </button>
           )}
+          <Link to="/random" className={styles.nextLink}>
+            🎲 Random puzzle
+          </Link>
           <button className={styles.button} onClick={onClose}>
             Play again
           </button>
