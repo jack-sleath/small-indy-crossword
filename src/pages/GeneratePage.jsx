@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import CrosswordGrid from '../components/CrosswordGrid'
 import ClueList from '../components/ClueList'
 import { validatePool } from '../utils/solver'
@@ -15,6 +15,7 @@ const BASE_URL = `${window.location.origin}${BASE}`
 
 export default function GeneratePage() {
   const { theme, toggleTheme } = useTheme()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [pools, setPools] = useState([])
   const [selectedSlug, setSelectedSlug] = useState(null)
   const [pool, setPool] = useState(null)
@@ -26,13 +27,25 @@ export default function GeneratePage() {
   const [previewVisible, setPreviewVisible] = useState(false)
   const attemptRef = useRef(Math.floor(Math.random() * 65536))
 
-  // Load manifest on mount, select the default pool
+  // Load manifest on mount and start on the pool named by `?pool=<slug>`, so
+  // arriving here from a themed puzzle keeps that theme. Unknown or missing
+  // slugs fall back to the default pool.
   useEffect(() => {
     loadManifest().then((p) => {
       setPools(p)
-      setSelectedSlug(resolvePoolEntry(p, null).slug)
+      setSelectedSlug(resolvePoolEntry(p, searchParams.get('pool')).slug)
     })
+    // Read once on mount; later changes come from the selector below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Keep `?pool` in step with the selector, so refreshing or sharing the
+  // generate URL reopens the same pool. The default pool carries no param.
+  function handlePoolChange(slug) {
+    setSelectedSlug(slug)
+    const entry = resolvePoolEntry(pools, slug)
+    setSearchParams(entry.default ? {} : { pool: entry.slug }, { replace: true })
+  }
 
   // When selected pool changes, fetch and validate the pool file
   useEffect(() => {
@@ -108,7 +121,7 @@ export default function GeneratePage() {
         id="pool-select"
         className={styles.poolSelect}
         value={selectedSlug ?? ''}
-        onChange={(e) => setSelectedSlug(e.target.value)}
+        onChange={(e) => handlePoolChange(e.target.value)}
       >
         {pools.map((p) => (
           <option key={p.slug} value={p.slug}>{p.name}</option>
