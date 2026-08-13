@@ -60,6 +60,10 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   // Daily puzzles always use the Guardian pool; URL ?pool param is for generated puzzles only
   const poolParam = overrideSeed ? null : searchParams.get('pool')
 
+  // Re-roll within the pool the player is currently in, so a themed run
+  // doesn't silently drop back to the default pool.
+  const randomTo = poolParam ? `/random?pool=${encodeURIComponent(poolParam)}` : '/random'
+
   // Game state
   const [cellValues, setCellValues] = useState({})
   const [selected, setSelected] = useState(null)
@@ -310,7 +314,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           </div>
           <div className={styles.noSeed}>
             <p>No puzzle loaded.</p>
-            <Link to="/random" className={styles.generateLink}>Random puzzle →</Link>
+            <Link to={randomTo} className={styles.generateLink}>Random puzzle →</Link>
             <Link to="/generate" className={styles.randomLink}>Generate a puzzle →</Link>
           </div>
         </main>
@@ -327,7 +331,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           </div>
           <div className={styles.noSeed}>
             <p>Invalid or unrecognised seed.</p>
-            <Link to="/random" className={styles.generateLink}>Random puzzle →</Link>
+            <Link to={randomTo} className={styles.generateLink}>Random puzzle →</Link>
             <Link to="/generate" className={styles.randomLink}>Generate a new puzzle →</Link>
           </div>
         </main>
@@ -876,7 +880,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
                 <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
                 Spacebar clears cell &amp; advances (instead of toggle direction)
               </label>
-              <Link to="/random" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
+              <Link to={randomTo} className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
               <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
               <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
             </div>
@@ -1018,7 +1022,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
                 <input type="checkbox" checked={spacebarClearAdvance} onChange={() => toggleSetting('spacebarClearAdvance', setSpacebarClearAdvance)} />
                 Spacebar clears cell &amp; advances (instead of toggle direction)
               </label>
-              <Link to="/random" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
+              <Link to={randomTo} className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Random puzzle →</Link>
               <Link to="/generate" className={styles.settingsGenerateLink} onClick={() => setShowSettings(false)}>Generate a new puzzle →</Link>
               <button className={styles.settingsClose} onClick={() => setShowSettings(false)}>Close ✕</button>
             </div>
@@ -1205,6 +1209,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
           onClose={handleReset}
           onShareResult={handleShareResult}
           shareFeedback={shareFeedback}
+          randomTo={randomTo}
         />
       )}
     </main>

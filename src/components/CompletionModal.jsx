@@ -10,8 +10,9 @@ import styles from './CompletionModal.module.css'
  *   onClose        — () => void — play again (resets puzzle)
  *   onShareResult  — () => void — share spoiler-free solve result
  *   shareFeedback  — boolean — show 'Copied!' feedback
+ *   randomTo       — string — target for "Random puzzle", carrying the current pool
  */
-export default function CompletionModal({ elapsed, assisted, revealedCount = 0, onDismiss, onClose, onShareResult, shareFeedback }) {
+export default function CompletionModal({ elapsed, assisted, revealedCount = 0, onDismiss, onClose, onShareResult, shareFeedback, randomTo = '/random' }) {
   const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0')
   const seconds = String(elapsed % 60).padStart(2, '0')
   // Older saves recorded only the assisted flag, with no count to report.
@@ -34,7 +35,7 @@ export default function CompletionModal({ elapsed, assisted, revealedCount = 0, 
               {shareFeedback ? 'Copied!' : '📤 Share result'}
             </button>
           )}
-          <Link to="/random" className={styles.nextLink}>
+          <Link to={randomTo} className={styles.nextLink}>
             🎲 Random puzzle
           </Link>
           <button className={styles.button} onClick={onClose}>
