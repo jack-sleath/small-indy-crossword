@@ -68,6 +68,10 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   const [isWon, setIsWon] = useState(false)
   const [incorrectCells, setIncorrectCells] = useState(new Set())
   const [revealedCells, setRevealedCells] = useState(new Set())
+  // Every cell ever revealed during this solve. Unlike revealedCells this is
+  // never cleared (a reset keeps it), so the completion score can report how
+  // many squares were given away even if the grid was wiped afterwards.
+  const [revealedEver, setRevealedEver] = useState(new Set())
   const [correctCells, setCorrectCells] = useState(new Set())
   const [rebusMode, setRebusMode] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
@@ -156,6 +160,9 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
         if (data.cellValues) setCellValues(data.cellValues)
         if (data.revealedCells) setRevealedCells(new Set(data.revealedCells))
         if (data.correctCells) setCorrectCells(new Set(data.correctCells))
+        // Saves written before reveal counting fall back to revealedCells.
+        if (data.revealedEver) setRevealedEver(new Set(data.revealedEver))
+        else if (data.revealedCells) setRevealedEver(new Set(data.revealedCells))
         if (data.isAssisted) setIsAssisted(data.isAssisted)
         const savedElapsed = data.elapsed ?? 0
         restoredElapsedRef.current = savedElapsed
@@ -177,12 +184,13 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     localStorage.setItem(`progress-${seedParam}`, JSON.stringify({
       cellValues,
       revealedCells: [...revealedCells],
+      revealedEver: [...revealedEver],
       correctCells: [...correctCells],
       isAssisted,
       elapsed,
       isWon,
     }))
-  }, [cellValues, revealedCells, correctCells, isAssisted, elapsed, isWon]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [cellValues, revealedCells, revealedEver, correctCells, isAssisted, elapsed, isWon]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Countdown to next daily puzzle (midnight UTC)
   useEffect(() => {
@@ -643,14 +651,17 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     setIsAssisted(true)
     setIncorrectCells(new Set())
     const revealed = new Set(revealedCells)
+    const everRevealed = new Set(revealedEver)
     const newValues = { ...cellValues }
     for (const key of keys) {
       if (answerMap[key]) {
         revealed.add(key)
+        everRevealed.add(key)
         newValues[key] = answerMap[key]
       }
     }
     setRevealedCells(revealed)
+    setRevealedEver(everRevealed)
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
     setShowRevealMenu(false)
@@ -717,7 +728,12 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
     const s = String(elapsed % 60).padStart(2, '0')
     const poolSuffix = poolParam ? `&pool=${poolParam}` : ''
     const shareUrl = dailyNumber ? `${BASE_URL}/daily` : `${BASE_URL}/?seed=${seedParam}${poolSuffix}`
-    const text = `I solved the Small Indy in ${m}:${s}!${isAssisted ? ' (with help)' : ''}\n${shareUrl}`
+    const revealedCount = revealedEver.size
+    // Older saves recorded only the assisted flag, with no count to report.
+    const helpNote = revealedCount > 0
+      ? ` (${revealedCount} square${revealedCount === 1 ? '' : 's'} revealed)`
+      : isAssisted ? ' (with help)' : ''
+    const text = `I solved the Small Indy in ${m}:${s}!${helpNote}\n${shareUrl}`
     if (navigator.share) {
       navigator.share({ text }).catch(() => {})
     } else {
@@ -746,8 +762,9 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
   }
 
   function handleReset() {
-    // Preserve `elapsed` and `isAssisted` across a reset so a player can't
-    // reveal answers, hit restart, and re-enter them for a fake fast time.
+    // Preserve `elapsed`, `isAssisted` and `revealedEver` across a reset so a
+    // player can't reveal answers, hit restart, and re-enter them for a fake
+    // fast time (or a clean "no squares revealed" score).
     setCellValues({})
     setSelected(null)
     setDirection('across')
@@ -1183,6 +1200,7 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
         <CompletionModal
           elapsed={elapsed}
           assisted={isAssisted}
+          revealedCount={revealedEver.size}
           onDismiss={() => setShowModal(false)}
           onClose={handleReset}
           onShareResult={handleShareResult}
