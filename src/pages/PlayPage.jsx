@@ -654,20 +654,29 @@ export default function PlayPage({ overrideSeed, dailyNumber } = {}) {
 
   // ── Reveal helpers ────────────────────────────────────────────────────────
   function revealKeys(keys) {
-    setIsAssisted(true)
     setIncorrectCells(new Set())
     const revealed = new Set(revealedCells)
     const everRevealed = new Set(revealedEver)
+    const correct = new Set(correctCells)
     const newValues = { ...cellValues }
+    let didReveal = false
     for (const key of keys) {
-      if (answerMap[key]) {
-        revealed.add(key)
-        everRevealed.add(key)
-        newValues[key] = answerMap[key]
+      if (!answerMap[key]) continue
+      // A letter the player already had right isn't a reveal: lock it in as
+      // confirmed-correct so it stays blue and off the revealed-square count.
+      if (!revealed.has(key) && cellValues[key] === answerMap[key]) {
+        correct.add(key)
+        continue
       }
+      revealed.add(key)
+      everRevealed.add(key)
+      newValues[key] = answerMap[key]
+      didReveal = true
     }
+    if (didReveal) setIsAssisted(true)
     setRevealedCells(revealed)
     setRevealedEver(everRevealed)
+    setCorrectCells(correct)
     setCellValues(newValues)
     checkForWin(newValues, answerMap)
     setShowRevealMenu(false)
